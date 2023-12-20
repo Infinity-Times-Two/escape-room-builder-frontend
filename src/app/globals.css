@@ -22,18 +22,22 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: hsl(33, 100%, 97%);
+}
+
+header {
+  background-color: hsl(32, 100%, 94%);
 }
 
 p {
   font-family: var(--font-cabin);
   font-weight: 600;
   @apply tracking-wide
+}
+
+a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -56,6 +60,10 @@ button > span {
 
 button.large > span {
   @apply py-4 px-8 text-2xl;
+}
+
+button.small > span {
+  @apply py-3 px-6 text-lg;
 }
 
 button.green > span {
