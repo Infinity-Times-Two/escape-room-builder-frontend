@@ -4,17 +4,21 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
+  --background-start-rgb: 255, 255, 255;
   --background-end-rgb: 255, 255, 255;
+  --btn-green-bg: hsl(126, 45%, 96%);
+  --btn-red-bg: hsl(0, 100%, 96%);
+  --light-red: hsl(0, 100%, 96%);
+  --dark-red: hsl(0, 58%, 27%);
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
-}
+} */
 
 body {
   color: rgb(var(--foreground-rgb));
@@ -25,3 +29,99 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+p {
+  font-family: var(--font-cabin);
+  font-weight: 600;
+  @apply tracking-wide
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-semibold tracking-wider;
+  font-family: var(--font-work-sans);
+}
+
+h3 {
+  font-size: 32px;
+}
+
+button {
+  @apply rounded-md bg-black font-semibold m-2;
+  font-family: var(--font-work-sans);
+}
+
+button > span {
+  @apply block -translate-x-0.5 -translate-y-0.5 rounded-md border-2 border-black bg-white py-3 px-7 text-lg uppercase tracking-wider hover:-translate-y-1 hover:-translate-x-1 transition-all;
+}
+
+button.large > span {
+  @apply py-4 px-8 text-2xl;
+}
+
+button.green > span {
+  background-color: var(--btn-green-bg);
+}
+
+button.red > span {
+  background-color: var(--btn-red-bg);
+}
+
+div.badge {
+  @apply block h-8 rounded-full bg-black font-semibold m-2 p-0 border-0 w-max;
+  font-family: var(--font-work-sans);
+}
+
+div.badge > span {
+  @apply block -translate-x-1 -translate-y-1 rounded-full bg-white text-black border-2 border-black py-1 px-8 uppercase tracking-wider cursor-pointer;
+}
+
+div.badge.red {
+  background-color: var(--dark-red);
+}
+
+div.badge.red > span {
+  color: var(--dark-red);
+  background-color: var(--light-red);
+  border-color: var(--dark-red);
+}
+
+div.badge.red > span:hover {
+  background-color:hsl(0, 100%, 94%)
+}
+
+div.badge.blue {
+  background-color: hsl(227, 54%, 27%);
+}
+
+div.badge.blue > span {
+  color: hsl(227, 54%, 27%);
+  background-color: hsl(227, 100%, 92%);
+  border-color: hsl(227, 54%, 27%);
+}
+
+div.badge.blue > span:hover {
+  background-color:hsl(227, 100%, 88%)
+}
+
+div.badge.orange {
+  background-color: hsl(32, 100%, 38%);
+}
+
+div.badge.orange > span {
+  color: hsl(32, 100%, 24%);
+  background-color: hsl(32, 100%, 92%);
+  border-color: hsl(32, 100%, 38%);
+}
+
+div.badge.orange > span:hover {
+  background-color:hsl(32, 100%, 88%)
+}
+
+div.chip {
+  @apply block rounded-full bg-white w-max text-black text-2xl font-semibold border-2 border-black py-1.5 px-9 tracking-wider;
+  font-family: var(--font-work-sans);
+}
+
+/* .input {
+  @apply border border-2 border-black rounded-md active:border active:border-2 active:border-black p-2;
+} */
