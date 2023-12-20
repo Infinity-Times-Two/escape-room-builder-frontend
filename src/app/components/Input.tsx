@@ -9,7 +9,7 @@ export default function Input({ type, placeholder }: InputProps) {
       <input
         type={type}
         placeholder={placeholder}
-        className='input -translate-x-1 -translate-y-1 input-bordered border-black border-2 focus:outline-none focus:border-black w-full max-w-xs'
+        className='input bg-white -translate-x-1 -translate-y-1 input-bordered border-black border-2 focus:outline-none focus:border-black w-full max-w-xs'
       />
     </div>
   );
