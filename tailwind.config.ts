@@ -15,6 +15,9 @@ const config: Config = {
     },
   },
   plugins: [require('daisyui')],
+  daisyui: {
+    themes: ["light"],
+  },
   safelist: [
     'bg-yellow-50', 'bg-blue-50', 'bg-green-50', 'bg-red-50', 'bg-purple-50', 'bg-pink-50', 'bg-orange-50',
   ],

@@ -5,7 +5,7 @@ type InputProps = {
 
 export default function Input({ type, placeholder }: InputProps) {
   return (
-    <div className='rounded-md bg-black font-semibold m-2'>
+    <div className='rounded-md bg-black font-semibold m-2 self-start'>
       <input
         type={type}
         placeholder={placeholder}

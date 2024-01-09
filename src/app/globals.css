@@ -22,12 +22,27 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: hsl(33, 100%, 97%);
+  background: #fff8f0;
 }
 
 header {
   background-color: hsl(32, 100%, 94%);
 }
+
+/* Patterned background experiment:
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background-color: #fff8f0;
+background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff2e3' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+header {
+  background-color: #fff2e3;
+background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff8f0' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+*/
 
 p {
   font-family: var(--font-cabin);
@@ -56,6 +71,10 @@ button {
 
 button > span {
   @apply block -translate-x-0.5 -translate-y-0.5 rounded-md border-2 border-black bg-white py-3 px-7 text-lg uppercase tracking-wider hover:-translate-y-1 hover:-translate-x-1 transition-all;
+}
+
+button.xl > span {
+  @apply py-5 px-10 text-3xl;
 }
 
 button.large > span {

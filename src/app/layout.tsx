@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Work_Sans, Cabin } from 'next/font/google';
 import Header from './components/Header';
+import Footer from './components/Footer';
 import './globals.css';
 
 const workSans = Work_Sans({
@@ -24,6 +25,7 @@ export default function RootLayout({
       <body className={`${cabin.variable} ${workSans.variable}`}>
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );
