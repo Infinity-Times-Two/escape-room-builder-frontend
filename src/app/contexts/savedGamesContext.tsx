@@ -8,7 +8,7 @@ import { useState, createContext, useMemo, PropsWithChildren } from 'react';
 import { mockSavedGames } from './mockSavedGames';
 
 type Game = {
-  id: number;
+  id: string;
   gameTitle: string;
   gameDescription: string;
   timeLimit: number; 
