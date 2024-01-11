@@ -93,7 +93,7 @@ button.large > span {
 }
 
 button.small > span {
-  @apply py-3 px-6 text-lg;
+  @apply py-2 px-4 text-lg;
 }
 
 button.green > span {

@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function Header() {
   return (
-    <header className='grid grid-cols-1 sm:grid-cols-2 items-center px-16'>
+    <header className='grid grid-cols-1 sm:grid-cols-2 items-center sm:px-16'>
       <h1 className='text-xl sm:text-2xl justify-self-center sm:justify-self-start py-6'>
         <Link href='/'>Escape Room Builder</Link>
       </h1>
