@@ -12,7 +12,7 @@ interface TriviaChallengeProps {
   };
   nextChallenge: number;
   currentGame: {
-    id: number;
+    id: string;
     gameTitle: string;
     gameDescription: string;
     challenges: Array<{
@@ -52,7 +52,7 @@ export default function TriviaChallenge({
   };
 
   return (
-    <div className='flex flex-col items-center p-16 min-h-screen gap-8'>
+    <div className='flex flex-col items-center sm:p-16 min-h-screen gap-8'>
       <h1>
         {currentChallenge?.type}: {currentChallenge?.description}
       </h1>

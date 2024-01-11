@@ -1,9 +1,10 @@
-import Card from '../components/ui/GameCard';
+import GameCard from '../components/ui/GameCard';
+import Card from '../components/ui/Card';
 import Input from '../components/ui/Input';
 import TextArea from '../components/ui/TextArea';
 
 const room = {
-  name: 'Room Name',
+  name: 'Game Card',
   challenges: 5,
   timeLimit: 900,
   description:
@@ -14,12 +15,13 @@ const room = {
 
 export default function About() {
   return (
-    <div className='flex flex-col items-center justify-start p-16 min-h-screen gap-8'>
-      <h1 className='text-4xl font-bold'>Style Guide</h1>
+    <div className='flex flex-col items-center justify-start sm:mx-16 py-16 min-h-screen gap-8 border-x border-black'>
+      <h1>Style Guide</h1>
       <p className='text-xl'>
         The UI is built with DaisyUI components customized with Tailwind CSS.
       </p>
-      <div className='flex flex-wrap items-start sm:w-11/12 justify-center'>
+      <h2>Buttons</h2>
+      <div className='flex flex-wrap items-start w-full justify-center border-b border-black pb-8 px-4'>
         <button>
           <span>Button</span>
         </button>
@@ -33,7 +35,9 @@ export default function About() {
           <span>XL Button</span>
         </button>
       </div>
-      <div className='flex flex-wrap items-start sm:w-11/12 justify-center'>
+      <hr />
+      <h2>Badges</h2>
+      <div className='flex flex-wrap items-start w-full justify-center border-b border-black pb-8 px-4'>
         <div className='badge'>
           <span>Default Badge</span>
         </div>
@@ -47,8 +51,9 @@ export default function About() {
           <span>Orange Badge</span>
         </div>
       </div>
-      <div className='flex flex-wrap items-start sm:w-11/12 gap-8 justify-center'>
-        <Card
+      <h2>Cards</h2>
+      <div className='flex flex-wrap items-start gap-8 w-full justify-center border-b border-black pb-8 px-4'>
+        <GameCard
           roomName={room.name}
           challenges={room.challenges}
           timeLimit={room.timeLimit}
@@ -56,8 +61,16 @@ export default function About() {
           titleBackgroundColor={room.titleBg}
           bodyBackgroundColor={room.bodyBg}
         />
-        <div className='flex flex-col gap-4'>
+        <Card>
+          <p>Card</p>
+        </Card>
+      </div>
+      <div className='flex flex-col gap-4 w-full items-center border-b border-black pb-8 px-4'>
+        <h2>Inputs</h2>
+        <div>
           <Input type='text' placeholder='Type here' />
+        </div>
+        <div>
           <TextArea placeholder='bio' />
         </div>
       </div>

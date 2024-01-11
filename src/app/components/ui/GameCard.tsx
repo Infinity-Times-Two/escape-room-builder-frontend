@@ -31,7 +31,7 @@ export default function GameCard({
         </div>
         : null }
         <div
-          className={`card-body bg-${bodyBackgroundColor}-50 px-6 py-12 flex flex-col gap-6`}
+          className={`card-body bg-${bodyBackgroundColor}-50 px-6 py-12 flex flex-col gap-6 rounded-md`}
           style={brickPattern}
         >
           <div className='chip'>

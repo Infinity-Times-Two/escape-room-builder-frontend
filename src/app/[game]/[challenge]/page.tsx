@@ -12,12 +12,12 @@ export default function Challenge({
   params: { game: string; challenge: string };
 }) {
   const currentGame = mockSavedGames.find(
-    (game) => game.id === Number(params.game)
+    (game) => game.id === params.game
   );
 
   if (!currentGame) {
     return (
-      <div className='flex flex-col items-center justify-start p-16 min-h-screen gap-8'>
+      <div className='flex flex-col items-center justify-start sm:p-16 min-h-screen gap-8'>
         <h2>Game not found</h2>
       </div>
     );

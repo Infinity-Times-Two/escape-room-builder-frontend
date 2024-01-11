@@ -1,6 +1,6 @@
 export const mockSavedGames = [
   {
-    id: 1,
+    id: 'seinfeld',
     gameTitle: 'Seinfeld Escape',
     gameDescription: 'Dodge the Soup Nazi: Can you escape?',
     timeLimit: 600,
@@ -32,7 +32,7 @@ export const mockSavedGames = [
     ],
   },
   {
-    id: 2,
+    id: '3rdrock',
     gameTitle: '3rd Rock Riddles',
     gameDescription: 'Embark on an interstellar adventure with the Solomons!',
     timeLimit: 600,
@@ -64,7 +64,7 @@ export const mockSavedGames = [
     ],
   },
   {
-    id: 3,
+    id: 'family-matters',
     gameTitle: 'Family Matters Mystery',
     gameDescription: 'Solve challenges in the Winslow household!',
     timeLimit: 600,

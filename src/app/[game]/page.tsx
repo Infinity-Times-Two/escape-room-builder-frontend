@@ -3,7 +3,7 @@ import { mockSavedGames } from '../contexts/mockSavedGames';
 
 export default function Game({ params }: { params: { game: string } }) {
   const currentGame = mockSavedGames.find(
-    (game) => game.id === Number(params.game)
+    (game) => game.id === params.game
   );
 
   if(!currentGame) {

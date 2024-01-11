@@ -12,7 +12,7 @@ interface WordScrambleChallengeProps {
   };
   nextChallenge: number;
   currentGame: {
-    id: number;
+    id: string;
     gameTitle: string;
     gameDescription: string;
     challenges: Array<{
@@ -74,14 +74,14 @@ export default function WordScrambleChallenge({
   };
 
   return (
-    <div className='flex flex-col items-center p-16 min-h-screen gap-8'>
+    <div className='flex flex-col items-center sm:p-16 min-h-screen gap-8'>
       <h1>
         {currentChallenge?.type}: {currentChallenge?.description}
       </h1>
 
       <div className='flex flex-col gap-2 max-w-full'>
         <Card>
-          <div className='flex flex-row gap-2 flex-wrap'>
+          <div className='flex flex-row gap-2 flex-wrap justify-center'>
             {Array.isArray(currentChallenge.clue) &&
               clues.map(
                 (clue: { clue: string; active: boolean }, index: number) => (
@@ -110,8 +110,7 @@ export default function WordScrambleChallenge({
           </div>
         </Card>
         <Card>
-          <div className='flex flex-row gap-2 flex-wrap'>
-            <div className='h-[48px]'></div>
+          <div className='flex flex-row gap-2 flex-wrap justify-center'>
             {answer &&
               answer.map((word: string, index: number) => (
                 <div
