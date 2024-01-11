@@ -83,8 +83,8 @@ export const mockSavedGames = [
         id: 'Challenge 2',
         type: 'Word Scramble',
         description: 'Unscramble this famous catchphrase',
-        clue: ['do', 'I', 'that', 'did'],
-        answer: 'Did I do that?',
+        clue: ['do', 'I', 'that', 'did', '?'],
+        answer: 'Did I do that ?',
       },
       {
         id: 'Challenge 3',
