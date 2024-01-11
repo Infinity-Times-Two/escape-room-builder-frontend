@@ -1,11 +1,11 @@
-import Card from '../components/Card';
-import Input from '../components/Input';
-import TextArea from '../components/TextArea';
+import Card from '../components/ui/GameCard';
+import Input from '../components/ui/Input';
+import TextArea from '../components/ui/TextArea';
 
 const room = {
   name: 'Room Name',
   challenges: 5,
-  timeLimit: 15,
+  timeLimit: 900,
   description:
     'A brief description of the escape room that makes it sound extremely fun and you want to play it!',
   titleBg: 'yellow',
