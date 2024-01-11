@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Card from '../ui/Card';
 
 interface WordScrambleChallengeProps {
   currentChallenge: {
@@ -31,13 +32,14 @@ export default function WordScrambleChallenge({
 }: WordScrambleChallengeProps) {
 
   const [answer, setAnswer] = useState<string[]>([]);
-  const [clues, setClues] = useState<string[]>(
+
+  const [clues, setClues] = useState<{ clue: string; active: boolean }[]>(
     Array.isArray(currentChallenge.clue)
-      ? currentChallenge.clue
-      : [currentChallenge.clue]
+      ? currentChallenge.clue.map((clue) => ({ clue, active: true }))
+      : [{ clue: currentChallenge.clue, active: true }]
   );
 
-  const shuffleClues = (array: string[]) => {
+  const shuffleClues = (array: { clue: string; active: boolean }[]) => {
     let newArray = [...array];
     for (let i = newArray.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -45,26 +47,29 @@ export default function WordScrambleChallenge({
     }
     return newArray;
   };
+
   useEffect(() => {
     const newClues = shuffleClues(clues);
-
     setClues(newClues);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // including clues in the dependency array causes an infinite loop
+    // including clues in the dependency array causes an infinite loop, so:
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log(answer.join(' '));
-    if (answer.join(' ').toLowerCase() === currentChallenge.answer.toLowerCase()) {
+    if (
+      answer.join(' ').toLowerCase() === currentChallenge.answer.toLowerCase()
+    ) {
       if (nextChallenge === currentGame.challenges.length) {
         router.push(`../${currentGame.id}/win`);
       } else {
         router.push(`./${currentGame.challenges[nextChallenge].id}`);
       }
     } else {
-      alert('incorrect');
+      alert('incorrect'); // To do: Add a way to handle incorrect answers
     }
   };
 
@@ -73,35 +78,61 @@ export default function WordScrambleChallenge({
       <h1>
         {currentChallenge?.type}: {currentChallenge?.description}
       </h1>
-      <div className='flex flex-row gap-2 flex-wrap'>
-        {Array.isArray(currentChallenge.clue) &&
-          clues.map((clue: string, index: number) => (
-            <div
-              key={index}
-              className='badge orange'
-              onClick={() => {
-                setAnswer([...answer, clue]);
-                setClues(clues.filter((item) => item !== clue));
-              }}
-            >
-              <span>{clue}</span>
-            </div>
-          ))}
-      </div>
-      <div className='flex flex-row gap-2 flex-wrap'>
-        {answer &&
-          answer.map((word: string, index: number) => (
-            <div
-              key={index}
-              className='badge blue'
-              onClick={() => {
-                setClues([...clues, word]);
-                setAnswer(answer.filter((item) => item !== word));
-              }}
-            >
-              <span>{word}</span>
-            </div>
-          ))}
+
+      <div className='flex flex-col gap-2 max-w-full'>
+        <Card>
+          <div className='flex flex-row gap-2 flex-wrap'>
+            {Array.isArray(currentChallenge.clue) &&
+              clues.map(
+                (clue: { clue: string; active: boolean }, index: number) => (
+                  <div
+                    key={index}
+                    className={`badge orange ${
+                      clue.active ? 'visible' : 'invisible'
+                    }`}
+                    onClick={() => {
+                      setAnswer([...answer, clue.clue]);
+                      setClues(
+                        clues.map((item) =>
+                          item.clue === clue.clue
+                            ? { ...item, active: !item.active }
+                            : item
+                        )
+                      ); 
+                      // This toggles CSS visibility rather than removing them from state or the DOM 
+                      // to prevent the container from resizing and keep the clues in the same order
+                    }}
+                  >
+                    <span>{clue.clue}</span>
+                  </div>
+                )
+              )}
+          </div>
+        </Card>
+        <Card>
+          <div className='flex flex-row gap-2 flex-wrap'>
+            <div className='h-[48px]'></div>
+            {answer &&
+              answer.map((word: string, index: number) => (
+                <div
+                  key={index}
+                  className='badge blue'
+                  onClick={() => {
+                    setClues(
+                      clues.map((item) =>
+                        item.clue === word
+                          ? { ...item, active: !item.active }
+                          : item
+                      )
+                    );
+                    setAnswer(answer.filter((item) => item !== word));
+                  }}
+                >
+                  <span>{word}</span>
+                </div>
+              ))}
+          </div>
+        </Card>
       </div>
       <button className='large' onClick={handleSubmit}>
         <span>Submit</span>
