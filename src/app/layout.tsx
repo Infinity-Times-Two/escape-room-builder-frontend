@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Work_Sans, Cabin } from 'next/font/google';
-import Header from './components/Header';
-import Footer from './components/Footer';
+import Header from './components/layout/Header';
+import Footer from './components/layout/Footer';
 import './globals.css';
 
 const workSans = Work_Sans({

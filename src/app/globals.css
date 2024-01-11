@@ -23,6 +23,7 @@
 body {
   color: rgb(var(--foreground-rgb));
   background: #fff8f0;
+  font-family: var(--font-cabin);
 }
 
 header {
@@ -45,19 +46,29 @@ background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox=
 */
 
 p {
-  font-family: var(--font-cabin);
   font-weight: 600;
   @apply tracking-wide
 }
 
 a:hover {
   text-decoration: underline;
-  text-decoration-thickness: 2px;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
 }
 
 h1, h2, h3, h4, h5, h6 {
   @apply font-semibold tracking-wider;
   font-family: var(--font-work-sans);
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+h1 {
+  font-size: 48px;
+}
+
+h2 {
+  font-size: 40px;
 }
 
 h3 {
@@ -82,7 +93,7 @@ button.large > span {
 }
 
 button.small > span {
-  @apply py-3 px-6 text-lg;
+  @apply py-2 px-4 text-lg;
 }
 
 button.green > span {
