@@ -58,7 +58,7 @@ export const mockSavedGames = [
         id: 'Challenge 3',
         type: 'Caesar Cypher',
         description: 'Decrypt the name of the only female alien in the crew',
-        clue: ['v', 'l', 'z', 'h', 's', 'b'],
+        clue: ['b', 'j', 'u', 'u', 'h'],
         answer: 'Sally',
       },
     ],
