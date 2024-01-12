@@ -9,14 +9,12 @@ export default function Win() {
     minutes: '15',
     seconds: '0',
   };
-  console.log('finish time:');
-  console.log(finishTime);
+
   formattedTime = {
     minutes: ((expiry - finishTime) / 60 - 1).toFixed(),
     seconds: ((expiry - finishTime) % 60).toFixed(),
   };
-  console.log('formatted time:');
-  console.log(formattedTime);
+
   return (
     <div className='flex flex-col items-center justify-start py-16 min-h-screen gap-8'>
       <h1>You win!</h1>

@@ -1,10 +1,3 @@
-import {
-  ReactElement,
-  JSXElementConstructor,
-  ReactNode,
-  ReactPortal,
-  PromiseLikeOfReactNode,
-} from 'react';
 import { useContext, useEffect, useState } from 'react';
 import { TimerContext } from '@/app/contexts/timerContext';
 
