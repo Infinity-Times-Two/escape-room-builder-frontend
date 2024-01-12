@@ -1,11 +1,14 @@
+'use client';
 import Link from 'next/link';
 import GameCard from '../ui/GameCard';
-import { mockSavedGames } from '../../contexts/mockSavedGames';
+import { useContext } from 'react';
+import { SavedGamesContext } from '@/app/contexts/savedGamesContext';
 
 export default function SavedRooms() {
+  const { savedGames } = useContext(SavedGamesContext)
   return (
     <div className='flex flex-row nowrap overflow-auto max-w-full self-start px-8 gap-8'>
-      {mockSavedGames.map((game) => (
+      {savedGames.map((game) => (
         <Link key={game.id} href={`/${game.id}`} className='hover:no-underline'>
           <GameCard
             roomName={game.gameTitle}

@@ -14,7 +14,7 @@ const TimerContext = createContext<TimerContextType>({
   setFinishTime: () => {},
 });
 
-const ContextProvider = (props: PropsWithChildren<{}>) => {
+const TimerContextProvider = (props: PropsWithChildren<{}>) => {
 
   const [expiry, setExpiry] = useState<number>(0);
   const [finishTime, setFinishTime] = useState<number>(0);
@@ -37,4 +37,4 @@ const ContextProvider = (props: PropsWithChildren<{}>) => {
 
 };
 
-export { TimerContext, ContextProvider };
+export { TimerContext, TimerContextProvider };

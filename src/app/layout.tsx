@@ -1,6 +1,7 @@
 'use client';
 import type { Metadata } from 'next';
-import { ContextProvider } from './contexts/timerContext';
+import { TimerContextProvider } from './contexts/timerContext';
+import { SavedGamesContextProvider } from './contexts/savedGamesContext';
 import { Work_Sans, Cabin } from 'next/font/google';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
@@ -25,11 +26,13 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={`${cabin.variable} ${workSans.variable}`}>
-        <ContextProvider>
-          <Header />
-          {children}
-          <Footer />
-        </ContextProvider>
+        <SavedGamesContextProvider>
+          <TimerContextProvider>
+            <Header />
+            {children}
+            <Footer />
+          </TimerContextProvider>
+        </SavedGamesContextProvider>
       </body>
     </html>
   );
