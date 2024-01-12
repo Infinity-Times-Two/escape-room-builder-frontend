@@ -16,13 +16,14 @@ export default function Timer(props: { timeLeft: number }) {
     return difference;
   };
 
-  const { expiry } = useContext(TimerContext);
+  const { expiry, setFinishTime } = useContext(TimerContext);
   const [timeRemaining, setTimeRemaining] = useState(props.timeLeft);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       if (expiry) {
         setTimeRemaining(calculateTimeLeft(expiry));
+        setFinishTime(props.timeLeft - timeRemaining)
       }
     }, 1000);
 
@@ -30,25 +31,25 @@ export default function Timer(props: { timeLeft: number }) {
   });
 
   let formattedTime: { minutes: string; seconds: string } = {
-    minutes: '0',
+    minutes: '15',
     seconds: '0',
   };
+
   if (typeof timeRemaining === 'number') {
     if (timeRemaining > 0) {
       formattedTime = {
-        minutes: (timeRemaining / 60).toFixed(),
+        minutes: (timeRemaining / 60 - 1).toFixed(),
         seconds: (timeRemaining % 60).toFixed(),
       };
     }
   }
 
-  console.log(formattedTime);
-
   return (
     <div className='m-6 absolute right-0 min-w-[250px]'>
       <div className='block rounded-full bg-white min-w-[230px] text-black text-xl font-semibold border-2 border-black py-1.5 px-8 tracking-wider'>
         <span>
-          Time left: {formattedTime.minutes}m {formattedTime.seconds}s
+          {/* Only render time left after first calculation */}
+          Time left: {Number(formattedTime.minutes) < 300 && formattedTime.minutes + 'm ' + formattedTime.seconds + 's'}
         </span>
       </div>
     </div>

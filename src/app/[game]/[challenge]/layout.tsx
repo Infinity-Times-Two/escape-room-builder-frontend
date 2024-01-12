@@ -1,5 +1,5 @@
 'use client';
-import Timer from '@/app/components/layout/Timer';
+import Timer from '@/app/components/ui/Timer';
 import { useContext } from 'react';
 import { TimerContext } from '@/app/contexts/timerContext';
 

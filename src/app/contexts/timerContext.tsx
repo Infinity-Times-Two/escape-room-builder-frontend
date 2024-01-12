@@ -3,11 +3,15 @@ import { useState, createContext, useMemo, PropsWithChildren, Dispatch, SetState
 type TimerContextType = {
   expiry: number;
   setExpiry: (value: number) => void;
+  finishTime: number;
+  setFinishTime: (value: number) => void;
 };
 
 const TimerContext = createContext<TimerContextType>({
   expiry: 0, // provide a default value
   setExpiry: () => {},
+  finishTime: 0,
+  setFinishTime: () => {},
 });
 
 const ContextProvider = (props: PropsWithChildren<{}>) => {

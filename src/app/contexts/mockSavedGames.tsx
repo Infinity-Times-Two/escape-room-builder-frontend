@@ -3,7 +3,7 @@ export const mockSavedGames = [
     id: 'seinfeld',
     gameTitle: 'Seinfeld Escape',
     gameDescription: 'Dodge the Soup Nazi: Can you escape?',
-    timeLimit: 2600,
+    timeLimit: 600,
     theme: '',
     author: 'Jerry',
     titleBg: 'yellow',
