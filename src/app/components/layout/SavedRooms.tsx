@@ -9,7 +9,9 @@ export default function SavedRooms() {
         <Link key={game.id} href={`/${game.id}`} className='hover:no-underline'>
           <GameCard
             roomName={game.gameTitle}
-            challenges={game.numberOfChallenges}
+            author={game.author}
+            theme={game.theme}
+            challenges={game.challenges.length}
             timeLimit={game.timeLimit}
             description={game.gameDescription}
             titleBackgroundColor={game.titleBg}

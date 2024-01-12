@@ -30,7 +30,6 @@ export default function WordScrambleChallenge({
   nextChallenge,
   currentGame,
 }: WordScrambleChallengeProps) {
-
   const [answer, setAnswer] = useState<string[]>([]);
 
   const [clues, setClues] = useState<{ clue: string; active: boolean }[]>(
@@ -59,7 +58,6 @@ export default function WordScrambleChallenge({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(answer.join(' '));
     if (
       answer.join(' ').toLowerCase() === currentChallenge.answer.toLowerCase()
     ) {
@@ -69,16 +67,12 @@ export default function WordScrambleChallenge({
         router.push(`./${currentGame.challenges[nextChallenge].id}`);
       }
     } else {
-      alert('incorrect'); // To do: Add a way to handle incorrect answers
+      alert('incorrect');
     }
   };
 
   return (
-    <div className='flex flex-col items-center sm:p-16 min-h-screen gap-8'>
-      <h1>
-        {currentChallenge?.type}: {currentChallenge?.description}
-      </h1>
-
+    <>
       <div className='flex flex-col gap-2 max-w-full'>
         <Card>
           <div className='flex flex-row gap-2 flex-wrap justify-center'>
@@ -98,8 +92,8 @@ export default function WordScrambleChallenge({
                             ? { ...item, active: !item.active }
                             : item
                         )
-                      ); 
-                      // This toggles CSS visibility rather than removing them from state or the DOM 
+                      );
+                      // This toggles CSS visibility rather than removing them from state or the DOM
                       // to prevent the container from resizing and keep the clues in the same order
                     }}
                   >
@@ -136,6 +130,6 @@ export default function WordScrambleChallenge({
       <button className='large' onClick={handleSubmit}>
         <span>Submit</span>
       </button>
-    </div>
+    </>
   );
 }

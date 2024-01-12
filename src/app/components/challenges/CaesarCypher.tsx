@@ -52,10 +52,7 @@ export default function CaesarCypherChallenge({
   };
 
   return (
-    <div className='flex flex-col items-center sm:p-16 min-h-screen gap-8'>
-      <h1>
-        {currentChallenge?.type}: {currentChallenge?.description}
-      </h1>
+    <>
       <h2>{currentChallenge?.clue}</h2>
       <form onSubmit={handleSubmit} className='flex flex-col gap-2'>
         <Input
@@ -68,6 +65,6 @@ export default function CaesarCypherChallenge({
           <span>Submit</span>
         </button>
       </form>
-    </div>
+    </>
   );
 }
