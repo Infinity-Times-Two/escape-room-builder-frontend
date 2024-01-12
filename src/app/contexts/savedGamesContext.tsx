@@ -12,9 +12,10 @@ type Game = {
   gameTitle: string;
   gameDescription: string;
   timeLimit: number; 
+  theme: string;
+  author: string;
   titleBg: string;
   bodyBg: string;
-  numberOfChallenges: number;
   challenges: Challenge[];
 };
 
