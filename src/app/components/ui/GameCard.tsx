@@ -1,5 +1,7 @@
 type CardProps = {
   roomName: string;
+  author: string;
+  theme: string;
   challenges: number;
   timeLimit: number;
   description: string;
@@ -13,6 +15,8 @@ const brickPattern = {
 
 export default function GameCard({
   roomName,
+  author,
+  theme,
   challenges,
   timeLimit,
   description,
@@ -25,9 +29,10 @@ export default function GameCard({
     <div className='rounded-md bg-black font-semibold m-2 self-start hover:-translate-y-1 hover:-translate-x-0.5 transition-all'>
       <div className='card bg-white -translate-x-1 -translate-y-1 border-2 border-black rounded-md w-[350px]'>
         {roomName ? <div
-          className={`card-title bg-${titleBackgroundColor}-50 px-4 py-5 border-b-2 border-black rounded-t -md`}
+          className={`card-title flex flex-col bg-${titleBackgroundColor}-50 px-4 py-5 border-b-2 border-black rounded-t`}
         >
-          <h3>{roomName}</h3>
+          <h3 className='text-center'>{roomName}</h3>
+          <p className='text-base'>By {author}</p>
         </div>
         : null }
         <div

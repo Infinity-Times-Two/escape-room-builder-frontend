@@ -12,9 +12,10 @@ type Game = {
   gameTitle: string;
   gameDescription: string;
   timeLimit: number; 
+  theme: string;
+  author: string;
   titleBg: string;
   bodyBg: string;
-  numberOfChallenges: number;
   challenges: Challenge[];
 };
 
@@ -32,14 +33,13 @@ interface SavedGamesContextType {
 }
 
 const defaultContextValue: SavedGamesContextType = {
-  savedGames: [],
+  savedGames: mockSavedGames,
   setSavedGames: () => {},
 };
 
 const SavedGamesContext = createContext(defaultContextValue);
 
-const ContextProvider = (props: PropsWithChildren<{}>) => {
-  const games = mockSavedGames;
+const SavedGamesContextProvider = (props: PropsWithChildren<{}>) => {
 
   const [savedGames, setSavedGames] = useState<Game[]>(mockSavedGames);
 
@@ -58,4 +58,4 @@ const ContextProvider = (props: PropsWithChildren<{}>) => {
   );
 };
 
-export { SavedGamesContext, ContextProvider };
+export { SavedGamesContext, SavedGamesContextProvider };

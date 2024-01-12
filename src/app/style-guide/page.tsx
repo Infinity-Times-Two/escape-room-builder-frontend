@@ -5,6 +5,8 @@ import TextArea from '../components/ui/TextArea';
 
 const room = {
   name: 'Game Card',
+  author: 'Author',
+  theme: 'none',
   challenges: 5,
   timeLimit: 900,
   description:
@@ -55,6 +57,8 @@ export default function About() {
       <div className='flex flex-wrap items-start gap-8 w-full justify-center border-b border-black pb-8 px-4'>
         <GameCard
           roomName={room.name}
+          author={room.author}
+          theme={room.theme}
           challenges={room.challenges}
           timeLimit={room.timeLimit}
           description={room.description}

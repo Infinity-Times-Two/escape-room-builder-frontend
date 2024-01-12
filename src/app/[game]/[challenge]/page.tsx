@@ -1,7 +1,5 @@
 'use client';
-import { useState } from 'react';
 import { mockSavedGames } from '@/app/contexts/mockSavedGames';
-import { useRouter } from 'next/navigation';
 import TriviaChallenge from '@/app/components/challenges/Trivia';
 import WordScrambleChallenge from '@/app/components/challenges/WordScramble';
 import CaesarCypherChallenge from '@/app/components/challenges/CaesarCypher';
@@ -11,9 +9,7 @@ export default function Challenge({
 }: {
   params: { game: string; challenge: string };
 }) {
-  const currentGame = mockSavedGames.find(
-    (game) => game.id === params.game
-  );
+  const currentGame = mockSavedGames.find((game) => game.id === params.game);
 
   if (!currentGame) {
     return (
@@ -33,7 +29,6 @@ export default function Challenge({
 
   const nextChallenge = currentGame.challenges.indexOf(currentChallenge) + 1;
 
-  console.log(currentChallenge.type);
   const Challenge = () => {
     switch (currentChallenge.type) {
       case 'Trivia': {
@@ -65,5 +60,12 @@ export default function Challenge({
       }
     }
   };
-  return <Challenge />;
+  return (
+    <div className='flex flex-col items-center px-4 pt-20 sm:p-16 sm:pt-24 min-h-screen gap-8'>
+      <h1>
+        {currentChallenge?.type}: {currentChallenge?.description}
+      </h1>
+      <Challenge />
+    </div>
+  );
 }

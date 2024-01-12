@@ -1,4 +1,7 @@
+'use client';
 import type { Metadata } from 'next';
+import { TimerContextProvider } from './contexts/timerContext';
+import { SavedGamesContextProvider } from './contexts/savedGamesContext';
 import { Work_Sans, Cabin } from 'next/font/google';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
@@ -10,10 +13,10 @@ const workSans = Work_Sans({
 });
 const cabin = Cabin({ subsets: ['latin'], variable: '--font-cabin' });
 
-export const metadata: Metadata = {
-  title: 'Escape Room Builder',
-  description: 'Build and play escape rooms with your friends',
-};
+// export const metadata: Metadata = {
+//   title: 'Escape Room Builder',
+//   description: 'Build and play escape rooms with your friends',
+// };
 
 export default function RootLayout({
   children,
@@ -23,9 +26,13 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={`${cabin.variable} ${workSans.variable}`}>
-        <Header />
-        {children}
-        <Footer />
+        <SavedGamesContextProvider>
+          <TimerContextProvider>
+            <Header />
+            {children}
+            <Footer />
+          </TimerContextProvider>
+        </SavedGamesContextProvider>
       </body>
     </html>
   );
