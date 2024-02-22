@@ -19,8 +19,6 @@ export async function GET(req: Request, res: any) {
     },
   })
   const data = await response.json()
-  console.log(data)
  
-  // return res.send(JSON.stringify(data))
   return Response.json(data)
 }

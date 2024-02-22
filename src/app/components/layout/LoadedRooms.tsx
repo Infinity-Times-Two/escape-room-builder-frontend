@@ -28,9 +28,7 @@ export default function SavedRooms() {
 
   const fetchGames = async () => {
     const response = await fetch('/api/games');
-    console.log(response);
     const data = await response.json();
-    console.log(data.games);
     setGames(data.games);
   };
 
