@@ -1,8 +1,8 @@
 'use client';
 import Link from 'next/link';
-import { mockSavedGames } from '../contexts/mockSavedGames';
+import { mockSavedGames } from '../../contexts/mockSavedGames';
 import { useContext } from 'react';
-import { TimerContext } from '../contexts/timerContext';
+import { TimerContext } from '../../contexts/timerContext';
 
 export default function Game({ params }: { params: { game: string } }) {
   const currentGame = mockSavedGames.find((game) => game.id === params.game);

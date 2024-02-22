@@ -1,4 +1,5 @@
 import SavedRooms from '../components/layout/SavedRooms';
+import LoadedRooms from '../components/layout/LoadedRooms';
 
 export default function Play() {
   return (
@@ -6,6 +7,8 @@ export default function Play() {
       <h1>Play</h1>
       <h2>Your Saved Rooms:</h2>
       <SavedRooms />
+      <h2>Loaded Rooms:</h2>
+      <LoadedRooms />
     </div>
   );
 }

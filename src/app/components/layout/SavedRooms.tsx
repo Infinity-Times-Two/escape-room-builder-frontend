@@ -9,7 +9,7 @@ export default function SavedRooms() {
   return (
     <div className='flex flex-row nowrap overflow-auto max-w-full self-start px-8 gap-8'>
       {savedGames.map((game) => (
-        <Link key={game.id} href={`/${game.id}`} className='hover:no-underline'>
+        <Link key={game.id} href={`/game/${game.id}`} className='hover:no-underline'>
           <GameCard
             roomName={game.gameTitle}
             author={game.author}
