@@ -42,7 +42,7 @@ export default function Challenge({
 
   const Challenge = () => {
     switch (currentChallenge.type) {
-      case 'Trivia': {
+      case 'Trivia' || 'trivia': {
         return (
           <TriviaChallenge
             currentChallenge={currentChallenge}
@@ -51,7 +51,7 @@ export default function Challenge({
           />
         );
       }
-      case 'Word Scramble': {
+      case 'Word Scramble' || 'word scramble': {
         return (
           <WordScrambleChallenge
             currentChallenge={currentChallenge}
@@ -60,7 +60,7 @@ export default function Challenge({
           />
         );
       }
-      case 'Caesar Cypher': {
+      case 'Caesar Cypher' || 'caesar cypher': {
         return (
           <CaesarCypherChallenge
             currentChallenge={currentChallenge}
