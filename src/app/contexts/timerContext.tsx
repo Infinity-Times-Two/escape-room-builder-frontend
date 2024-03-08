@@ -1,3 +1,4 @@
+'use client';
 import { useState, createContext, useMemo, PropsWithChildren, Dispatch, SetStateAction } from 'react';
 
 type TimerContextType = {

@@ -5,6 +5,8 @@ import { TimerContext } from '@/app/contexts/timerContext';
 export default function Win() {
   const { expiry, finishTime } = useContext(TimerContext);
 
+  localStorage.removeItem('singleGame')
+  
   let formattedTime: { minutes: string; seconds: string } = {
     minutes: '15',
     seconds: '0',

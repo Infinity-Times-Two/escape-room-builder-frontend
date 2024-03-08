@@ -1,28 +1,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Input from '../ui/Input';
+import { SingleGame, Challenge } from '@/app/types/types';
 
 interface TriviaChallengeProps {
-  currentChallenge: {
-    id: string;
-    type: string;
-    description: string;
-    clue: string | Array<string>;
-    answer: string;
-  };
+  currentChallenge: Challenge
   nextChallenge: number;
-  currentGame: {
-    id: string;
-    gameTitle: string;
-    gameDescription: string;
-    challenges: Array<{
-      id: string;
-      type: string;
-      description: string;
-      clue: string | Array<string>;
-      answer: string;
-    }>;
-  };
+  currentGame: SingleGame
 }
 
 export default function TriviaChallenge({
@@ -52,11 +36,11 @@ export default function TriviaChallenge({
   };
 
   return (
-    <>
-      <h2>{currentChallenge?.clue}</h2>
-      <form onSubmit={handleSubmit} className='flex flex-col gap-2'>
+    <div className='flex flex-col gap-8'>
+      <h2>{currentChallenge.clue}</h2>
+      <form onSubmit={handleSubmit} className='flex flex-col gap-2 items-center gap-8'>
         <Input
-          type='text'
+          fieldType='text'
           placeholder='Your answer'
           onChange={handleChange}
           value={answer}
@@ -65,6 +49,6 @@ export default function TriviaChallenge({
           <span>Submit</span>
         </button>
       </form>
-    </>
+    </div>
   );
 }

@@ -72,64 +72,62 @@ export default function WordScrambleChallenge({
   };
 
   return (
-    <>
-      <div className='flex flex-col gap-2 max-w-full'>
-        <Card>
-          <div className='flex flex-row gap-2 flex-wrap justify-center'>
-            {Array.isArray(currentChallenge.clue) &&
-              clues.map(
-                (clue: { clue: string; active: boolean }, index: number) => (
-                  <div
-                    key={index}
-                    className={`badge orange ${
-                      clue.active ? 'visible' : 'invisible'
-                    }`}
-                    onClick={() => {
-                      setAnswer([...answer, clue.clue]);
-                      setClues(
-                        clues.map((item) =>
-                          item.clue === clue.clue
-                            ? { ...item, active: !item.active }
-                            : item
-                        )
-                      );
-                      // This toggles CSS visibility rather than removing them from state or the DOM
-                      // to prevent the container from resizing and keep the clues in the same order
-                    }}
-                  >
-                    <span>{clue.clue}</span>
-                  </div>
-                )
-              )}
-          </div>
-        </Card>
-        <Card>
-          <div className='flex flex-row gap-2 flex-wrap justify-center'>
-            {answer &&
-              answer.map((word: string, index: number) => (
+    <div className='flex flex-col gap-2 items-center max-w-full'>
+      <Card>
+        <div className='flex flex-row gap-2 flex-wrap justify-center'>
+          {Array.isArray(currentChallenge.clue) &&
+            clues.map(
+              (clue: { clue: string; active: boolean }, index: number) => (
                 <div
                   key={index}
-                  className='badge blue'
+                  className={`badge orange ${
+                    clue.active ? 'visible' : 'invisible'
+                  }`}
                   onClick={() => {
+                    setAnswer([...answer, clue.clue]);
                     setClues(
                       clues.map((item) =>
-                        item.clue === word
+                        item.clue === clue.clue
                           ? { ...item, active: !item.active }
                           : item
                       )
                     );
-                    setAnswer(answer.filter((item) => item !== word));
+                    // This toggles CSS visibility rather than removing them from state or the DOM
+                    // to prevent the container from resizing and keep the clues in the same order
                   }}
                 >
-                  <span>{word}</span>
+                  <span>{clue.clue}</span>
                 </div>
-              ))}
-          </div>
-        </Card>
-      </div>
+              )
+            )}
+        </div>
+      </Card>
+      <Card>
+        <div className='flex flex-row gap-2 flex-wrap justify-center'>
+          {answer &&
+            answer.map((word: string, index: number) => (
+              <div
+                key={index}
+                className='badge blue'
+                onClick={() => {
+                  setClues(
+                    clues.map((item) =>
+                      item.clue === word
+                        ? { ...item, active: !item.active }
+                        : item
+                    )
+                  );
+                  setAnswer(answer.filter((item) => item !== word));
+                }}
+              >
+                <span>{word}</span>
+              </div>
+            ))}
+        </div>
+      </Card>
       <button className='large' onClick={handleSubmit}>
         <span>Submit</span>
       </button>
-    </>
+    </div>
   );
 }

@@ -16,7 +16,7 @@ export default function Timer(props: { timeLeft: number }) {
     const timer = setTimeout(() => {
       if (expiry) {
         setTimeRemaining(calculateTimeLeft(expiry));
-        setFinishTime(props.timeLeft - timeRemaining)
+        setFinishTime(props.timeLeft - timeRemaining);
       }
     }, 1000);
 
@@ -36,13 +36,17 @@ export default function Timer(props: { timeLeft: number }) {
       };
     }
   }
-
+  // Note - this will be positioned relative to <main>, the nearest relatively positioned element
   return (
-    <div className='m-6 absolute right-0 min-w-[250px]'>
-      <div className='block rounded-full bg-white min-w-[230px] text-black text-xl font-semibold border-2 border-black py-1.5 px-8 tracking-wider'>
+    <div className='flex justify-center m-6 absolute right-0 top-0 min-w-[300px]'>
+      <div className='flex flex-row nowrap justify-between gap-2 block rounded-full bg-white min-w-[250px] text-black text-xl font-semibold border-2 border-black py-1.5 px-8 tracking-wider'>
         <span>
           {/* Only render time left after first calculation */}
-          Time left: {Number(formattedTime.minutes) < 300 && formattedTime.minutes + 'm ' + formattedTime.seconds + 's'}
+          Time left:
+        </span>{' '}
+        <span>
+          {Number(formattedTime.minutes) < 300 &&
+            formattedTime.minutes + 'm ' + formattedTime.seconds + 's'}
         </span>
       </div>
     </div>

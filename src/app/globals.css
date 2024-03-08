@@ -47,7 +47,7 @@ background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox=
 
 p {
   font-weight: 600;
-  @apply tracking-wide
+  @apply tracking-wide;
 }
 
 a:hover {
@@ -56,15 +56,22 @@ a:hover {
   text-underline-offset: 3px;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   @apply font-semibold tracking-wider;
   font-family: var(--font-work-sans);
   text-transform: uppercase;
   font-weight: bold;
+  text-align: center;
 }
 
 h1 {
   font-size: 48px;
+  margin-inline: 12px;
 }
 
 h2 {
@@ -124,7 +131,7 @@ div.badge.red > span {
 }
 
 div.badge.red > span:hover {
-  background-color:hsl(0, 100%, 94%)
+  background-color: hsl(0, 100%, 94%);
 }
 
 div.badge.blue {
@@ -138,7 +145,7 @@ div.badge.blue > span {
 }
 
 div.badge.blue > span:hover {
-  background-color:hsl(227, 100%, 88%)
+  background-color: hsl(227, 100%, 88%);
 }
 
 div.badge.orange {
@@ -152,7 +159,7 @@ div.badge.orange > span {
 }
 
 div.badge.orange > span:hover {
-  background-color:hsl(32, 100%, 88%)
+  background-color: hsl(32, 100%, 88%);
 }
 
 div.chip {

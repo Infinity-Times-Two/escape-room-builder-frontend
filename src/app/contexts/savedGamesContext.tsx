@@ -1,31 +1,8 @@
-/*************
- * 
- * This file is currently not in use
- * 
- */
-
+'use client';
 import { useState, createContext, useMemo, PropsWithChildren } from 'react';
 import { mockSavedGames } from './mockSavedGames';
 
-type Game = {
-  id: string;
-  gameTitle: string;
-  gameDescription: string;
-  timeLimit: number; 
-  theme: string;
-  author: string;
-  titleBg: string;
-  bodyBg: string;
-  challenges: Challenge[];
-};
-
-type Challenge = {
-  id: string;
-  type: string;
-  description: string;
-  clue: string | Array<string>;
-  answer: string;
-};
+import { Game } from '../types/types'
 
 interface SavedGamesContextType {
   savedGames: Game[];

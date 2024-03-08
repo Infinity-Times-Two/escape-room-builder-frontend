@@ -1,3 +1,5 @@
+import { Challenge } from "@/app/types/types";
+
 type CardProps = {
   roomName: string;
   author: string;
@@ -26,8 +28,8 @@ export default function GameCard({
   const timeInMinutes = (timeLimit / 60).toFixed(2);
   const formattedTime = parseFloat(timeInMinutes);
   return (
-    <div className='rounded-md bg-black font-semibold m-2 self-start hover:-translate-y-1 hover:-translate-x-0.5 transition-all'>
-      <div className='card bg-white -translate-x-1 -translate-y-1 border-2 border-black rounded-md w-[350px]'>
+    <div className='rounded-md bg-black font-semibold max-w-[350px] m-2 self-start '>
+      <div className='card bg-white -translate-x-1 -translate-y-1 border-2 border-black rounded-md hover:-translate-y-2 hover:-translate-x-2 transition-all'>
         {roomName ? <div
           className={`card-title flex flex-col bg-${titleBackgroundColor}-50 px-4 py-5 border-b-2 border-black rounded-t`}
         >

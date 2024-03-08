@@ -1,45 +1,28 @@
 'use client';
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import GameCard from '../ui/GameCard';
+import { useContext, useEffect } from 'react';
+import { LoadedGamesContext } from '@/app/contexts/loadedGamesContext';
+import { Game } from '@/app/types/types';
 
-interface Game {
-  id: string;
-  gameTitle: string;
-  gameDescription: string;
-  timeLimit: number;
-  theme: string;
-  author: string;
-  titleBg: string;
-  bodyBg: string;
-  numberOfChallenges: number;
-}
-
-interface Challenge {
-  id: string;
-  type: string;
-  description: string;
-  clue: string | Array<string>;
-  answer: string;
-}
-
-export default function SavedRooms() {
-  const [games, setGames] = useState<Game[]>();
-
-  const fetchGames = async () => {
-    const response = await fetch('/api/games');
-    const data = await response.json();
-    setGames(data.games);
-  };
+export default function LoadedRooms() {
+  const { loadedGames, setLoadedGames } = useContext(LoadedGamesContext);
 
   useEffect(() => {
-    fetchGames();
-  }, []);
-
+    const fetchRooms = async () => {
+      const response = await fetch('/api/games');
+      const data = await response.json();
+      if (Array.isArray(data.games)) {
+        setLoadedGames(data.games);
+      }
+    };
+    fetchRooms();
+  }, [setLoadedGames]);
+  
   return (
-    <div className='flex flex-row nowrap overflow-auto max-w-full self-start px-8 gap-8'>
-      {games &&
-        games.map((game) => (
+    <div className='flex flex-row nowrap overflow-auto max-w-7xl self-start gap-8'>
+      {loadedGames &&
+        loadedGames.map((game: Game) => (
           <Link
             key={game.id}
             href={`/game/${game.id}`}
@@ -49,7 +32,7 @@ export default function SavedRooms() {
               roomName={game.gameTitle}
               author={game.author}
               theme={game.theme}
-              challenges={game.numberOfChallenges}
+              challenges={game.numberOfChallenges || 0}
               timeLimit={game.timeLimit}
               description={game.gameDescription}
               titleBackgroundColor={game.titleBg}

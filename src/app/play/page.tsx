@@ -1,14 +1,17 @@
+import { Suspense } from 'react';
 import SavedRooms from '../components/layout/SavedRooms';
 import LoadedRooms from '../components/layout/LoadedRooms';
 
 export default function Play() {
   return (
-    <div className='flex flex-col items-center justify-start py-16 min-h-screen gap-8'>
+    <div className='flex flex-col items-center justify-start min-h-screen gap-8'>
       <h1>Play</h1>
-      <h2>Your Saved Rooms:</h2>
+      {/* <h2>Your Saved Rooms:</h2>
       <SavedRooms />
-      <h2>Loaded Rooms:</h2>
-      <LoadedRooms />
+      <h2>Loaded Rooms:</h2> */}
+      <Suspense fallback={<p>Loading...</p>}>
+        <LoadedRooms />
+      </Suspense>
     </div>
   );
 }
