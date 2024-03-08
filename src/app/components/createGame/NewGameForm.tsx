@@ -125,7 +125,7 @@ export default function NewGameForm() {
   const handleClueChange = (e: any, type: string, index: number) => {
     const clue = e.target.value.trim();
     setNewGame((prevGame: SingleGame) => {
-      const newChallenges = prevGame.challenges.map((item, itemIndex) => {
+      const newChallenges = prevGame.challenges?.map((item, itemIndex) => {
         if (itemIndex === index) {
           return { ...item, clue: clue };
         }
@@ -139,7 +139,7 @@ export default function NewGameForm() {
 
   const handleDescriptionChange = (e: any, index: number) => {
     setNewGame((prevGame: SingleGame) => {
-      const newChallenges = prevGame.challenges.map((item, itemIndex) => {
+      const newChallenges = prevGame.challenges?.map((item, itemIndex) => {
         if (itemIndex === index) {
           return { ...item, description: e.target.value };
         }
@@ -153,7 +153,7 @@ export default function NewGameForm() {
 
   const handleAnswerChange = (e: any, index: number) => {
     setNewGame((prevGame: SingleGame) => {
-      const newChallenges = prevGame.challenges.map((item, itemIndex) => {
+      const newChallenges = prevGame.challenges?.map((item, itemIndex) => {
         if (itemIndex === index) {
           return { ...item, answer: e.target.value };
         }
@@ -171,7 +171,7 @@ export default function NewGameForm() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    newGame.challenges.map((challenge) => {
+    newGame.challenges?.map((challenge) => {
       if (challenge.type === 'word scramble') {
         const sentence = challenge.clue;
         let sentenceArray: string[] = [];
@@ -248,7 +248,7 @@ export default function NewGameForm() {
         </div>
         <h2>Challenges</h2>
 
-        {newGame.challenges.map((challenge: Challenge, index) => {
+        {newGame.challenges?.map((challenge: Challenge, index) => {
           const onClueChange = (e: any) => {
             handleClueChange(e, challenge.type, index);
           };
@@ -263,9 +263,9 @@ export default function NewGameForm() {
             <NewChallenge
               key={challenge.id}
               challengeType={challenge.type}
-              clue={newGame.challenges[index].clue}
-              description={newGame.challenges[index].description}
-              answer={newGame.challenges[index].answer}
+              clue={newGame.challenges?.[index].clue}
+              description={newGame.challenges?.[index].description}
+              answer={newGame.challenges?.[index].answer}
               onClueChange={onClueChange}
               onDescriptionChange={onDescriptionChange}
               onAnswerChange={onAnswerChange}

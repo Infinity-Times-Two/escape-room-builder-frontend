@@ -1,4 +1,4 @@
-import Input from "../ui/Input";
+import Input from '../ui/Input';
 
 export default function Challenge({
   index,
@@ -11,9 +11,9 @@ export default function Challenge({
   challengeType,
 }: {
   index: number;
-  clue: string | string[];
-  description: string;
-  answer: string;
+  clue: string | string[] | undefined;
+  description: string | undefined;
+  answer: string | undefined;
   onClueChange(e: any, index: number | undefined): void;
   onDescriptionChange(e: any, index: number | undefined): void;
   onAnswerChange(e: any, index: number | undefined): void;
@@ -22,7 +22,9 @@ export default function Challenge({
   return (
     <div key={`${challengeType}-${index}`}>
       <h3 className='mb-6'>New {challengeType} Challenge</h3>
-      <label htmlFor={`challenge-description-${index}`} className=''>Description</label>
+      <label htmlFor={`challenge-description-${index}`} className=''>
+        Description
+      </label>
       <Input
         fieldType={`challenge-description-${index}`}
         value={description}
@@ -48,4 +50,4 @@ export default function Challenge({
       />
     </div>
   );
-};
+}

@@ -7,7 +7,7 @@ export interface Game {
   author: string;
   titleBg: string;
   bodyBg: string;
-  challenges?: Challenge[];
+  challenges?: Challenge[] | undefined;
   numberOfChallenges?: number;
 }
 
@@ -28,7 +28,7 @@ export interface SingleGame {
   author: string;
   bodyBg: string;
   titleBg: string;
-  challenges: Challenge[];
+  challenges: Challenge[] | undefined;
 }
 
 export interface DBuser {

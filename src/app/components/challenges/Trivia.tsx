@@ -25,10 +25,10 @@ export default function TriviaChallenge({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (answer.toLowerCase() === currentChallenge.answer.toLowerCase()) {
-      if (nextChallenge === currentGame.challenges.length) {
+      if (nextChallenge === currentGame.challenges?.length) {
         router.push(`../${currentGame.id}/win`);
       } else {
-        router.push(`./${currentGame.challenges[nextChallenge].id}`);
+        router.push(`./${currentGame.challenges?.[nextChallenge].id}`);
       }
     } else {
       alert('incorrect');

@@ -4,6 +4,53 @@ import { SingleGameContext } from '@/app/contexts/singleGameContext';
 import TriviaChallenge from '@/app/components/challenges/Trivia';
 import WordScrambleChallenge from '@/app/components/challenges/WordScramble';
 import CaesarCypherChallenge from '@/app/components/challenges/CaesarCypher';
+import { Challenge, SingleGame } from '@/app/types/types';
+
+type SingleChallengeProps = {
+  currentChallenge: Challenge;
+  nextChallenge: number;
+  singleGame: SingleGame;
+};
+
+const SingleChallenge: React.FC<SingleChallengeProps> = ({
+  currentChallenge,
+  nextChallenge,
+  singleGame,
+}) => {
+  console.log(currentChallenge.type);
+  const challengeType = currentChallenge.type.toLowerCase();
+  switch (challengeType) {
+    case 'trivia': {
+      return (<>
+      <p>Trivia Challenge:</p>
+        <TriviaChallenge
+          currentChallenge={currentChallenge}
+          nextChallenge={nextChallenge}
+          currentGame={singleGame}
+        />
+        </>
+      );
+    }
+    case 'word scramble': {
+      return (
+        <WordScrambleChallenge
+          currentChallenge={currentChallenge}
+          nextChallenge={nextChallenge}
+          currentGame={singleGame}
+        />
+      );
+    }
+    case 'caesar cypher': {
+      return (
+        <CaesarCypherChallenge
+          currentChallenge={currentChallenge}
+          nextChallenge={nextChallenge}
+          currentGame={singleGame}
+        />
+      );
+    }
+  }
+};
 
 export default function Challenge({
   params,
@@ -11,16 +58,15 @@ export default function Challenge({
   params: { game: string; challenge: string };
 }) {
   const { singleGame, setSingleGame } = useContext(SingleGameContext);
-  
+
   // If user navigates to a challenge page directly, check if the game is in localStorage
   useEffect(() => {
     const localStorageGame: any = localStorage.getItem('singleGame');
     if (!singleGame && localStorageGame !== null) {
-      const parsedGame = JSON.parse(localStorageGame)
+      const parsedGame = JSON.parse(localStorageGame);
       setSingleGame(parsedGame);
     }
   }, [setSingleGame, singleGame]);
-
 
   if (!singleGame) {
     return (
@@ -30,53 +76,29 @@ export default function Challenge({
     );
   }
 
-  const currentChallenge = singleGame.challenges.find(
+  const currentChallenge = singleGame.challenges?.find(
     (challenge) => challenge.id === decodeURIComponent(params.challenge)
   );
 
   if (!currentChallenge) {
     return <div>Challenge not found</div>;
   }
-  console.log(currentChallenge)
-  const nextChallenge = singleGame.challenges.indexOf(currentChallenge) + 1;
+  console.log(currentChallenge);
+  let nextChallenge: number = 1;
+  if (singleGame.challenges && singleGame.challenges.length > 0) {
+    nextChallenge = singleGame.challenges.indexOf(currentChallenge) + 1;
+  }
 
-  const Challenge = () => {
-    switch (currentChallenge.type) {
-      case 'Trivia' || 'trivia': {
-        return (
-          <TriviaChallenge
-            currentChallenge={currentChallenge}
-            nextChallenge={nextChallenge}
-            currentGame={singleGame}
-          />
-        );
-      }
-      case 'Word Scramble' || 'word scramble': {
-        return (
-          <WordScrambleChallenge
-            currentChallenge={currentChallenge}
-            nextChallenge={nextChallenge}
-            currentGame={singleGame}
-          />
-        );
-      }
-      case 'Caesar Cypher' || 'caesar cypher': {
-        return (
-          <CaesarCypherChallenge
-            currentChallenge={currentChallenge}
-            nextChallenge={nextChallenge}
-            currentGame={singleGame}
-          />
-        );
-      }
-    }
-  };
   return (
     <div className='pt-16 sm:pt-0'>
       <h1 className='mb-8'>
         {currentChallenge?.type}: {currentChallenge?.description}
       </h1>
-      <Challenge />
+      <SingleChallenge
+        currentChallenge={currentChallenge}
+        nextChallenge={nextChallenge}
+        singleGame={singleGame}
+      />
     </div>
   );
 }

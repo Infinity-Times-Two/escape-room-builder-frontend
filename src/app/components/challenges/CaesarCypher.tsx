@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Input from '../ui/Input';
+import { SingleGame } from '@/app/types/types';
 
 interface CaesarCypherChallengeProps {
   currentChallenge: {
@@ -11,18 +12,7 @@ interface CaesarCypherChallengeProps {
     answer: string;
   };
   nextChallenge: number;
-  currentGame: {
-    id: string;
-    gameTitle: string;
-    gameDescription: string;
-    challenges: Array<{
-      id: string;
-      type: string;
-      description: string;
-      clue: string | Array<string>;
-      answer: string;
-    }>;
-  };
+  currentGame: SingleGame;
 }
 
 export default function CaesarCypherChallenge({
@@ -41,10 +31,10 @@ export default function CaesarCypherChallenge({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (answer.toLowerCase() === currentChallenge.answer.toLowerCase()) {
-      if (nextChallenge === currentGame.challenges.length) {
+      if (nextChallenge === currentGame.challenges?.length) {
         router.push(`../${currentGame.id}/win`);
       } else {
-        router.push(`./${currentGame.challenges[nextChallenge].id}`);
+        router.push(`./${currentGame.challenges?.[nextChallenge].id}`);
       }
     } else {
       alert('incorrect');
