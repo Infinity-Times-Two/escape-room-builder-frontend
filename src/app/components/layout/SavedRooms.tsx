@@ -14,7 +14,7 @@ export default function SavedRooms() {
             roomName={game.gameTitle}
             author={game.author}
             theme={game.theme}
-            challenges={game.numberOfChallenges}
+            challenges={game.challenges?.length}
             timeLimit={game.timeLimit}
             description={game.gameDescription}
             titleBackgroundColor={game.titleBg}

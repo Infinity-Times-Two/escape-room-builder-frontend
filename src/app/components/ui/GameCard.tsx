@@ -4,7 +4,7 @@ type CardProps = {
   roomName: string;
   author: string;
   theme: string;
-  challenges: number;
+  challenges: number | undefined;
   timeLimit: number;
   description: string;
   titleBackgroundColor: string;
