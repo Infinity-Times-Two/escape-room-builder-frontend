@@ -75,7 +75,7 @@ export default function Game({ params }: { params: { game: string } }) {
         <>
           <h2>{singleGame.gameTitle}</h2>
           <p>{singleGame.gameDescription}</p>
-          <Link href={`./${singleGame.id}/${singleGame.challenges[0].id}`}>
+          <Link href={`./${singleGame.id}/${singleGame.challenges?.[0].id}`}>
             <button
               className='xl'
               onClick={() =>
@@ -95,7 +95,7 @@ export default function Game({ params }: { params: { game: string } }) {
             <span>{formattedTime} minutes</span>
           </div>
           <div className='chip'>
-            <span>{singleGame.challenges.length} challenges</span>
+            <span>{singleGame.challenges?.length} challenges</span>
           </div>
         </>
       )}
