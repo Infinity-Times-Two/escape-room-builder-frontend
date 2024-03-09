@@ -25,7 +25,8 @@ export default function Header() {
         // console.log(`Looking for user with id ${id}`);
         const response = await fetch(`/api/user/${id}`);
         const data = await response.json();
-        // console.log(data);
+        console.log('Response from fetching user data on the front-end:')
+        console.log(data);
         setUser({
           id: data.userId,
           firstName: data.firstName,
@@ -69,12 +70,12 @@ export default function Header() {
         ) : (
           <>
             <SignInButton mode='modal'>
-              <button className='small'>
+              <button data-test='sign-in-button' className='small'>
                 <span className='whitespace-nowrap'>Sign in</span>
               </button>
             </SignInButton>
             <SignUpButton mode='modal'>
-              <button className='small'>
+              <button data-test='sign-out-button' className='small'>
                 <span className='whitespace-nowrap'>Sign up</span>
               </button>
             </SignUpButton>

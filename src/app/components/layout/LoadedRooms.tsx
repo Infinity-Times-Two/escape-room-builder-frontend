@@ -22,12 +22,13 @@ export default function LoadedRooms() {
   return (
     <div className='flex flex-row flex-wrap justify-center row-wrap max-w-7xl self-start gap-8'>
       {loadedGames &&
-        loadedGames.map((game: Game) => (
+        loadedGames.map((game: Game, index) => (
           <Link
             key={game.id}
             href={`/game/${game.id}`}
             className='hover:no-underline'
-          >
+            data-test={`game-card-${index}`}
+            >
             <GameCard
               roomName={game.gameTitle}
               author={game.author}

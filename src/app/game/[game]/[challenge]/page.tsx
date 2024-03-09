@@ -22,7 +22,6 @@ const SingleChallenge: React.FC<SingleChallengeProps> = ({
   switch (challengeType) {
     case 'trivia': {
       return (<>
-      <p>Trivia Challenge:</p>
         <TriviaChallenge
           currentChallenge={currentChallenge}
           nextChallenge={nextChallenge}
