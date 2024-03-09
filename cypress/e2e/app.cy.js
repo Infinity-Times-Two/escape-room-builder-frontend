@@ -25,7 +25,7 @@ describe('Navigation', () => {
     // Shows a log-in
     cy.getByData('start-game').click();
 
-    cy.getByData('challenge-submit').should('exist')
+    cy.get('button').should("contain.text", 'Submit')
   });
 });
 

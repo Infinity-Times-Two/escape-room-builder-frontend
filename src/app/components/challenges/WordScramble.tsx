@@ -109,7 +109,7 @@ export default function WordScrambleChallenge({
             ))}
         </div>
       </Card>
-      <button className='large' onClick={handleSubmit}>
+      <button className='large' onClick={handleSubmit} data-type='challenge-submit'>
         <span>Submit</span>
       </button>
     </div>

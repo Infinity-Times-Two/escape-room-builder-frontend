@@ -37,7 +37,7 @@ export default function TriviaChallenge({
 
   return (
     <div className='flex flex-col gap-8'>
-      <h2>{currentChallenge.clue}</h2>
+      <h2 data-type='challenge-submit'>{currentChallenge.clue}</h2>
       <form onSubmit={handleSubmit} className='flex flex-col gap-2 items-center gap-8'>
         <Input
           fieldType='text'

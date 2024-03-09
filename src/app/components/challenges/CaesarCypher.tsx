@@ -51,7 +51,7 @@ export default function CaesarCypherChallenge({
           onChange={handleChange}
           value={answer}
         />
-        <button className='large self-center' type='submit'>
+        <button className='large self-center' type='submit' data-type='challenge-submit'>
           <span>Submit</span>
         </button>
       </form>
