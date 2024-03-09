@@ -8,41 +8,6 @@ export const mockSavedGames = [
     author: 'Jerry',
     titleBg: 'yellow',
     bodyBg: 'green',
-    numberOfChallenges: 3
-  },
-  {
-    id: '3rdrock',
-    gameTitle: '3rd Rock Riddles',
-    gameDescription: 'Embark on an interstellar adventure with the Solomons!',
-    timeLimit: 600,
-    theme: '',
-    author: 'The Big Giant Head',
-    titleBg: 'purple',
-    bodyBg: 'silver',
-    numberOfChallenges: 3
-  },
-  {
-    id: 'family-matters',
-    gameTitle: 'Family Matters Mystery',
-    gameDescription: 'Solve challenges in the Winslow household!',
-    timeLimit: 600,
-    theme: '',
-    author: 'Laura Winslow',
-    titleBg: 'blue',
-    bodyBg: 'pink',
-    numberOfChallenges: 3
-  },
-];
-export const mockIndividualGames = [
-  {
-    id: 'seinfeld',
-    gameTitle: 'Seinfeld Escape',
-    gameDescription: 'Dodge the Soup Nazi: Can you escape?',
-    timeLimit: 600,
-    theme: '',
-    author: 'Jerry',
-    titleBg: 'yellow',
-    bodyBg: 'green',
     challenges: [
       {
         id: 'Challenge 1',
