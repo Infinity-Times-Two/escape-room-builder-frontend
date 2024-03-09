@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Input from '../ui/Input';
-import { SingleGame, Challenge } from '@/app/types/types';
+import { Game, Challenge } from '@/app/types/types';
 
 interface TriviaChallengeProps {
   currentChallenge: Challenge
   nextChallenge: number;
-  currentGame: SingleGame
+  currentGame: Game
 }
 
 export default function TriviaChallenge({
@@ -25,10 +25,10 @@ export default function TriviaChallenge({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (answer.toLowerCase() === currentChallenge.answer.toLowerCase()) {
-      if (nextChallenge === currentGame.challenges?.length) {
+      if (nextChallenge === currentGame.challenges.length) {
         router.push(`../${currentGame.id}/win`);
       } else {
-        router.push(`./${currentGame.challenges?.[nextChallenge].id}`);
+        router.push(`./${currentGame.challenges[nextChallenge].id}`);
       }
     } else {
       alert('incorrect');

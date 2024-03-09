@@ -20,7 +20,7 @@ export default function LoadedRooms() {
   }, [setLoadedGames]);
   
   return (
-    <div className='flex flex-row wrap  max-w-7xl self-start gap-8'>
+    <div className='flex flex-row flex-wrap justify-center row-wrap max-w-7xl self-start gap-8'>
       {loadedGames &&
         loadedGames.map((game: Game) => (
           <Link
@@ -32,7 +32,7 @@ export default function LoadedRooms() {
               roomName={game.gameTitle}
               author={game.author}
               theme={game.theme}
-              challenges={game.numberOfChallenges || 0}
+              challenges={game.challenges.length}
               timeLimit={game.timeLimit}
               description={game.gameDescription}
               titleBackgroundColor={game.titleBg}
