@@ -20,7 +20,7 @@ export default function LoadedRooms() {
   }, [setLoadedGames]);
   
   return (
-    <div className='flex flex-row nowrap overflow-auto max-w-7xl self-start gap-8'>
+    <div className='flex flex-row wrap  max-w-7xl self-start gap-8'>
       {loadedGames &&
         loadedGames.map((game: Game) => (
           <Link

@@ -8,7 +8,7 @@ import { TimerContext } from '../../contexts/timerContext';
 
 import { Game } from '../../types/types';
 
-export default function Game({ params }: { params: { game: string } }) {
+export default function PlayGame({ params }: { params: { game: string } }) {
   const { singleGame, setSingleGame } = useContext(SingleGameContext);
   const [loading, setLoading] = useState(true);
   // Set state if game in localStorage exists
@@ -53,7 +53,7 @@ export default function Game({ params }: { params: { game: string } }) {
 
   const { setExpiry } = useContext(TimerContext);
 
-  if (!singleGame) {
+  if (!singleGame && !loading) {
     return (
       <div className='flex flex-col items-center justify-start p-16 min-h-screen gap-8'>
         <h2>Game not found</h2>

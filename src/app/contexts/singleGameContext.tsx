@@ -1,22 +1,92 @@
 'use client';
-import { useState, useEffect, createContext, useMemo, PropsWithChildren } from 'react';
+import {
+  useState,
+  useEffect,
+  createContext,
+  useMemo,
+  PropsWithChildren,
+} from 'react';
 
-import { SingleGame } from "../types/types";
+import { SingleGame } from '../types/types';
 
 interface SingleGameContextType {
-  singleGame: SingleGame | undefined;
-  setSingleGame: React.Dispatch<React.SetStateAction<SingleGame | undefined>>;
+  singleGame: SingleGame;
+  setSingleGame: React.Dispatch<React.SetStateAction<SingleGame>>;
 }
 
 const defaultContextValue: SingleGameContextType = {
-  singleGame: undefined,
+  singleGame: {
+    id: '',
+    gameTitle: '',
+    gameDescription: '',
+    timeLimit: 300,
+    theme: '',
+    author: '',
+    bodyBg: '',
+    titleBg: '',
+    challenges: [
+      {
+        id: 'challenge-1',
+        type: '',
+        description: '',
+        clue: '',
+        answer: '',
+      },
+      {
+        id: 'challenge-2',
+        type: '',
+        description: '',
+        clue: '',
+        answer: '',
+      },
+      {
+        id: 'challenge-3',
+        type: '',
+        description: '',
+        clue: '',
+        answer: '',
+      },
+    ],
+  },
   setSingleGame: () => {},
 };
 
 const SingleGameContext = createContext(defaultContextValue);
 
 const SingleGameContextProvider = (props: PropsWithChildren<{}>) => {
-  const [singleGame, setSingleGame] = useState<SingleGame | undefined>(undefined);
+  const [singleGame, setSingleGame] = useState<SingleGame>({
+    id: '',
+    gameTitle: '',
+    gameDescription: '',
+    timeLimit: 300,
+    theme: '',
+    author: '',
+    bodyBg: '',
+    titleBg: '',
+    challenges: [
+      {
+        id: 'challenge-1',
+        type: '',
+        description: '',
+        clue: '',
+        answer: '',
+      },
+      {
+        id: 'challenge-2',
+        type: '',
+        description: '',
+        clue: '',
+        answer: '',
+      },
+      {
+        id: 'challenge-3',
+        type: '',
+        description: '',
+        clue: '',
+        answer: '',
+      },
+    ],
+  });
 
   const value = useMemo(
     () => ({
@@ -24,13 +94,13 @@ const SingleGameContextProvider = (props: PropsWithChildren<{}>) => {
       setSingleGame,
     }),
     [singleGame, setSingleGame]
-  )
+  );
 
   return (
     <SingleGameContext.Provider value={value}>
       {props.children}
     </SingleGameContext.Provider>
-  )
-}
+  );
+};
 
 export { SingleGameContext, SingleGameContextProvider };
