@@ -51,7 +51,7 @@ const SingleChallenge: React.FC<SingleChallengeProps> = ({
   }
 };
 
-export default function Challenge({
+export default function ChallengePage({
   params,
 }: {
   params: { game: string; challenge: string };
