@@ -23,7 +23,9 @@ describe('Navigation', () => {
     cy.getByData('game-card-0').click();
 
     // Shows a log-in
-    cy.get('.cl-headerTitle').should('have.text', 'Sign in');
+    cy.getByData('start-game').click();
+
+    cy.getByData('challenge-submit').should('exist')
   });
 });
 

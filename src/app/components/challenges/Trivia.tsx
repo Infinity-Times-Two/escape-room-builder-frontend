@@ -45,7 +45,7 @@ export default function TriviaChallenge({
           onChange={handleChange}
           value={answer}
         />
-        <button className='large' type='submit'>
+        <button className='large' type='submit' data-type='challenge-submit'>
           <span>Submit</span>
         </button>
       </form>

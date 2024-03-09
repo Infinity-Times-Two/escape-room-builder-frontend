@@ -25,15 +25,19 @@ Cypress.Commands.add(`signIn`, () => {
   cy.window()
     .should((window) => {
       expect(window).to.not.have.property(`Clerk`, undefined);
+      // @ts-ignore
       expect(window.Clerk.isReady()).to.eq(true);
     })
     .then(async (window) => {
+      // @ts-ignore
       await cy.clearCookies({ domain: window.location.domain });
+      // @ts-ignore
       const res = await window.Clerk.client.signIn.create({
         identifier: Cypress.env(`test_email`),
         password: Cypress.env(`test_password`),
       });
- 
+      
+      // @ts-ignore
       await window.Clerk.setActive({
         session: res.createdSessionId,
       });

@@ -75,7 +75,7 @@ export default function PlayGame({ params }: { params: { game: string } }) {
         <>
           <h2>{singleGame.gameTitle}</h2>
           <p>{singleGame.gameDescription}</p>
-          <Link href={`./${singleGame.id}/${singleGame.challenges[0].id}`}>
+          <Link href={`./${singleGame.id}/${singleGame.challenges[0].id}`} data-test='start-game'>
             <button
               className='xl'
               onClick={() =>

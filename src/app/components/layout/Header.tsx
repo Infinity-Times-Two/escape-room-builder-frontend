@@ -3,7 +3,7 @@ import { useEffect, useContext } from 'react';
 import { UserContext } from '@/app/contexts/userContext';
 import Link from 'next/link';
 import { UserButton, useAuth } from '@clerk/nextjs';
-import { SignInButton, SignUpButton } from '@clerk/nextjs';
+import { SignInButton, SignUpButton, SignedIn, SignedOut } from '@clerk/nextjs';
 import { DBuser } from '@/app/types/types';
 
 export default function Header() {
@@ -25,7 +25,7 @@ export default function Header() {
         // console.log(`Looking for user with id ${id}`);
         const response = await fetch(`/api/user/${id}`);
         const data = await response.json();
-        console.log('Response from fetching user data on the front-end:')
+        console.log('Response from fetching user data on the front-end:');
         console.log(data);
         setUser({
           id: data.userId,
@@ -65,22 +65,22 @@ export default function Header() {
       </h1>
       <div className='flex flex-row items-center justify-self-center sm:justify-self-end space-x-4 sm:space-x-8 pb-6 pt-2 sm:pt-6'>
         <Link href='/about'>About</Link>
-        {userId ? (
+        <SignedIn>
           <UserButton />
-        ) : (
-          <>
-            <SignInButton mode='modal'>
-              <button data-test='sign-in-button' className='small'>
-                <span className='whitespace-nowrap'>Sign in</span>
-              </button>
-            </SignInButton>
-            <SignUpButton mode='modal'>
-              <button data-test='sign-out-button' className='small'>
-                <span className='whitespace-nowrap'>Sign up</span>
-              </button>
-            </SignUpButton>
-          </>
-        )}
+        </SignedIn>
+
+        <SignedOut>
+          <SignInButton mode='modal'>
+            <button data-test='sign-in-button' className='small'>
+              <span className='whitespace-nowrap'>Sign in</span>
+            </button>
+          </SignInButton>
+          <SignUpButton mode='modal'>
+            <button data-test='sign-out-button' className='small'>
+              <span className='whitespace-nowrap'>Sign up</span>
+            </button>
+          </SignUpButton>
+        </SignedOut>
       </div>
     </header>
   );
