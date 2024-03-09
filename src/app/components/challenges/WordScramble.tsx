@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Card from '../ui/Card';
-import { SingleGame, Challenge } from '@/app/types/types';
+import { Game, Challenge } from '@/app/types/types';
 
 interface WordScrambleChallengeProps {
   currentChallenge: Challenge;
   nextChallenge: number;
-  currentGame: SingleGame;
+  currentGame: Game;
 }
 
 export default function WordScrambleChallenge({
@@ -45,10 +45,10 @@ export default function WordScrambleChallenge({
     if (
       answer.join(' ').toLowerCase() === currentChallenge.answer.toLowerCase()
     ) {
-      if (nextChallenge === currentGame.challenges?.length) {
+      if (nextChallenge === currentGame.challenges.length) {
         router.push(`../${currentGame.id}/win`);
       } else {
-        router.push(`./${currentGame.challenges?.[nextChallenge].id}`);
+        router.push(`./${currentGame.challenges[nextChallenge].id}`);
       }
     } else {
       alert('incorrect');

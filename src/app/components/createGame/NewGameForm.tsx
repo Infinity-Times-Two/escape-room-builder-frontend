@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useContext } from 'react';
-import { SingleGame, Challenge } from '../../types/types';
+import { Game, Challenge } from '../../types/types';
 import { UserContext } from '@/app/contexts/userContext';
 import NewChallenge from './Challenge';
 import Input from '../ui/Input';
@@ -11,7 +11,7 @@ import { SingleGameContext } from '@/app/contexts/singleGameContext';
 import Link from 'next/link';
 
 export default function NewGameForm() {
-  const [newGame, setNewGame] = useState<SingleGame>({
+  const [newGame, setNewGame] = useState<Game>({
     id: '',
     gameTitle: '',
     gameDescription: '',
@@ -48,7 +48,6 @@ export default function NewGameForm() {
   const { savedGames, setSavedGames } = useContext(SavedGamesContext);
   const { singleGame, setSingleGame } = useContext(SingleGameContext);
   const { user } = useContext(UserContext);
-  console.log(user);
 
   // Set state to saved form in localStorage if one exists
   useEffect(() => {
@@ -62,7 +61,7 @@ export default function NewGameForm() {
   useEffect(() => {
     if (!newGame.id) {
       const newId = uuidv4();
-      setNewGame((prevGame: SingleGame) => {
+      setNewGame((prevGame: Game) => {
         const newGame = { ...prevGame, id: newId };
         return newGame;
       });
@@ -71,12 +70,12 @@ export default function NewGameForm() {
     if (newGame.author === '') {
       const author = user?.firstName;
       if (author) {
-        setNewGame((prevGame: SingleGame) => {
+        setNewGame((prevGame: Game) => {
           const newGame = { ...prevGame, author: author };
           return newGame;
         });
       } else {
-        setNewGame((prevGame: SingleGame) => {
+        setNewGame((prevGame: Game) => {
           const newGame = { ...prevGame, author: 'Anonymous' };
           return newGame;
         });
@@ -86,7 +85,7 @@ export default function NewGameForm() {
       const colours = ['red', 'blue', 'yellow', 'green', 'orange', 'purple'];
       const bodybgIndex = Math.floor(Math.random() * 6);
       const titlebgIndex = Math.floor(Math.random() * 6);
-      setNewGame((prevGame: SingleGame) => {
+      setNewGame((prevGame: Game) => {
         const newGame = {
           ...prevGame,
           bodyBg: colours[bodybgIndex],
@@ -99,8 +98,8 @@ export default function NewGameForm() {
   }, [newGame, user?.firstName]);
 
   const handleInputChange = (e: any) => {
-    setNewGame((prevGame: SingleGame) => {
-      let saveGame: SingleGame = prevGame;
+    setNewGame((prevGame: Game) => {
+      let saveGame: Game = prevGame;
       switch (e.target.dataset.type) {
         case 'gameTitle':
           saveGame = { ...prevGame, gameTitle: e.target.value };
@@ -115,7 +114,7 @@ export default function NewGameForm() {
   };
 
   const handleTimeLimitChange = (e: any) => {
-    setNewGame((prevGame: SingleGame) => {
+    setNewGame((prevGame: Game) => {
       const newGame = { ...prevGame, timeLimit: e.target.value };
       localStorage.setItem('newGameForm', JSON.stringify(newGame));
       return newGame;
@@ -124,8 +123,8 @@ export default function NewGameForm() {
 
   const handleClueChange = (e: any, type: string, index: number) => {
     const clue = e.target.value.trim();
-    setNewGame((prevGame: SingleGame) => {
-      const newChallenges = prevGame.challenges?.map((item, itemIndex) => {
+    setNewGame((prevGame: Game) => {
+      const newChallenges = prevGame.challenges.map((item, itemIndex) => {
         if (itemIndex === index) {
           return { ...item, clue: clue };
         }
@@ -138,8 +137,8 @@ export default function NewGameForm() {
   };
 
   const handleDescriptionChange = (e: any, index: number) => {
-    setNewGame((prevGame: SingleGame) => {
-      const newChallenges = prevGame.challenges?.map((item, itemIndex) => {
+    setNewGame((prevGame: Game) => {
+      const newChallenges = prevGame.challenges.map((item, itemIndex) => {
         if (itemIndex === index) {
           return { ...item, description: e.target.value };
         }
@@ -152,8 +151,8 @@ export default function NewGameForm() {
   };
 
   const handleAnswerChange = (e: any, index: number) => {
-    setNewGame((prevGame: SingleGame) => {
-      const newChallenges = prevGame.challenges?.map((item, itemIndex) => {
+    setNewGame((prevGame: Game) => {
+      const newChallenges = prevGame.challenges.map((item, itemIndex) => {
         if (itemIndex === index) {
           return { ...item, answer: e.target.value };
         }
@@ -171,7 +170,7 @@ export default function NewGameForm() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    newGame.challenges?.map((challenge) => {
+    newGame.challenges.map((challenge) => {
       if (challenge.type === 'word scramble') {
         const sentence = challenge.clue;
         let sentenceArray: string[] = [];
@@ -248,7 +247,7 @@ export default function NewGameForm() {
         </div>
         <h2>Challenges</h2>
 
-        {newGame.challenges?.map((challenge: Challenge, index) => {
+        {newGame.challenges.map((challenge: Challenge, index) => {
           const onClueChange = (e: any) => {
             handleClueChange(e, challenge.type, index);
           };
@@ -263,9 +262,9 @@ export default function NewGameForm() {
             <NewChallenge
               key={challenge.id}
               challengeType={challenge.type}
-              clue={newGame.challenges?.[index].clue}
-              description={newGame.challenges?.[index].description}
-              answer={newGame.challenges?.[index].answer}
+              clue={newGame.challenges[index].clue}
+              description={newGame.challenges[index].description}
+              answer={newGame.challenges[index].answer}
               onClueChange={onClueChange}
               onDescriptionChange={onDescriptionChange}
               onAnswerChange={onAnswerChange}

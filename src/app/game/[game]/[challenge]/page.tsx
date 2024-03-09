@@ -4,12 +4,12 @@ import { SingleGameContext } from '@/app/contexts/singleGameContext';
 import TriviaChallenge from '@/app/components/challenges/Trivia';
 import WordScrambleChallenge from '@/app/components/challenges/WordScramble';
 import CaesarCypherChallenge from '@/app/components/challenges/CaesarCypher';
-import { Challenge, SingleGame } from '@/app/types/types';
+import { Challenge, Game } from '@/app/types/types';
 
 type SingleChallengeProps = {
   currentChallenge: Challenge;
   nextChallenge: number;
-  singleGame: SingleGame;
+  singleGame: Game;
 };
 
 const SingleChallenge: React.FC<SingleChallengeProps> = ({
@@ -76,7 +76,7 @@ export default function Challenge({
     );
   }
 
-  const currentChallenge = singleGame.challenges?.find(
+  const currentChallenge = singleGame.challenges.find(
     (challenge) => challenge.id === decodeURIComponent(params.challenge)
   );
 

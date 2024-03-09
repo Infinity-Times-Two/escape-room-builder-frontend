@@ -7,11 +7,11 @@ import {
   PropsWithChildren,
 } from 'react';
 
-import { SingleGame } from '../types/types';
+import { Game } from '../types/types';
 
 interface SingleGameContextType {
-  singleGame: SingleGame;
-  setSingleGame: React.Dispatch<React.SetStateAction<SingleGame>>;
+  singleGame: Game;
+  setSingleGame: React.Dispatch<React.SetStateAction<Game>>;
 }
 
 const defaultContextValue: SingleGameContextType = {
@@ -54,7 +54,7 @@ const defaultContextValue: SingleGameContextType = {
 const SingleGameContext = createContext(defaultContextValue);
 
 const SingleGameContextProvider = (props: PropsWithChildren<{}>) => {
-  const [singleGame, setSingleGame] = useState<SingleGame>({
+  const [singleGame, setSingleGame] = useState<Game>({
     id: '',
     gameTitle: '',
     gameDescription: '',
