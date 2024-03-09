@@ -16,6 +16,7 @@ jobs:
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
           NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
           DEV_API: ${{ secrets.DEV_API }}
+          PROD_API: ${{ secrets.PROD_API }}
         with:
           build: npm run build
           start: npm start
