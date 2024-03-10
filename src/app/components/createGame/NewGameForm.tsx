@@ -23,20 +23,20 @@ export default function NewGameForm() {
     bodyBg: '',
     titleBg: '',
     challenges: [
-      {
-        id: 'challenge-1',
-        type: 'trivia',
-        description: '',
-        clue: '',
-        answer: '',
-      },
-      {
-        id: 'challenge-2',
-        type: 'caesar cypher',
-        description: '',
-        clue: '',
-        answer: '',
-      },
+      // {
+      //   id: 'challenge-1',
+      //   type: 'trivia',
+      //   description: '',
+      //   clue: '',
+      //   answer: '',
+      // },
+      // {
+      //   id: 'challenge-2',
+      //   type: 'caesar cypher',
+      //   description: '',
+      //   clue: '',
+      //   answer: '',
+      // },
       {
         id: 'challenge-3',
         type: 'word scramble',
@@ -126,7 +126,7 @@ export default function NewGameForm() {
   const handleClueChange = (e: any, type: string, index: number) => {
     let clue: string | string[];
     // Caesar Cypher clues come from the "Encrypt" function passed to onClueChange, not the event target
-    if (type === 'caesar cypher') {
+    if (type === 'caesar cypher' || 'word scramble') {
       clue = e;
     } else {
       clue = e.target.value;
@@ -205,7 +205,7 @@ export default function NewGameForm() {
   return (
     <form>
       <div className='flex flex-col gap-12'>
-        <div className='flex flex-col gap-4'>
+        {/* <div className='flex flex-col gap-4'>
           <h1>Create your escape room</h1>
           <h2>Room Info</h2>
           <label htmlFor='gameTitle'>Name your Escape room</label>
@@ -252,8 +252,8 @@ export default function NewGameForm() {
             <span>55</span>
             <span>60</span>
           </div>
-        </div>
-        <h2>Challenges</h2>
+        </div> 
+        <h2>Challenges</h2>*/}
 
         {newGame.challenges.map((challenge: Challenge, index) => {
           const onClueChange = (e: any) => {
