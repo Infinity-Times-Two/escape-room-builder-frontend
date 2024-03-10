@@ -4,6 +4,7 @@ function getURI() {
   return `http://localhost:${PORT}`;
 }
 export default defineConfig({
+  projectId: "f968uc",
   e2e: {
     baseUrl: getURI(),
     setupNodeEvents(on, config) {
