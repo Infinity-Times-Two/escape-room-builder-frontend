@@ -20,7 +20,7 @@ Author: [James Keezer](https://github.com/Jamesllllllllll)
 - [Typescript](https://www.typescriptlang.org/) - Lanugage
 - [Cypress](https://www.cypress.io/) - Testing
 - [Clerk](https://clerk.com) - Authentication
-- [DaisyUI](https://daisyui.com/) UI Components
+- [DaisyUI](https://daisyui.com/) - UI Components
 - [Tailwind](https://tailwindcss.com) - CSS
 - [Vercel](https://vercel.com) - Hosting
 
