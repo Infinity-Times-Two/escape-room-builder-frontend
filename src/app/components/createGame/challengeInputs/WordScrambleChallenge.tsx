@@ -1,6 +1,6 @@
-import Input from '../ui/Input';
+import Input from "../../ui/Input";
 
-export default function Challenge({
+export default function WordScrambleChallenge({
   index,
   clue,
   description,

@@ -2,13 +2,15 @@
 import { useState, useEffect, useContext } from 'react';
 import { Game, Challenge } from '../../types/types';
 import { UserContext } from '@/app/contexts/userContext';
-import NewChallenge from './Challenge';
 import Input from '../ui/Input';
 import TextArea from '../ui/TextArea';
 import { v4 as uuidv4 } from 'uuid';
 import { SavedGamesContext } from '@/app/contexts/savedGamesContext';
 import { SingleGameContext } from '@/app/contexts/singleGameContext';
 import Link from 'next/link';
+import TriviaChallenge from './challengeInputs/TriviaChallenge';
+import CaesarCypherChallenge from './challengeInputs/CaesarCypherChallenge';
+import WordScrambleChallenge from './challengeInputs/WordScrambleChallenge';
 
 export default function NewGameForm() {
   const [newGame, setNewGame] = useState<Game>({
@@ -122,7 +124,13 @@ export default function NewGameForm() {
   };
 
   const handleClueChange = (e: any, type: string, index: number) => {
-    const clue = e.target.value.trim();
+    let clue: string | string[];
+    // Caesar Cypher clues come from the "Encrypt" function passed to onClueChange, not the event target
+    if (type === 'caesar cypher') {
+      clue = e;
+    } else {
+      clue = e.target.value;
+    }
     setNewGame((prevGame: Game) => {
       const newChallenges = prevGame.challenges.map((item, itemIndex) => {
         if (itemIndex === index) {
@@ -171,13 +179,13 @@ export default function NewGameForm() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     newGame.challenges.map((challenge) => {
-      if (challenge.type === 'word scramble') {
-        const sentence = challenge.clue;
-        let sentenceArray: string[] = [];
-        if (typeof sentence === 'string') {
+      if (typeof challenge.clue === 'string') {
+        let sentence = challenge.clue.trim();
+        if (challenge.type === 'word scramble') {
+          let sentenceArray: string[] = [];
           sentenceArray = sentence.split(' ');
+          challenge.clue = sentenceArray;
         }
-        challenge.clue = sentenceArray;
       }
     });
     // When saving games is implemented, set state, save to localstorage
@@ -258,19 +266,56 @@ export default function NewGameForm() {
             handleAnswerChange(e, index);
           };
 
-          return (
-            <NewChallenge
-              key={challenge.id}
-              challengeType={challenge.type}
-              clue={newGame.challenges[index].clue}
-              description={newGame.challenges[index].description}
-              answer={newGame.challenges[index].answer}
-              onClueChange={onClueChange}
-              onDescriptionChange={onDescriptionChange}
-              onAnswerChange={onAnswerChange}
-              index={index}
-            />
-          );
+          switch (challenge.type) {
+            case 'trivia': {
+              return (
+                <TriviaChallenge
+                  key={challenge.id}
+                  challengeType={challenge.type}
+                  clue={newGame.challenges[index].clue}
+                  description={newGame.challenges[index].description}
+                  answer={newGame.challenges[index].answer}
+                  onClueChange={onClueChange}
+                  onDescriptionChange={onDescriptionChange}
+                  onAnswerChange={onAnswerChange}
+                  index={index}
+                />
+              );
+            }
+            case 'caesar cypher': {
+              return (
+                <CaesarCypherChallenge
+                  key={challenge.id}
+                  challengeType={challenge.type}
+                  clue={newGame.challenges[index].clue}
+                  description={newGame.challenges[index].description}
+                  answer={newGame.challenges[index].answer}
+                  onClueChange={onClueChange}
+                  onDescriptionChange={onDescriptionChange}
+                  onAnswerChange={onAnswerChange}
+                  index={index}
+                />
+              );
+            }
+            case 'word scramble': {
+              return (
+                <WordScrambleChallenge
+                  key={challenge.id}
+                  challengeType={challenge.type}
+                  clue={newGame.challenges[index].clue}
+                  description={newGame.challenges[index].description}
+                  answer={newGame.challenges[index].answer}
+                  onClueChange={onClueChange}
+                  onDescriptionChange={onDescriptionChange}
+                  onAnswerChange={onAnswerChange}
+                  index={index}
+                />
+              );
+            }
+            default: {
+              return <p>Challenge type not found</p>;
+            }
+          }
         })}
         {singleGame?.id !== newGame.id && (
           <button className='w-60 self-center' onClick={handleSubmit}>
