@@ -20,3 +20,8 @@ jobs:
         with:
           build: npm run build
           start: npm start
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.1.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: Infinity-Times-Two/escape-room-builder-frontend
