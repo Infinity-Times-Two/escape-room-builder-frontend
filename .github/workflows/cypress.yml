@@ -37,7 +37,7 @@ jobs:
           DEV_API: ${{ secrets.DEV_API }}
           PROD_API: ${{ secrets.PROD_API }}
       - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v4.1.0
-      with:
-      token: ${{ secrets.CODECOV_TOKEN }}
-        slug: Infinity-Times-Two/escape-room-builder-frontend
+        uses: codecov/codecov-action@v4.1.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: Infinity-Times-Two/escape-room-builder-frontend
