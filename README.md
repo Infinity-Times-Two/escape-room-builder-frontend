@@ -1,15 +1,14 @@
-<center>
-# Escape Room Builder
 
-## Create and Share Escape Rooms
+<h1 align="center">Escape Room Builder</h1>
 
-[![Escape Room Builder](https://img.shields.io/endpoint?url=https://cloud.cypress.io/badge/simple/f968uc&style=flat&logo=cypress)](https://cloud.cypress.io/projects/f968uc/runs)
-</center>
+<h2 align="center">Create and Share Escape Rooms</h2>
+
+<p align="center"><a href="https://cloud.cypress.io/projects/f968uc/runs"><img src="https://img.shields.io/endpoint?url=https://cloud.cypress.io/badge/simple/f968uc&style=flat&logo=cypress" /></a></p>
 
 Escape Room Builder is a full-stack web app that allows users to create and play escape rooms. Logged-out users may browse public escape rooms by other users, and create and play their own - the data is saved to local storage on their device. Users may optionally log in to save their escape rooms so they can be shared publically and across devices.
 
-> ![NOTE]
-> AI Disclaimer from James: No code completion was used in the production of this project. All mistakes, anti-patterns, bugs and brilliant ideas are my own.
+> [!NOTE]
+> **AI DISCLAIMER**: No code completion was used in the production of this project. All mistakes, anti-patterns, bugs and brilliant ideas are my own.
 
 ## Tech Stack
 
@@ -21,7 +20,7 @@ Author: [James Keezer](https://github.com/Jamesllllllllll)
 - [Typescript](https://www.typescriptlang.org/) - Lanugage
 - [Cypress](https://www.cypress.io/) - Testing
 - [Clerk](https://clerk.com) - Authentication
-- [DaisyUI](https://daisyui.com/) UI Components
+- [DaisyUI](https://daisyui.com/) - UI Components
 - [Tailwind](https://tailwindcss.com) - CSS
 - [Vercel](https://vercel.com) - Hosting
 
