@@ -80,6 +80,7 @@ export default function CaesarCypherChallenge({
         onChange={onClueChange}
         placeholder=''
         key={`challenge-caesar-cypher-clue-${index}`}
+        disabled
       />
     </div>
   );

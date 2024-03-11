@@ -13,7 +13,7 @@ import CaesarCypherChallenge from './challengeInputs/CaesarCypherChallenge';
 import WordScrambleChallenge from './challengeInputs/WordScrambleChallenge';
 
 export default function NewGameForm() {
-  const [newGame, setNewGame] = useState<Game>({
+  const defaultGameData = {
     id: '',
     gameTitle: '',
     gameDescription: '',
@@ -45,23 +45,18 @@ export default function NewGameForm() {
         answer: '',
       },
     ],
+  };
+  const [newGame, setNewGame] = useState<Game>(() => {
+    const localStorageData = localStorage.getItem('newGameForm');
+    return localStorageData ? JSON.parse(localStorageData) : defaultGameData;
   });
 
   const { savedGames, setSavedGames } = useContext(SavedGamesContext);
   const { singleGame, setSingleGame } = useContext(SingleGameContext);
   const { user } = useContext(UserContext);
-
   // Set state to saved form in localStorage if one exists
   useEffect(() => {
-    const localStorageGameForm: any = localStorage.getItem('newGameForm');
-    if (localStorageGameForm !== null) {
-      const parsedGame = JSON.parse(localStorageGameForm);
-      setNewGame(parsedGame);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!newGame.id) {
+    if (newGame.id === '') {
       const newId = uuidv4();
       setNewGame((prevGame: Game) => {
         const newGame = { ...prevGame, id: newId };
@@ -110,7 +105,7 @@ export default function NewGameForm() {
           saveGame = { ...prevGame, gameDescription: e.target.value };
           break;
       }
-      localStorage.setItem('newGameForm', JSON.stringify(newGame));
+      localStorage.setItem('newGameForm', JSON.stringify(saveGame));
       return saveGame;
     });
   };
@@ -193,13 +188,15 @@ export default function NewGameForm() {
     // setSavedGames((prevGames) => [ ...prevGames, newGame]);
     setSingleGame(newGame);
     localStorage.setItem('singleGame', JSON.stringify(newGame));
-    const response = await fetch('/api/games', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newGame),
-    });
-    const data = await response.json();
-    console.log(data.message);
+    if (user.id !== '') {
+      const response = await fetch('/api/games', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newGame),
+      });
+      const data = await response.json();
+      console.log(data.message);
+    }
   };
 
   return (
@@ -214,6 +211,7 @@ export default function NewGameForm() {
             value={newGame.gameTitle}
             placeholder='Room name'
             onChange={handleInputChange}
+            required
           />
         </div>
         <div className='flex flex-col gap-4'>
@@ -232,13 +230,13 @@ export default function NewGameForm() {
             min={300}
             max={3600}
             value={newGame.timeLimit}
-            className='range'
+            className='range range-lg [--range-shdw:violet]'
             step='300'
             onChange={handleTimeLimitChange}
             id='timeLimit'
           />
 
-          <div className='w-full flex justify-between text-sm px-0.5'>
+          <div className='w-full flex justify-between text-sm px-2'>
             <span>05</span>
             <span>10</span>
             <span>15</span>
@@ -332,6 +330,28 @@ export default function NewGameForm() {
               <span>Play Game!</span>
             </button>
           </Link>
+        )}
+        {singleGame?.id === newGame.id && user.id === '' && (
+          <div role='alert' className='alert alert-info'>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
+              className='stroke-current shrink-0 w-6 h-6'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth='2'
+                d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
+              ></path>
+            </svg>
+            <span>
+              Your game is saved to your device. If you would like to share or
+              save across devices, please <Link href='/sign-in'>sign in</Link>{' '}
+              or <Link href='/sign-up'>sign up</Link>.
+            </span>
+          </div>
         )}
       </div>
       {/* 

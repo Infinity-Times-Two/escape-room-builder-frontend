@@ -16,7 +16,8 @@ const config: Config = {
   },
   plugins: [require('daisyui'), require('@tailwindcss/container-queries')],
   daisyui: {
-    themes: ['light'],
+    themes: false,
+    logs: false,
   },
   safelist: [
     'bg-yellow-50',

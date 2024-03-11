@@ -103,7 +103,7 @@ export default function WordScrambleChallenge({
               className='flex flex-row flex-wrap justify-center'
             >
               {words.map((word: string, index: number) => (
-                <Badge key={word} word={word} />
+                <Badge key={`${word}-${index}`} word={word} />
               ))}
             </FlipMove>
           </div>
