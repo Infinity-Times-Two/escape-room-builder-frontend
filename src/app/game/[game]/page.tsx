@@ -11,11 +11,7 @@ export default function PlayGame({ params }: { params: { game: string } }) {
   const { singleGame, setSingleGame } = useContext(SingleGameContext);
   const [loading, setLoading] = useState(false);
 
-  // Should check if the game in localStorage 'singleGame' is the same as params.game
-  // If it is, load it here
-  // If it's not, don't load it from localStorage and fetch from the DB
-
-  // Set state if game in localStorage exists
+  // Set state if game in localStorage exists, otherwise fetch from DB
   useEffect(() => {
     const fetchSingleGame = async () => {
       setLoading(true);
@@ -26,25 +22,45 @@ export default function PlayGame({ params }: { params: { game: string } }) {
       localStorage.setItem('singleGame', JSON.stringify(data));
       setLoading(false);
     };
+
     const localStorageGame: any = localStorage.getItem('singleGame');
-    const localStorageSavedGames: any = localStorage.getItem('savedGames')
-    const savedGamesArray = JSON.parse(localStorageSavedGames)
-    console.log(savedGamesArray);
-    for (let i = 0; i < savedGamesArray.length; i++) {
-      console.log(`checking ${i}`)
-      if (savedGamesArray[i].id === params.game) {
-        console.log('Setting Single Game:')
-        console.log(savedGamesArray[i])
-        setSingleGame(savedGamesArray[i])
+    const localStorageSavedGames: any = localStorage.getItem('savedGames');
+    const localStorageLoadedGames: any = localStorage.getItem('loadedGames');
+    const localStorageSingleGame: Game = JSON.parse(localStorageGame)
+    const savedGamesArray: Game[] | null = JSON.parse(localStorageSavedGames);
+    const loadedGamesArray: Game[] | null = JSON.parse(localStorageLoadedGames);
+
+
+    // Check if the game is saved
+    if (savedGamesArray) {
+      const savedGame: Game | undefined = savedGamesArray?.find(
+        (game) => game.id === params.game
+      );
+      if (savedGame) {
+        setSingleGame(savedGame);
       }
     }
-    if (localStorageGame.id === params.game) {
+
+    // Check if the game was already loaded
+    if (loadedGamesArray) {
+      const loadedGame: Game | undefined = loadedGamesArray?.find(
+        (game) => game.id === params.game
+      );
+      if (loadedGame) {
+        console.log('found local game')
+        setSingleGame(loadedGame);
+      }
+    }
+
+    // Check if it's the single game already loaded to be played
+    if (localStorageSingleGame?.id === params.game) {
+      console.log('loading game from Single Game')
       const parsedGame = JSON.parse(localStorageGame);
       setSingleGame(parsedGame);
-    } else if (localStorageGame.id) {
-
-    }else {
-      // fetchSingleGame()
+    } else {
+      // Otherwise, fetch from the DB
+      console.log('fetching from DB')
+      fetchSingleGame();
     }
   }, [setSingleGame, params.game]);
 
@@ -52,9 +68,6 @@ export default function PlayGame({ params }: { params: { game: string } }) {
   // const { loadedGames } = useContext(LoadedGamesContext);
 
   // const loadedGame: Game | undefined = loadedGames?.find(
-  //   (game) => game.id === params.game
-  // );
-  // const savedGame: Game | undefined = savedGames?.find(
   //   (game) => game.id === params.game
   // );
 
@@ -90,7 +103,10 @@ export default function PlayGame({ params }: { params: { game: string } }) {
         <>
           <h2>{singleGame.gameTitle}</h2>
           <p>{singleGame.gameDescription}</p>
-          <Link href={`./${singleGame.id}/${singleGame.challenges[0].id}`} data-test='start-game'>
+          <Link
+            href={`./${singleGame.id}/${singleGame.challenges[0].id}`}
+            data-test='start-game'
+          >
             <button
               className='xl'
               onClick={() =>
