@@ -1,4 +1,7 @@
-import Input from '../ui/Input';
+import TriviaChallenge from './challengeInputs/TriviaChallenge';
+import CaesarCypherChallenge from './challengeInputs/CaesarCypherChallenge';
+import WordScrambleChallenge from './challengeInputs/WordScrambleChallenge';
+import { Challenge } from '@/app/types/types';
 
 export default function NewChallenge({
   index,
@@ -8,7 +11,7 @@ export default function NewChallenge({
   onClueChange,
   onDescriptionChange,
   onAnswerChange,
-  challengeType,
+  challenge,
 }: {
   index: number;
   clue: string | string[] | undefined;
@@ -17,37 +20,56 @@ export default function NewChallenge({
   onClueChange(e: any, index: number | undefined): void;
   onDescriptionChange(e: any, index: number | undefined): void;
   onAnswerChange(e: any, index: number | undefined): void;
-  challengeType: string;
+  challenge: Challenge;
 }) {
-  return (
-    <div key={`${challengeType}-${index}`}>
-      <h3 className='mb-6'>New {challengeType} Challenge</h3>
-      <label htmlFor={`challenge-description-${index}`} className=''>
-        Description
-      </label>
-      <Input
-        fieldType={`challenge-description-${index}`}
-        value={description}
-        placeholder={`${challengeType} description`}
-        onChange={onDescriptionChange}
-        key={`challenge-description-${index}`}
-      />
-      <label htmlFor={`challenge-clue-${index}`}>Clue</label>
-      <Input
-        fieldType={`challenge-clue-${index}`}
-        value={clue}
-        placeholder={`${challengeType} clue`}
-        onChange={onClueChange}
-        key={`challenge-clue-${index}`}
-      />
-      <label htmlFor={`challenge-answer-${index}`}>Answer</label>
-      <Input
-        fieldType={`challenge-answer-${index}`}
-        value={answer}
-        placeholder={`${challengeType} answer`}
-        onChange={onAnswerChange}
-        key={`challenge-answer-${index}`}
-      />
-    </div>
-  );
+  switch (challenge.type) {
+    case 'trivia': {
+      return (
+        <TriviaChallenge
+          key={challenge.id}
+          challengeType={challenge.type}
+          clue={clue}
+          description={description}
+          answer={answer}
+          onClueChange={onClueChange}
+          onDescriptionChange={onDescriptionChange}
+          onAnswerChange={onAnswerChange}
+          index={index}
+        />
+      );
+    }
+    case 'caesar cypher': {
+      return (
+        <CaesarCypherChallenge
+          key={challenge.id}
+          challengeType={challenge.type}
+          clue={clue}
+          description={description}
+          answer={answer}
+          onClueChange={onClueChange}
+          onDescriptionChange={onDescriptionChange}
+          onAnswerChange={onAnswerChange}
+          index={index}
+        />
+      );
+    }
+    case 'word scramble': {
+      return (
+        <WordScrambleChallenge
+          key={challenge.id}
+          challengeType={challenge.type}
+          clue={clue}
+          description={description}
+          answer={answer}
+          onClueChange={onClueChange}
+          onDescriptionChange={onDescriptionChange}
+          onAnswerChange={onAnswerChange}
+          index={index}
+        />
+      );
+    }
+    default: {
+      return <p>Challenge type not found</p>;
+    }
+  }
 }

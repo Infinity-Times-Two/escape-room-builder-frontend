@@ -5,21 +5,17 @@ import { LoadedGamesContext } from '@/app/contexts/loadedGamesContext';
 import { SingleGameContext } from '@/app/contexts/singleGameContext';
 import { useContext, useEffect, useState } from 'react';
 import { TimerContext } from '../../contexts/timerContext';
-
-import { Game } from '../../types/types';
+import { Game } from '@/app/types/types';
 
 export default function PlayGame({ params }: { params: { game: string } }) {
   const { singleGame, setSingleGame } = useContext(SingleGameContext);
-  const [loading, setLoading] = useState(true);
-  // Set state if game in localStorage exists
-  useEffect(() => {
-    const localStorageGame: any = localStorage.getItem('singleGame');
-    if (localStorageGame !== null) {
-      const parsedGame = JSON.parse(localStorageGame);
-      setSingleGame(parsedGame);
-    }
-  }, [setSingleGame]);
+  const [loading, setLoading] = useState(false);
 
+  // Should check if the game in localStorage 'singleGame' is the same as params.game
+  // If it is, load it here
+  // If it's not, don't load it from localStorage and fetch from the DB
+
+  // Set state if game in localStorage exists
   useEffect(() => {
     const fetchSingleGame = async () => {
       setLoading(true);
@@ -30,7 +26,26 @@ export default function PlayGame({ params }: { params: { game: string } }) {
       localStorage.setItem('singleGame', JSON.stringify(data));
       setLoading(false);
     };
-    fetchSingleGame();
+    const localStorageGame: any = localStorage.getItem('singleGame');
+    const localStorageSavedGames: any = localStorage.getItem('savedGames')
+    const savedGamesArray = JSON.parse(localStorageSavedGames)
+    console.log(savedGamesArray);
+    for (let i = 0; i < savedGamesArray.length; i++) {
+      console.log(`checking ${i}`)
+      if (savedGamesArray[i].id === params.game) {
+        console.log('Setting Single Game:')
+        console.log(savedGamesArray[i])
+        setSingleGame(savedGamesArray[i])
+      }
+    }
+    if (localStorageGame.id === params.game) {
+      const parsedGame = JSON.parse(localStorageGame);
+      setSingleGame(parsedGame);
+    } else if (localStorageGame.id) {
+
+    }else {
+      // fetchSingleGame()
+    }
   }, [setSingleGame, params.game]);
 
   // const { savedGames } = useContext(SavedGamesContext);

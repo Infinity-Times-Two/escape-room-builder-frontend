@@ -1,8 +1,7 @@
 'use client';
 import { useState, createContext, useMemo, PropsWithChildren } from 'react';
-import { mockSavedGames } from './mockSavedGames';
 
-import { Game } from '../types/types'
+import { Game } from '../types/types';
 
 interface SavedGamesContextType {
   savedGames: Game[];
@@ -10,15 +9,14 @@ interface SavedGamesContextType {
 }
 
 const defaultContextValue: SavedGamesContextType = {
-  savedGames: mockSavedGames,
+  savedGames: [],
   setSavedGames: () => {},
 };
 
 const SavedGamesContext = createContext(defaultContextValue);
 
 const SavedGamesContextProvider = (props: PropsWithChildren<{}>) => {
-
-  const [savedGames, setSavedGames] = useState<Game[]>(mockSavedGames);
+  const [savedGames, setSavedGames] = useState<Game[]>([]);
 
   const value = useMemo(
     () => ({

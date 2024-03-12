@@ -20,7 +20,7 @@ export default function TriviaChallenge({
   challengeType: string;
 }) {
   return (
-    <div key={`${challengeType}-${index}`}>
+    <div className='border-2 border-black p-8 rounded-xl bg-white/50' key={`${challengeType}-${index}`}>
       <h3 className='mb-6'>New {challengeType} Challenge</h3>
       <label htmlFor={`challenge-clue-${index}`}>Question</label>
       <Input

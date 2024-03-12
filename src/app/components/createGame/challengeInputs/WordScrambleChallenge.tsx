@@ -69,14 +69,14 @@ export default function WordScrambleChallenge({
   Badge.displayName = 'Badge';
 
   return (
-    <div key={`${challengeType}-${index}`} className='flex flex-col gap-8'>
+    <div key={`${challengeType}-${index}`} className='flex flex-col gap-8 border-2 border-black p-8 rounded-xl bg-white/50'>
       <h3 className='mb-6'>New {challengeType} Challenge</h3>
       <div>
-        <label htmlFor={`challenge-description-${index}`}>Description</label>
+        <label htmlFor={`challenge-description-${index}`}>Description (optional)</label>
         <Input
           fieldType={`challenge-description-${index}`}
           value={description}
-          placeholder={`${challengeType} description`}
+          placeholder='Describe the phrase to be solved'
           onChange={onDescriptionChange}
           key={`challenge-description-${index}`}
         />

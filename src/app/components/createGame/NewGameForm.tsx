@@ -8,9 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { SavedGamesContext } from '@/app/contexts/savedGamesContext';
 import { SingleGameContext } from '@/app/contexts/singleGameContext';
 import Link from 'next/link';
-import TriviaChallenge from './challengeInputs/TriviaChallenge';
-import CaesarCypherChallenge from './challengeInputs/CaesarCypherChallenge';
-import WordScrambleChallenge from './challengeInputs/WordScrambleChallenge';
+import NewChallenge from './NewChallenge';
 
 export default function NewGameForm() {
   const defaultGameData = {
@@ -23,22 +21,22 @@ export default function NewGameForm() {
     bodyBg: '',
     titleBg: '',
     challenges: [
-      // {
-      //   id: 'challenge-1',
-      //   type: 'trivia',
-      //   description: '',
-      //   clue: '',
-      //   answer: '',
-      // },
-      // {
-      //   id: 'challenge-2',
-      //   type: 'caesar cypher',
-      //   description: '',
-      //   clue: '',
-      //   answer: '',
-      // },
       {
-        id: 'challenge-3',
+        id: 'challenge-0',
+        type: 'trivia',
+        description: '',
+        clue: '',
+        answer: '',
+      },
+      {
+        id: 'challenge-1',
+        type: 'caesar cypher',
+        description: '',
+        clue: '',
+        answer: '',
+      },
+      {
+        id: 'challenge-2',
         type: 'word scramble',
         description: '',
         clue: [''],
@@ -92,7 +90,7 @@ export default function NewGameForm() {
       });
     }
     localStorage.setItem('newGameForm', JSON.stringify(newGame));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleInputChange = (e: any) => {
@@ -170,6 +168,23 @@ export default function NewGameForm() {
 
   const handleAddChallenge = (e: any) => {
     e.preventDefault();
+
+    setNewGame((prevGame: Game) => {
+      const numberOfChallenges = prevGame.challenges.length;
+      const newChallenges = [
+        ...prevGame.challenges,
+        {
+          id: `challenge-${numberOfChallenges}`, // this number should be the current length of the challenge array (challenges are zero-indexed)
+          type: 'trivia',
+          description: '',
+          clue: '',
+          answer: '',
+        },
+      ];
+      const updatedGame = { ...prevGame, challenges: newChallenges };
+      localStorage.setItem('newGameForm', JSON.stringify(updatedGame));
+      return updatedGame;
+    });
   };
 
   const handleSubmit = async (e: any) => {
@@ -188,6 +203,11 @@ export default function NewGameForm() {
     // and add to user's array of saved games in DB
     // setSavedGames((prevGames) => [ ...prevGames, newGame]);
     setSingleGame(newGame);
+    setSavedGames((prevGames: Game[]) => {
+      const newGames = [ ...prevGames, newGame ]
+      localStorage.setItem('savedGames', JSON.stringify(newGames))
+      return newGames
+    })
     localStorage.setItem('singleGame', JSON.stringify(newGame));
     if (user.id !== '') {
       const response = await fetch('/api/games', {
@@ -265,61 +285,30 @@ export default function NewGameForm() {
             handleAnswerChange(e, index);
           };
 
-          switch (challenge.type) {
-            case 'trivia': {
-              return (
-                <TriviaChallenge
-                  key={challenge.id}
-                  challengeType={challenge.type}
-                  clue={newGame.challenges[index].clue}
-                  description={newGame.challenges[index].description}
-                  answer={newGame.challenges[index].answer}
-                  onClueChange={onClueChange}
-                  onDescriptionChange={onDescriptionChange}
-                  onAnswerChange={onAnswerChange}
-                  index={index}
-                />
-              );
-            }
-            case 'caesar cypher': {
-              return (
-                <CaesarCypherChallenge
-                  key={challenge.id}
-                  challengeType={challenge.type}
-                  clue={newGame.challenges[index].clue}
-                  description={newGame.challenges[index].description}
-                  answer={newGame.challenges[index].answer}
-                  onClueChange={onClueChange}
-                  onDescriptionChange={onDescriptionChange}
-                  onAnswerChange={onAnswerChange}
-                  index={index}
-                />
-              );
-            }
-            case 'word scramble': {
-              return (
-                <WordScrambleChallenge
-                  key={challenge.id}
-                  challengeType={challenge.type}
-                  clue={newGame.challenges[index].clue}
-                  description={newGame.challenges[index].description}
-                  answer={newGame.challenges[index].answer}
-                  onClueChange={onClueChange}
-                  onDescriptionChange={onDescriptionChange}
-                  onAnswerChange={onAnswerChange}
-                  index={index}
-                />
-              );
-            }
-            default: {
-              return <p>Challenge type not found</p>;
-            }
-          }
+          return (
+            <NewChallenge
+              key={challenge.id}
+              challenge={challenge}
+              clue={newGame.challenges[index].clue}
+              description={newGame.challenges[index].description}
+              answer={newGame.challenges[index].answer}
+              onClueChange={onClueChange}
+              onDescriptionChange={onDescriptionChange}
+              onAnswerChange={onAnswerChange}
+              index={index}
+            />
+          );
         })}
+
         {singleGame?.id !== newGame.id && (
-          <button className='w-60 self-center' onClick={handleSubmit}>
-            <span>Create Game</span>
-          </button>
+          <>
+            <button onClick={handleAddChallenge}>
+              <span>Add Trivia Challenge</span>
+            </button>
+            <button className='w-60 self-center' onClick={handleSubmit}>
+              <span>Create Game</span>
+            </button>
+          </>
         )}
         {singleGame?.id === newGame.id && (
           <Link
@@ -355,11 +344,8 @@ export default function NewGameForm() {
           </div>
         )}
       </div>
-      {/* 
-      <button onClick={handleAddChallenge}>
-        <span>Add Challenge</span>
-      </button>
 
+      {/*
       <fieldset className='flex flex-col gap-4'>
         <legend className='mb-4'>Choose a challenge type:</legend>
         <div className='flex flex-row-reverse justify-end gap-2'>
