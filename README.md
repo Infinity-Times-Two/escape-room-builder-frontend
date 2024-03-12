@@ -3,7 +3,7 @@
 
 <h2 align="center">Create and Share Escape Rooms</h2>
 
-<p align="center"><a href="https://cloud.cypress.io/projects/f968uc/runs"><img src="https://img.shields.io/endpoint?url=https://cloud.cypress.io/badge/simple/f968uc&style=flat&logo=cypress" /></a></p>
+<p align="center"><a href="https://cloud.cypress.io/projects/f968uc/runs"><img src="https://img.shields.io/endpoint?url=https://cloud.cypress.io/badge/detailed/f968uc&style=flat&logo=cypress" /></a></p>
 
 Escape Room Builder is a full-stack web app that allows users to create and play escape rooms. Logged-out users may browse public escape rooms by other users, and create and play their own - the data is saved to local storage on their device. Users may optionally log in to save their escape rooms so they can be shared publically and across devices.
 

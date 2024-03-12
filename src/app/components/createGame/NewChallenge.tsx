@@ -1,6 +1,6 @@
-import Input from "../../ui/Input";
+import Input from '../ui/Input';
 
-export default function TriviaChallenge({
+export default function NewChallenge({
   index,
   clue,
   description,
@@ -22,11 +22,21 @@ export default function TriviaChallenge({
   return (
     <div key={`${challengeType}-${index}`}>
       <h3 className='mb-6'>New {challengeType} Challenge</h3>
-      <label htmlFor={`challenge-clue-${index}`}>Question</label>
+      <label htmlFor={`challenge-description-${index}`} className=''>
+        Description
+      </label>
+      <Input
+        fieldType={`challenge-description-${index}`}
+        value={description}
+        placeholder={`${challengeType} description`}
+        onChange={onDescriptionChange}
+        key={`challenge-description-${index}`}
+      />
+      <label htmlFor={`challenge-clue-${index}`}>Clue</label>
       <Input
         fieldType={`challenge-clue-${index}`}
         value={clue}
-        placeholder={`${challengeType[0].toUpperCase() + challengeType.substring(1)} question`}
+        placeholder={`${challengeType} clue`}
         onChange={onClueChange}
         key={`challenge-clue-${index}`}
       />
@@ -34,7 +44,7 @@ export default function TriviaChallenge({
       <Input
         fieldType={`challenge-answer-${index}`}
         value={answer}
-        placeholder='Answer'
+        placeholder={`${challengeType} answer`}
         onChange={onAnswerChange}
         key={`challenge-answer-${index}`}
       />

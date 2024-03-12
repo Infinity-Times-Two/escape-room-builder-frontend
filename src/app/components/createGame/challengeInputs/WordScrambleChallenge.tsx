@@ -32,7 +32,7 @@ export default function WordScrambleChallenge({
       newArray.length === array.length &&
       newArray.every((element, index) => element === array[index])
     ) {
-      for (let i = newArray.length - 1; i > 0; i--) {
+      for (let i = newArray.length - 1; i >= 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
       }
@@ -42,14 +42,15 @@ export default function WordScrambleChallenge({
 
   const shuffle = (e: any) => {
     e.preventDefault();
-    if (answer === '') {
-      setWords([]);
-      alert('You must enter something!')
-    }
     if (answer !== undefined) {
-      clue = shuffleWords(answer.split(' '));
-      setWords(clue);
-      onClueChange(clue, index);
+      clue = answer.trim().split(' ');
+      if (clue.length > 2) {
+        const shuffledClue = shuffleWords(clue);
+        setWords(shuffledClue);
+        onClueChange(shuffledClue, index);
+      } else {
+        alert('Please enter at least 3 words');
+      }
     }
   };
 

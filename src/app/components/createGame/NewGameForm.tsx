@@ -23,20 +23,20 @@ export default function NewGameForm() {
     bodyBg: '',
     titleBg: '',
     challenges: [
-      {
-        id: 'challenge-1',
-        type: 'trivia',
-        description: '',
-        clue: '',
-        answer: '',
-      },
-      {
-        id: 'challenge-2',
-        type: 'caesar cypher',
-        description: '',
-        clue: '',
-        answer: '',
-      },
+      // {
+      //   id: 'challenge-1',
+      //   type: 'trivia',
+      //   description: '',
+      //   clue: '',
+      //   answer: '',
+      // },
+      // {
+      //   id: 'challenge-2',
+      //   type: 'caesar cypher',
+      //   description: '',
+      //   clue: '',
+      //   answer: '',
+      // },
       {
         id: 'challenge-3',
         type: 'word scramble',
@@ -92,6 +92,7 @@ export default function NewGameForm() {
       });
     }
     localStorage.setItem('newGameForm', JSON.stringify(newGame));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleInputChange = (e: any) => {

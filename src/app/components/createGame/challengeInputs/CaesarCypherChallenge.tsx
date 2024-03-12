@@ -53,12 +53,12 @@ export default function CaesarCypherChallenge({
     <div key={`${challengeType}-${index}`}>
       <h3 className='mb-6'>New {challengeType} Challenge</h3>
       <label htmlFor={`challenge-description-${index}`} className=''>
-        Description
+        Describe the word to be decrypted
       </label>
       <Input
         fieldType={`challenge-description-${index}`}
         value={description}
-        placeholder={`${challengeType} description`}
+        placeholder='Describe the word to be decrypted'
         onChange={onDescriptionChange}
         key={`challenge-description-${index}`}
       />
@@ -66,7 +66,7 @@ export default function CaesarCypherChallenge({
       <Input
         fieldType={`challenge-answer-${index}`}
         value={answer}
-        placeholder={`${challengeType} answer`}
+        placeholder='Answer'
         onChange={onAnswerChange}
         key={`challenge-answer-${index}`}
       />
