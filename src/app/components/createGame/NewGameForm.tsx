@@ -11,13 +11,21 @@ import Link from 'next/link';
 import NewChallenge from './NewChallenge';
 
 export default function NewGameForm() {
+  const { user } = useContext(UserContext);
+  let author: string;
+  if (user.firstName === '') {
+    author = 'Anonymous'
+  } else {
+    author = user.firstName
+  }
+
   const defaultGameData = {
     id: '',
     gameTitle: '',
     gameDescription: '',
     timeLimit: 900,
     theme: '',
-    author: '',
+    author: author,
     bodyBg: '',
     titleBg: '',
     challenges: [
@@ -51,8 +59,11 @@ export default function NewGameForm() {
 
   const { savedGames, setSavedGames } = useContext(SavedGamesContext);
   const { singleGame, setSingleGame } = useContext(SingleGameContext);
-  const { user } = useContext(UserContext);
   // Set state to saved form in localStorage if one exists
+
+  useEffect(() => {
+    console.log('username changed')
+  }, [author])
   useEffect(() => {
     if (newGame.id === '') {
       const newId = uuidv4();
@@ -62,20 +73,6 @@ export default function NewGameForm() {
       });
     }
 
-    if (newGame.author === '') {
-      const author = user?.firstName;
-      if (author) {
-        setNewGame((prevGame: Game) => {
-          const newGame = { ...prevGame, author: author };
-          return newGame;
-        });
-      } else {
-        setNewGame((prevGame: Game) => {
-          const newGame = { ...prevGame, author: 'Anonymous' };
-          return newGame;
-        });
-      }
-    }
     if (newGame.bodyBg === '') {
       const colours = ['red', 'blue', 'yellow', 'green', 'orange', 'purple'];
       const bodybgIndex = Math.floor(Math.random() * 6);
@@ -199,16 +196,23 @@ export default function NewGameForm() {
         }
       }
     });
+
     // When saving games is implemented, set state, save to localstorage
     // and add to user's array of saved games in DB
-    // setSavedGames((prevGames) => [ ...prevGames, newGame]);
+
+    // Set this game to be the current game in state
     setSingleGame(newGame);
-    setSavedGames((prevGames: Game[]) => {
-      const newGames = [ ...prevGames, newGame ]
-      localStorage.setItem('savedGames', JSON.stringify(newGames))
-      return newGames
-    })
     localStorage.setItem('singleGame', JSON.stringify(newGame));
+
+    // Add this game to saved games in state & local storage
+    setSavedGames((prevGames: Game[]) => {
+      const newGames = [...prevGames, newGame];
+      localStorage.setItem('savedGames', JSON.stringify(newGames));
+      return newGames;
+    });
+
+    // Add to all games in DB
+    // TO DO: Allow user to make each game public or private
     if (user.id !== '') {
       const response = await fetch('/api/games', {
         method: 'POST',
@@ -216,8 +220,9 @@ export default function NewGameForm() {
         body: JSON.stringify(newGame),
       });
       const data = await response.json();
-      console.log(data.message);
     }
+
+    // TO DO: Add game ID to user's saved games array in escape-room-users table in DB
   };
 
   return (
@@ -235,6 +240,7 @@ export default function NewGameForm() {
             required
           />
         </div>
+        <p>By: {author}</p>
         <div className='flex flex-col gap-4'>
           <label htmlFor='gameDescription'>Describe your Escape room</label>
           <TextArea

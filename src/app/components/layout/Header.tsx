@@ -4,7 +4,6 @@ import { UserContext } from '@/app/contexts/userContext';
 import Link from 'next/link';
 import { UserButton, useAuth } from '@clerk/nextjs';
 import { SignInButton, SignUpButton, SignedIn, SignedOut } from '@clerk/nextjs';
-import { DBuser } from '@/app/types/types';
 
 export default function Header() {
   const { isLoaded, userId, sessionId, getToken } = useAuth();
@@ -12,20 +11,23 @@ export default function Header() {
 
   useEffect(() => {
     const createUser = async (userId: string | undefined) => {
-      console.log('Creating user...');
       const response = await fetch(`/api/createUser/${userId}`);
       const data = await response.json();
-      console.log('Response from createUser:');
-      console.log(data);
-
       return data;
     };
+
+    const updateUser = async (userId: string | undefined) => {
+      const response = await fetch(`/api/updateUser/${userId}`);
+      const data = await response.json();
+      return data;
+    };
+
     const fetchUser = async (id: string | undefined | null) => {
       if (id !== null && id !== undefined) {
-        // console.log(`Looking for user with id ${id}`);
+        console.log('Looking for user in DB');
         const response = await fetch(`/api/user/${id}`);
         const data = await response.json();
-        console.log('Response from fetching user data on the front-end:');
+        console.log('Found user');
         console.log(data);
         setUser({
           id: data.userId,
@@ -35,10 +37,25 @@ export default function Header() {
           createdGames: data.createdGames,
           isAdmin: data.isAdmin,
         });
+        if (typeof data.firstName === 'undefined') {
+          console.log('Fetching first name...');
+          const response = await fetch(`/api/updateUser/${id}`);
+          const data = await response.json();
+          console.log('Got first name:');
+          console.log(data.firstName);
+          setUser((prevUser) => {
+            const updatedUser = { ...prevUser, firstName: data.firstName };
+            return updatedUser;
+          });
+        }
+
         if (data?.message === 'User not found') {
+          console.log('Creating user...');
           createUser(id);
           const response = await fetch(`/api/user/${id}`);
           const data = await response.json();
+          console.log('User created');
+          console.log(data);
           setUser({
             id: data.userId,
             firstName: data.firstName,

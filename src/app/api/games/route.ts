@@ -1,5 +1,4 @@
 export async function GET(req: Request, res: any) {
-  console.log('Fetching games...')
   const devApiKey = process.env.DEV_API;
   if (typeof devApiKey !== 'string') {
     throw new Error('DEV_API is not defined')
@@ -22,7 +21,6 @@ export async function GET(req: Request, res: any) {
 }
 
 export async function POST(req: Request, res: Response) {
-  console.log('Adding game...')
   const info = await req.json()
   const devApiKey = process.env.DEV_API;
   if (typeof devApiKey !== 'string') {
@@ -43,7 +41,5 @@ export async function POST(req: Request, res: Response) {
   })
 
   const data = await response.json()
-  console.log('Response:')
-  console.log(data)
   return Response.json(data)
 }

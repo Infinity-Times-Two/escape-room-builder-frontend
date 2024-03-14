@@ -1,8 +1,5 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import {
-  DynamoDBDocumentClient,
-  GetCommand,
-} from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
 import type { NextApiResponse } from 'next';
 
 type ResponseData = {
@@ -37,10 +34,8 @@ export async function GET(
   };
 
   const response = await getUser(params.userId);
-  console.log(response);
   if (!response.Item) {
-    console.log('Sending not found message...');
-    return Response.json({ message: 'User not found' })
+    return Response.json({ message: 'User not found' });
   }
   return Response.json(response.Item);
 }

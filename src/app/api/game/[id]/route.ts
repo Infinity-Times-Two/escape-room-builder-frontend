@@ -1,5 +1,4 @@
 export async function GET(req: Request, { params }: { params: { id: string }}) {
-  console.log('Fetching single game');
   const devApiKey = process.env.DEV_API;
   if (typeof devApiKey !== 'string') {
     throw new Error('DEV_API is not defined');
@@ -19,6 +18,6 @@ export async function GET(req: Request, { params }: { params: { id: string }}) {
     },
   });
   const data = await response.json();
-  console.log(data);
+  console.(data);
   return Response.json(data);
 }

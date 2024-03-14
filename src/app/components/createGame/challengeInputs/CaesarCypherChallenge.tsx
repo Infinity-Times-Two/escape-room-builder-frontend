@@ -37,7 +37,6 @@ export default function CaesarCypherChallenge({
         encryptedWord.push(String.fromCharCode(newLetter));
         setEncryptedClue(encryptedWord.toString());
       });
-      console.log(`Seed: ${randomSeed} - Encrypted word: ${encryptedWord}`);
     }
     return encryptedWord;
   };
@@ -46,7 +45,6 @@ export default function CaesarCypherChallenge({
     e.preventDefault();
     clue = encryptCaesarCypher(answer).toString().replaceAll(',', '');
     onClueChange(clue, index);
-    console.log(`Clue: ${clue}`);
   };
 
   return (
