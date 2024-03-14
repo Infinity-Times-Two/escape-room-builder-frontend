@@ -25,13 +25,13 @@ export async function GET(
     const command = new UpdateCommand({
       TableName: process.env.AWS_TABLE_NAME,
       Key: { userId: userId },
-      UpdateExpression: 'SET #firstName = :firstName',
       ExpressionAttributeNames: {
         "#firstName": "firstName",
       },
       ExpressionAttributeValues: {
         ":firstName": firstName,
       },
+      UpdateExpression: 'SET #firstName = :firstName',
       ReturnValues: "UPDATED_NEW",
     });
     try {

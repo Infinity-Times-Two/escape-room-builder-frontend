@@ -14,9 +14,9 @@ export default function NewGameForm() {
   const { user } = useContext(UserContext);
   let author: string;
   if (user.firstName === '') {
-    author = 'Anonymous'
+    author = 'Anonymous';
   } else {
-    author = user.firstName
+    author = user.firstName;
   }
 
   const defaultGameData = {
@@ -52,18 +52,22 @@ export default function NewGameForm() {
       },
     ],
   };
+
   const [newGame, setNewGame] = useState<Game>(() => {
     const localStorageData = localStorage.getItem('newGameForm');
     return localStorageData ? JSON.parse(localStorageData) : defaultGameData;
   });
 
-  const { savedGames, setSavedGames } = useContext(SavedGamesContext);
+  const [nextChallenge, setNextChallenge] = useState('Trivia');
+
+  const { setSavedGames } = useContext(SavedGamesContext);
   const { singleGame, setSingleGame } = useContext(SingleGameContext);
   // Set state to saved form in localStorage if one exists
 
-  useEffect(() => {
-    console.log('username changed')
-  }, [author])
+  const saveForm = (updatedGame: Game) => {
+    localStorage.setItem('newGameForm', JSON.stringify(updatedGame));
+  }
+  
   useEffect(() => {
     if (newGame.id === '') {
       const newId = uuidv4();
@@ -86,7 +90,7 @@ export default function NewGameForm() {
         return newGame;
       });
     }
-    localStorage.setItem('newGameForm', JSON.stringify(newGame));
+    saveForm(newGame);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -101,7 +105,7 @@ export default function NewGameForm() {
           saveGame = { ...prevGame, gameDescription: e.target.value };
           break;
       }
-      localStorage.setItem('newGameForm', JSON.stringify(saveGame));
+      saveForm(saveGame);
       return saveGame;
     });
   };
@@ -109,7 +113,7 @@ export default function NewGameForm() {
   const handleTimeLimitChange = (e: any) => {
     setNewGame((prevGame: Game) => {
       const newGame = { ...prevGame, timeLimit: e.target.value };
-      localStorage.setItem('newGameForm', JSON.stringify(newGame));
+      saveForm(newGame);
       return newGame;
     });
   };
@@ -130,7 +134,7 @@ export default function NewGameForm() {
         return item;
       });
       const updatedGame = { ...prevGame, challenges: newChallenges };
-      localStorage.setItem('newGameForm', JSON.stringify(updatedGame));
+      saveForm(updatedGame);
       return updatedGame;
     });
   };
@@ -144,7 +148,7 @@ export default function NewGameForm() {
         return item;
       });
       const updatedGame = { ...prevGame, challenges: newChallenges };
-      localStorage.setItem('newGameForm', JSON.stringify(updatedGame));
+      saveForm(updatedGame);
       return updatedGame;
     });
   };
@@ -158,7 +162,7 @@ export default function NewGameForm() {
         return item;
       });
       const updatedGame = { ...prevGame, challenges: newChallenges };
-      localStorage.setItem('newGameForm', JSON.stringify(updatedGame));
+      saveForm(updatedGame);
       return updatedGame;
     });
   };
@@ -179,7 +183,7 @@ export default function NewGameForm() {
         },
       ];
       const updatedGame = { ...prevGame, challenges: newChallenges };
-      localStorage.setItem('newGameForm', JSON.stringify(updatedGame));
+      saveForm(updatedGame);
       return updatedGame;
     });
   };
@@ -308,9 +312,45 @@ export default function NewGameForm() {
 
         {singleGame?.id !== newGame.id && (
           <>
-            <button onClick={handleAddChallenge}>
-              <span>Add Trivia Challenge</span>
-            </button>
+            <div className='flex flex-row flex-wrap'>
+              <fieldset className='flex flex-col gap-4'>
+                <legend className='mb-4'>Choose a challenge type:</legend>
+                <div className='flex flex-row-reverse justify-end gap-2'>
+                  <label htmlFor='trivia'>Trivia</label>
+                  <input
+                    type='radio'
+                    name='challengeType'
+                    id='trivia'
+                    value='Trivia'
+                    className='radio radio-primary'
+                    required
+                  />
+                </div>
+                <div className='flex flex-row-reverse justify-end gap-2'>
+                  <label htmlFor='caesarCypher'>Caesar Cypher</label>
+                  <input
+                    type='radio'
+                    name='challengeType'
+                    id='caesarCypher'
+                    value='Caesar Cypher'
+                    className='radio radio-primary'
+                  />
+                </div>
+                <div className='flex flex-row-reverse justify-end gap-2'>
+                  <label htmlFor='wordScramble'>Word Scramble</label>
+                  <input
+                    type='radio'
+                    name='challengeType'
+                    id='wordScramble'
+                    value='Word Scramble'
+                    className='radio radio-primary'
+                  />
+                </div>
+              </fieldset>
+              <button onClick={handleAddChallenge}>
+                <span>Add Challenge</span>
+              </button>
+            </div>
             <button className='w-60 self-center' onClick={handleSubmit}>
               <span>Create Game</span>
             </button>
@@ -350,42 +390,6 @@ export default function NewGameForm() {
           </div>
         )}
       </div>
-
-      {/*
-      <fieldset className='flex flex-col gap-4'>
-        <legend className='mb-4'>Choose a challenge type:</legend>
-        <div className='flex flex-row-reverse justify-end gap-2'>
-          <label htmlFor='trivia'>Trivia</label>
-          <input
-            type='radio'
-            name='challengeType'
-            id='trivia'
-            value='Trivia'
-            className='radio radio-primary'
-            required
-          />
-        </div>
-        <div className='flex flex-row-reverse justify-end gap-2'>
-          <label htmlFor='caesarCypher'>Caesar Cypher</label>
-          <input
-            type='radio'
-            name='challengeType'
-            id='caesarCypher'
-            value='Caesar Cypher'
-            className='radio radio-primary'
-          />
-        </div>
-        <div className='flex flex-row-reverse justify-end gap-2'>
-          <label htmlFor='wordScramble'>Word Scramble</label>
-          <input
-            type='radio'
-            name='challengeType'
-            id='wordScramble'
-            value='Word Scramble'
-            className='radio radio-primary'
-          />
-        </div>
-      </fieldset> */}
     </form>
   );
 }
