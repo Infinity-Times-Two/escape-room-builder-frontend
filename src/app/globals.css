@@ -87,6 +87,14 @@ button {
   font-family: var(--font-work-sans);
 }
 
+button:disabled {
+  @apply bg-gray-500
+}
+
+button:disabled > span {
+  @apply bg-gray-300 text-gray-500 border-gray-500 hover:-translate-y-0.5 hover:-translate-x-0.5
+}
+
 button > span {
   @apply block -translate-x-0.5 -translate-y-0.5 rounded-md border-2 border-black bg-white py-3 px-7 text-lg uppercase tracking-wider hover:-translate-y-1 hover:-translate-x-1 transition-all;
 }

@@ -1,5 +1,5 @@
 import Input from '../../ui/Input';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function CaesarCypherChallenge({
   index,
@@ -23,16 +23,31 @@ export default function CaesarCypherChallenge({
   challengeType: string;
 }) {
   const [encryptedClue, setEncryptedClue] = useState<string>('');
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('')
+
+  useEffect(() => {
+    if (typeof answer !== 'undefined' && answer !== '') {
+      let regex = /^[A-Za-z ]+$/;
+      setErrorMessage('Please only use letters and spaces')
+      setError(!regex.test(answer))
+    }
+  }, [answer]);
+
   const encryptCaesarCypher = (answer: string | undefined) => {
     // leetcode mode ON
     let originalWord: string[];
     let encryptedWord: string[] = [];
 
     if (typeof answer === 'string') {
-      originalWord = Array.from(answer);
+      const lowerCaseAnswer = answer.toLowerCase();
+      originalWord = Array.from(lowerCaseAnswer);
       const randomSeed = Math.floor(Math.random() * 25) + 1;
       originalWord.forEach((letter) => {
-        let newLetter = letter.charCodeAt(0) + randomSeed;
+        let newLetter = letter.charCodeAt(0);
+        if (newLetter !== 32) {
+          newLetter = letter.charCodeAt(0) + randomSeed;
+        }
         if (newLetter > 122) {
           newLetter = newLetter - 26;
         }
@@ -45,7 +60,18 @@ export default function CaesarCypherChallenge({
 
   const onEncrypt = (e: any) => {
     e.preventDefault();
-    clue = encryptCaesarCypher(answer).toString().replaceAll(',', '');
+    let regex = /^[A-Za-z]+$/;
+    if (typeof answer === 'string' && !regex.test(answer)) {
+      setError(true);
+      setErrorMessage('Please enter at least one word')
+      return
+    }
+    setError(false)
+    clue = encryptCaesarCypher(answer)
+      .toString()
+      .toLowerCase()
+      .replaceAll(',', '');
+    console.log(clue);
     onClueChange(clue, index);
   };
 
@@ -94,9 +120,29 @@ export default function CaesarCypherChallenge({
         onChange={onAnswerChange}
         key={`challenge-answer-${index}`}
       />
-      <button onClick={onEncrypt}>
-        <span>Encrypt</span>
-      </button>
+      <div className='flex flex-row'>
+        <button onClick={onEncrypt} disabled={error}>
+          <span>Encrypt</span>
+        </button>
+        {error && (
+          <div role='alert' className='alert alert-warning mx-4 self-center'>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              className='stroke-current shrink-0 h-6 w-6'
+              fill='none'
+              viewBox='0 0 24 24'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth='2'
+                d='M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'
+              />
+            </svg>
+            <span>{errorMessage}</span>
+          </div>
+        )}
+      </div>
       <p>Encrypted clue:</p>
       <Input
         fieldType={`challenge-caesar-cypher-clue-${index}`}
