@@ -58,7 +58,7 @@ export default function NewGameForm() {
     return localStorageData ? JSON.parse(localStorageData) : defaultGameData;
   });
 
-  const [nextChallenge, setNextChallenge] = useState('Trivia');
+  const [nextChallenge, setNextChallenge] = useState('trivia');
 
   const { setSavedGames } = useContext(SavedGamesContext);
   const { singleGame, setSingleGame } = useContext(SingleGameContext);
@@ -66,8 +66,8 @@ export default function NewGameForm() {
 
   const saveForm = (updatedGame: Game) => {
     localStorage.setItem('newGameForm', JSON.stringify(updatedGame));
-  }
-  
+  };
+
   useEffect(() => {
     if (newGame.id === '') {
       const newId = uuidv4();
@@ -93,6 +93,16 @@ export default function NewGameForm() {
     saveForm(newGame);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const index = newGame.challenges.length - 1;
+    const type = newGame.challenges[index].type
+    const challengeId = document.getElementById(`${type}-${index}`);
+    window.scrollTo({
+      top: challengeId?.offsetTop,
+      behavior: 'smooth',
+    });
+  }, [newGame.challenges])
 
   const handleInputChange = (e: any) => {
     setNewGame((prevGame: Game) => {
@@ -176,7 +186,7 @@ export default function NewGameForm() {
         ...prevGame.challenges,
         {
           id: `challenge-${numberOfChallenges}`, // this number should be the current length of the challenge array (challenges are zero-indexed)
-          type: 'trivia',
+          type: nextChallenge,
           description: '',
           clue: '',
           answer: '',
@@ -186,6 +196,22 @@ export default function NewGameForm() {
       saveForm(updatedGame);
       return updatedGame;
     });
+  };
+
+  const handleRemoveChallenge = (e: any, index: number) => {
+    e.preventDefault();
+    setNewGame((prevGame: Game) => {
+      const newChallenges = prevGame.challenges.filter(
+        (item, itemIndex) => itemIndex !== index
+      );
+      const updatedGame = { ...prevGame, challenges: newChallenges };
+      saveForm(updatedGame);
+      return updatedGame;
+    });
+  };
+
+  const handleNextChallenge = (e: any) => {
+    setNextChallenge(e.target.value);
   };
 
   const handleSubmit = async (e: any) => {
@@ -294,6 +320,9 @@ export default function NewGameForm() {
           const onAnswerChange = (e: any) => {
             handleAnswerChange(e, index);
           };
+          const onRemove = (e: any) => {
+            handleRemoveChallenge(e, index);
+          };
 
           return (
             <NewChallenge
@@ -305,6 +334,7 @@ export default function NewGameForm() {
               onClueChange={onClueChange}
               onDescriptionChange={onDescriptionChange}
               onAnswerChange={onAnswerChange}
+              onRemove={onRemove}
               index={index}
             />
           );
@@ -312,7 +342,7 @@ export default function NewGameForm() {
 
         {singleGame?.id !== newGame.id && (
           <>
-            <div className='flex flex-row flex-wrap'>
+            <div className='flex flex-row flex-wrap gap-8 w-full'>
               <fieldset className='flex flex-col gap-4'>
                 <legend className='mb-4'>Choose a challenge type:</legend>
                 <div className='flex flex-row-reverse justify-end gap-2'>
@@ -321,8 +351,10 @@ export default function NewGameForm() {
                     type='radio'
                     name='challengeType'
                     id='trivia'
-                    value='Trivia'
+                    value='trivia'
                     className='radio radio-primary'
+                    onChange={handleNextChallenge}
+                    checked={nextChallenge === 'trivia'}
                     required
                   />
                 </div>
@@ -332,8 +364,10 @@ export default function NewGameForm() {
                     type='radio'
                     name='challengeType'
                     id='caesarCypher'
-                    value='Caesar Cypher'
+                    value='caesar cypher'
                     className='radio radio-primary'
+                    onChange={handleNextChallenge}
+                    checked={nextChallenge === 'caesar cypher'}
                   />
                 </div>
                 <div className='flex flex-row-reverse justify-end gap-2'>
@@ -342,16 +376,20 @@ export default function NewGameForm() {
                     type='radio'
                     name='challengeType'
                     id='wordScramble'
-                    value='Word Scramble'
+                    value='word scramble'
                     className='radio radio-primary'
+                    onChange={handleNextChallenge}
+                    checked={nextChallenge === 'word scramble'}
                   />
                 </div>
               </fieldset>
-              <button onClick={handleAddChallenge}>
-                <span>Add Challenge</span>
-              </button>
+              <div className='grid place-items-center flex-grow'>
+                <button onClick={handleAddChallenge}>
+                  <span>Add {nextChallenge} Challenge</span>
+                </button>
+              </div>
             </div>
-            <button className='w-60 self-center' onClick={handleSubmit}>
+            <button onClick={handleSubmit}>
               <span>Create Game</span>
             </button>
           </>

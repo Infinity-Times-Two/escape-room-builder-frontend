@@ -11,6 +11,7 @@ export default function WordScrambleChallenge({
   onClueChange,
   onDescriptionChange,
   onAnswerChange,
+  onRemove,
   challengeType,
 }: {
   index: number;
@@ -20,6 +21,7 @@ export default function WordScrambleChallenge({
   onClueChange(e: any, index: number | undefined): void;
   onDescriptionChange(e: any, index: number | undefined): void;
   onAnswerChange(e: any, index: number | undefined): void;
+  onRemove(e: any): void;
   challengeType: string;
 }) {
   const [words, setWords] = useState<string[]>([]);
@@ -69,10 +71,35 @@ export default function WordScrambleChallenge({
   Badge.displayName = 'Badge';
 
   return (
-    <div key={`${challengeType}-${index}`} className='flex flex-col gap-8 border-2 border-black p-8 rounded-xl bg-white/50'>
+    <div
+      key={`${challengeType}-${index}`}
+      className='flex flex-col gap-8 border-2 border-black p-8 rounded-xl bg-white/50 relative'
+      id={`${challengeType}-${index}`}
+    >
+      <button
+        onClick={onRemove}
+        className='btn btn-circle btn-outline absolute top-0 right-0'
+      >
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          className='h-6 w-6'
+          fill='none'
+          viewBox='0 0 24 24'
+          stroke='currentColor'
+        >
+          <path
+            strokeLinecap='round'
+            strokeLinejoin='round'
+            strokeWidth='1'
+            d='M6 18L18 6M6 6l12 12'
+          />
+        </svg>
+      </button>
       <h3 className='mb-6'>New {challengeType} Challenge</h3>
       <div>
-        <label htmlFor={`challenge-description-${index}`}>Description (optional)</label>
+        <label htmlFor={`challenge-description-${index}`}>
+          Description (optional)
+        </label>
         <Input
           fieldType={`challenge-description-${index}`}
           value={description}

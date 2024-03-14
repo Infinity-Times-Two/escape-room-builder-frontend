@@ -11,6 +11,7 @@ export default function NewChallenge({
   onClueChange,
   onDescriptionChange,
   onAnswerChange,
+  onRemove,
   challenge,
 }: {
   index: number;
@@ -20,6 +21,7 @@ export default function NewChallenge({
   onClueChange(e: any, index: number | undefined): void;
   onDescriptionChange(e: any, index: number | undefined): void;
   onAnswerChange(e: any, index: number | undefined): void;
+  onRemove(e: any): void;
   challenge: Challenge;
 }) {
   switch (challenge.type) {
@@ -34,6 +36,7 @@ export default function NewChallenge({
           onClueChange={onClueChange}
           onDescriptionChange={onDescriptionChange}
           onAnswerChange={onAnswerChange}
+          onRemove={onRemove}
           index={index}
         />
       );
@@ -49,6 +52,7 @@ export default function NewChallenge({
           onClueChange={onClueChange}
           onDescriptionChange={onDescriptionChange}
           onAnswerChange={onAnswerChange}
+          onRemove={onRemove}
           index={index}
         />
       );
@@ -64,6 +68,7 @@ export default function NewChallenge({
           onClueChange={onClueChange}
           onDescriptionChange={onDescriptionChange}
           onAnswerChange={onAnswerChange}
+          onRemove={onRemove}
           index={index}
         />
       );
