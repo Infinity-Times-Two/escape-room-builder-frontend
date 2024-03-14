@@ -55,6 +55,7 @@ export default function CaesarCypherChallenge({
       key={`${challengeType}-${index}`}
       id={`${challengeType}-${index}`}
     >
+      <p className='absolute top-0 left-0 p-6 text-2xl'>{index + 1}</p>
       <button
         onClick={onRemove}
         className='btn btn-circle btn-outline absolute top-0 right-0'

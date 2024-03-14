@@ -95,13 +95,15 @@ export default function NewGameForm() {
   }, []);
 
   useEffect(() => {
-    const index = newGame.challenges.length - 1;
-    const type = newGame.challenges[index].type
-    const challengeId = document.getElementById(`${type}-${index}`);
-    window.scrollTo({
-      top: challengeId?.offsetTop,
-      behavior: 'smooth',
-    });
+    if (newGame.challenges.length > 3) {
+      const index = newGame.challenges.length - 1
+      const challengeType = newGame.challenges[index].type
+      const challengeId = document.getElementById(`${challengeType}-${index}`)
+      window.scrollTo({
+        top: challengeId?.offsetTop,
+        behavior: 'smooth',
+      });
+    }
   }, [newGame.challenges])
 
   const handleInputChange = (e: any) => {
@@ -177,11 +179,19 @@ export default function NewGameForm() {
     });
   };
 
+  // const scrollToNewChallenge = (type: string, index: number) => {
+  //   const challengeId = document.getElementById(`${type}-${index}`);
+  //   console.log(`SCROLLING TO ${type}-${index}`)
+  //   window.scrollTo({
+  //     top: challengeId?.offsetTop,
+  //     behavior: 'smooth',
+  //   });
+  // };
+
   const handleAddChallenge = (e: any) => {
     e.preventDefault();
-
     setNewGame((prevGame: Game) => {
-      const numberOfChallenges = prevGame.challenges.length;
+      const numberOfChallenges: number = prevGame.challenges.length;
       const newChallenges = [
         ...prevGame.challenges,
         {
@@ -310,35 +320,39 @@ export default function NewGameForm() {
         </div>
         <h2>Challenges</h2>
 
-        {newGame.challenges.map((challenge: Challenge, index) => {
-          const onClueChange = (e: any) => {
-            handleClueChange(e, challenge.type, index);
-          };
-          const onDescriptionChange = (e: any) => {
-            handleDescriptionChange(e, index);
-          };
-          const onAnswerChange = (e: any) => {
-            handleAnswerChange(e, index);
-          };
-          const onRemove = (e: any) => {
-            handleRemoveChallenge(e, index);
-          };
+        {newGame.challenges.length === 0 ? (
+          <p>Add a challenge!</p>
+        ) : (
+          newGame.challenges.map((challenge: Challenge, index) => {
+            const onClueChange = (e: any) => {
+              handleClueChange(e, challenge.type, index);
+            };
+            const onDescriptionChange = (e: any) => {
+              handleDescriptionChange(e, index);
+            };
+            const onAnswerChange = (e: any) => {
+              handleAnswerChange(e, index);
+            };
+            const onRemove = (e: any) => {
+              handleRemoveChallenge(e, index);
+            };
 
-          return (
-            <NewChallenge
-              key={challenge.id}
-              challenge={challenge}
-              clue={newGame.challenges[index].clue}
-              description={newGame.challenges[index].description}
-              answer={newGame.challenges[index].answer}
-              onClueChange={onClueChange}
-              onDescriptionChange={onDescriptionChange}
-              onAnswerChange={onAnswerChange}
-              onRemove={onRemove}
-              index={index}
-            />
-          );
-        })}
+            return (
+              <NewChallenge
+                key={challenge.id}
+                challenge={challenge}
+                clue={newGame.challenges[index].clue}
+                description={newGame.challenges[index].description}
+                answer={newGame.challenges[index].answer}
+                onClueChange={onClueChange}
+                onDescriptionChange={onDescriptionChange}
+                onAnswerChange={onAnswerChange}
+                onRemove={onRemove}
+                index={index}
+              />
+            );
+          })
+        )}
 
         {singleGame?.id !== newGame.id && (
           <>
