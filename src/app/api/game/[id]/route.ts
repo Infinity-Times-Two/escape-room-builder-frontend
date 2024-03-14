@@ -18,6 +18,6 @@ export async function GET(req: Request, { params }: { params: { id: string }}) {
     },
   });
   const data = await response.json();
-  console.(data);
+  console.log(data);
   return Response.json(data);
 }
