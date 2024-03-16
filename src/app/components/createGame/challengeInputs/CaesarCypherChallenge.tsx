@@ -1,5 +1,6 @@
 import Input from '../../ui/Input';
 import { useState, useEffect } from 'react';
+import RemoveButton from '../../ui/RemoveButton';
 
 export default function CaesarCypherChallenge({
   index,
@@ -24,13 +25,14 @@ export default function CaesarCypherChallenge({
 }) {
   const [encryptedClue, setEncryptedClue] = useState<string>('');
   const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('');
+  const [seed, setSeed] = useState('')
 
   useEffect(() => {
     if (typeof answer !== 'undefined' && answer !== '') {
       let regex = /^[A-Za-z ]+$/;
-      setErrorMessage('Please only use letters and spaces')
-      setError(!regex.test(answer))
+      setErrorMessage('Please only use letters and spaces');
+      setError(!regex.test(answer));
     }
   }, [answer]);
 
@@ -43,6 +45,7 @@ export default function CaesarCypherChallenge({
       const lowerCaseAnswer = answer.toLowerCase();
       originalWord = Array.from(lowerCaseAnswer);
       const randomSeed = Math.floor(Math.random() * 25) + 1;
+      setSeed(String.fromCharCode(97 + randomSeed).toUpperCase());
       originalWord.forEach((letter) => {
         let newLetter = letter.charCodeAt(0);
         if (newLetter !== 32) {
@@ -60,20 +63,33 @@ export default function CaesarCypherChallenge({
 
   const onEncrypt = (e: any) => {
     e.preventDefault();
-    let regex = /^[A-Za-z]+$/;
-    if (typeof answer === 'string' && !regex.test(answer)) {
+    // let regex = /^[A-Za-z]+$/;
+    if (typeof answer === 'string' && answer.length < 3) {
       setError(true);
-      setErrorMessage('Please enter at least one word')
-      return
+      setErrorMessage('Please enter at least one word');
+      return;
     }
-    setError(false)
+    setError(false);
     clue = encryptCaesarCypher(answer)
       .toString()
       .toLowerCase()
       .replaceAll(',', '');
-    console.log(clue);
     onClueChange(clue, index);
   };
+
+  const handleKeyDown = (e: any) => {
+    e.preventDefault();
+    if (e.key === 'Enter') {
+      onEncrypt(e);
+    }
+  };
+
+    // Clear encrypted word when form is reset
+    useEffect(() => {
+      if (clue?.length === 0) {
+        setEncryptedClue('')
+      }
+    }, [clue])
 
   return (
     <div
@@ -82,25 +98,6 @@ export default function CaesarCypherChallenge({
       id={`${challengeType}-${index}`}
     >
       <p className='absolute top-0 left-0 p-6 text-2xl'>{index + 1}</p>
-      <button
-        onClick={onRemove}
-        className='btn btn-circle btn-outline absolute top-0 right-0'
-      >
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          className='h-6 w-6'
-          fill='none'
-          viewBox='0 0 24 24'
-          stroke='currentColor'
-        >
-          <path
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            strokeWidth='1'
-            d='M6 18L18 6M6 6l12 12'
-          />
-        </svg>
-      </button>
       <h3 className='mb-6'>New {challengeType} Challenge</h3>
       <label htmlFor={`challenge-description-${index}`} className=''>
         Describe the word to be decrypted
@@ -142,6 +139,24 @@ export default function CaesarCypherChallenge({
             <span>{errorMessage}</span>
           </div>
         )}
+        {encryptedClue && (
+          <div role='alert' className='alert alert-info mx-4 self-center'>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
+              className='stroke-current shrink-0 w-6 h-6'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth='2'
+                d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
+              ></path>
+            </svg>
+            <span>{`Key: A ➜ ${seed}`}</span>
+          </div>
+        )}
       </div>
       <p>Encrypted clue:</p>
       <Input
@@ -149,9 +164,11 @@ export default function CaesarCypherChallenge({
         value={encryptedClue.toString().replaceAll(',', '')}
         onChange={onClueChange}
         placeholder=''
+        onKeyDown={handleKeyDown}
         key={`challenge-caesar-cypher-clue-${index}`}
         disabled
       />
+      <RemoveButton onRemove={onRemove} />
     </div>
   );
 }

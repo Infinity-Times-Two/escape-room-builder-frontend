@@ -1,4 +1,5 @@
 import Input from '../../ui/Input';
+import RemoveButton from '../../ui/RemoveButton';
 
 export default function TriviaChallenge({
   index,
@@ -28,25 +29,6 @@ export default function TriviaChallenge({
       id={`${challengeType}-${index}`}
     >
       <p className='absolute top-0 left-0 p-6 text-2xl'>{index + 1}</p>
-      <button
-        onClick={onRemove}
-        className='btn btn-circle btn-outline absolute top-0 right-0'
-      >
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          className='h-6 w-6'
-          fill='none'
-          viewBox='0 0 24 24'
-          stroke='currentColor'
-        >
-          <path
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            strokeWidth='1'
-            d='M6 18L18 6M6 6l12 12'
-          />
-        </svg>
-      </button>
       <h3 className='mb-6'>New {challengeType} Challenge</h3>
       <label htmlFor={`challenge-clue-${index}`}>Question</label>
       <Input
@@ -66,6 +48,7 @@ export default function TriviaChallenge({
         onChange={onAnswerChange}
         key={`challenge-answer-${index}`}
       />
+      <RemoveButton onRemove={onRemove} />
     </div>
   );
 }

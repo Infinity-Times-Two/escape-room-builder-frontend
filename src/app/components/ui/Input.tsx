@@ -8,6 +8,7 @@ type InputProps = {
   value?: string | string[] | undefined;
   disabled?: boolean;
   required?: boolean;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLElement>) => void;
 };
 
 export default function Input({ fieldType, placeholder, onChange, value, disabled, required }: InputProps) {
