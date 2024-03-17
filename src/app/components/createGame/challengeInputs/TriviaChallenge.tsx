@@ -11,6 +11,7 @@ export default function TriviaChallenge({
   onAnswerChange,
   onRemove,
   challengeType,
+  dataTest
 }: {
   index: number;
   clue: string | string[] | undefined;
@@ -21,6 +22,7 @@ export default function TriviaChallenge({
   onAnswerChange(e: any, index: number | undefined): void;
   onRemove(e: any): void;
   challengeType: string;
+  dataTest: string;
 }) {
   return (
     <div
@@ -39,6 +41,7 @@ export default function TriviaChallenge({
         } question`}
         onChange={onClueChange}
         key={`challenge-clue-${index}`}
+        dataTest={`${dataTest}-clue`}
       />
       <label htmlFor={`challenge-answer-${index}`}>Answer</label>
       <Input
@@ -47,6 +50,7 @@ export default function TriviaChallenge({
         placeholder='Answer'
         onChange={onAnswerChange}
         key={`challenge-answer-${index}`}
+        dataTest={`${dataTest}-answer`}
       />
       <RemoveButton onRemove={onRemove} />
     </div>

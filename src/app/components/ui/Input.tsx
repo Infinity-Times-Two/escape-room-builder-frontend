@@ -9,13 +9,15 @@ type InputProps = {
   disabled?: boolean;
   required?: boolean;
   onKeyDown?: (event: React.KeyboardEvent<HTMLElement>) => void;
+  dataTest?: string;
 };
 
-export default function Input({ fieldType, placeholder, onChange, value, disabled, required }: InputProps) {
+export default function Input({ fieldType, placeholder, onChange, value, disabled, required, dataTest }: InputProps) {
   return (
     <div className='rounded-md bg-black font-semibold m-2'>
       <input
         data-type={fieldType}
+        data-test={dataTest}
         name={fieldType}
         id={fieldType}
         placeholder={placeholder}

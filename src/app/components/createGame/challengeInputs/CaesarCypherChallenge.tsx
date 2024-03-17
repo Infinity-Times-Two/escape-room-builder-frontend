@@ -12,6 +12,7 @@ export default function CaesarCypherChallenge({
   onAnswerChange,
   onRemove,
   challengeType,
+  dataTest
 }: {
   index: number;
   clue: string | string[] | undefined;
@@ -22,6 +23,7 @@ export default function CaesarCypherChallenge({
   onAnswerChange(e: any, index: number | undefined): void;
   onRemove(e: any): void;
   challengeType: string;
+  dataTest: string;
 }) {
   const [encryptedClue, setEncryptedClue] = useState<string>('');
   const [error, setError] = useState(false);
@@ -63,6 +65,7 @@ export default function CaesarCypherChallenge({
 
   const onEncrypt = (e: any) => {
     e.preventDefault();
+    setEncryptedClue('')
     // let regex = /^[A-Za-z]+$/;
     if (typeof answer === 'string' && answer.length < 3) {
       setError(true);
@@ -116,9 +119,10 @@ export default function CaesarCypherChallenge({
         placeholder='Answer'
         onChange={onAnswerChange}
         key={`challenge-answer-${index}`}
+        dataTest={`${dataTest}-answer`}
       />
       <div className='flex flex-row'>
-        <button onClick={onEncrypt} disabled={error}>
+        <button onClick={onEncrypt} disabled={error} data-test={`${index}-encrypt-button`}>
           <span>Encrypt</span>
         </button>
         {error && (
@@ -167,6 +171,7 @@ export default function CaesarCypherChallenge({
         onKeyDown={handleKeyDown}
         key={`challenge-caesar-cypher-clue-${index}`}
         disabled
+        dataTest={`${dataTest}-clue`}
       />
       <RemoveButton onRemove={onRemove} />
     </div>

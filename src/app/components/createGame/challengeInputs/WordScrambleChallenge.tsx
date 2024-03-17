@@ -14,6 +14,7 @@ export default function WordScrambleChallenge({
   onAnswerChange,
   onRemove,
   challengeType,
+  dataTest
 }: {
   index: number;
   clue: string | string[] | undefined;
@@ -24,6 +25,7 @@ export default function WordScrambleChallenge({
   onAnswerChange(e: any, index: number | undefined): void;
   onRemove(e: any): void;
   challengeType: string;
+  dataTest: string;
 }) {
   const [words, setWords] = useState<string[]>([]);
   const [error, setError] = useState(false);
@@ -122,10 +124,11 @@ export default function WordScrambleChallenge({
           onChange={onAnswerChange}
           key={`challenge-answer-${index}`}
           onKeyDown={handleKeyDown}
+          dataTest={`${dataTest}-answer`}
         />
       </div>
       <div className='flex flex-row'>
-        <button onClick={shuffle}>
+        <button onClick={shuffle} data-test={`${index}-scramble-button`}>
           <span>Scramble</span>
         </button>
         {error && (
@@ -148,7 +151,7 @@ export default function WordScrambleChallenge({
         )}
       </div>
       <Card>
-        <div className='flex flex-row gap-2 flex0wrap justify-center'>
+        <div className='flex flex-row gap-2 flex0wrap justify-center' data-test={`${dataTest}-clue`}>
           <FlipMove
             staggerDurationBy='50'
             duration={600}

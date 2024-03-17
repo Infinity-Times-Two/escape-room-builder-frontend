@@ -274,6 +274,7 @@ export default function NewGameForm() {
     setNewGame(defaultGameData);
   };
 
+  const minutes = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
   return (
     <>
       <form>
@@ -288,6 +289,7 @@ export default function NewGameForm() {
               placeholder='Room name'
               onChange={handleInputChange}
               required
+              dataTest='game-title'
             />
           </div>
           <p>By: {author}</p>
@@ -298,6 +300,7 @@ export default function NewGameForm() {
               value={newGame.gameDescription}
               placeholder='Describe this room'
               onChange={handleInputChange}
+              dataTest='game-description'
             />
           </div>
           <div className='flex flex-col gap-4'>
@@ -308,24 +311,27 @@ export default function NewGameForm() {
               max={3600}
               value={newGame.timeLimit}
               className='range range-lg [--range-shdw:violet]'
-              step='300'
+              step={300}
               onChange={handleTimeLimitChange}
               id='timeLimit'
+              data-test='time-limit'
             />
-
-            <div className='w-full flex justify-between text-sm px-2'>
-              <span>05</span>
-              <span>10</span>
-              <span>15</span>
-              <span>20</span>
-              <span>25</span>
-              <span>30</span>
-              <span>35</span>
-              <span>40</span>
-              <span>45</span>
-              <span>50</span>
-              <span>55</span>
-              <span>60</span>
+            <div className='w-full flex justify-between text-sm pl-px'>
+              {minutes.map((item: number) => {
+                return (
+                  <span
+                    data-test={`minute-marker-${item}`}
+                    key={`minute-${item}`}
+                    className={
+                      Number(newGame.timeLimit) === item * 60
+                        ? 'flex items-center justify-center font-bold border p-2 border-black rounded-full w-[2.5rem] min-h-[2.5rem] bg-teal-100'
+                        : 'flex items-center justify-center p-2 w-[2.5rem] min-h-[2.5rem]'
+                    }
+                  >
+                    {String(item).padStart(2, "0")}
+                  </span>
+                );
+              })}
             </div>
           </div>
           <h2>Challenges</h2>
@@ -359,6 +365,7 @@ export default function NewGameForm() {
                   onAnswerChange={onAnswerChange}
                   onRemove={onRemove}
                   index={index}
+                  dataTest={`${challenge.id}-${String(challenge.type).replace(" ", "-")}`} // Mmm.. maybe refactor challenge type names?
                 />
               );
             })
@@ -408,13 +415,13 @@ export default function NewGameForm() {
                     </div>
                   </fieldset>
                   <div className='grid place-items-center flex-grow'>
-                    <button onClick={handleAddChallenge}>
+                    <button onClick={handleAddChallenge} data-test='add-challenge'>
                       <span>Add {nextChallenge} Challenge</span>
                     </button>
                   </div>
                 </div>
               </div>
-              <button onClick={handleSubmit}>
+              <button onClick={handleSubmit} data-test='create-game'>
                 <span>Create Game</span>
               </button>
             </>
@@ -425,7 +432,7 @@ export default function NewGameForm() {
               href={`/game/${newGame.id}`}
               className='hover:no-underline self-center'
             >
-              <button className='green w-60'>
+              <button className='green w-60' data-test='play-game'>
                 <span>Play Game!</span>
               </button>
             </Link>
@@ -445,7 +452,7 @@ export default function NewGameForm() {
                   d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
                 ></path>
               </svg>
-              <span>
+              <span data-test='logged-out-message'>
                 Your game is saved to your device. If you would like to share or
                 save across devices, please <Link href='/sign-in'>sign in</Link>{' '}
                 or <Link href='/sign-up'>sign up</Link>.

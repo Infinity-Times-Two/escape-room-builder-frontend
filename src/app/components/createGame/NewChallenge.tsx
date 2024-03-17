@@ -13,6 +13,7 @@ export default function NewChallenge({
   onAnswerChange,
   onRemove,
   challenge,
+  dataTest
 }: {
   index: number;
   clue: string | string[] | undefined;
@@ -23,6 +24,7 @@ export default function NewChallenge({
   onAnswerChange(e: any, index: number | undefined): void;
   onRemove(e: any): void;
   challenge: Challenge;
+  dataTest: string;
 }) {
   switch (challenge.type) {
     case 'trivia': {
@@ -38,6 +40,7 @@ export default function NewChallenge({
           onAnswerChange={onAnswerChange}
           onRemove={onRemove}
           index={index}
+          dataTest={dataTest}
         />
       );
     }
@@ -54,6 +57,7 @@ export default function NewChallenge({
           onAnswerChange={onAnswerChange}
           onRemove={onRemove}
           index={index}
+          dataTest={dataTest}
         />
       );
     }
@@ -70,6 +74,7 @@ export default function NewChallenge({
           onAnswerChange={onAnswerChange}
           onRemove={onRemove}
           index={index}
+          dataTest={dataTest}
         />
       );
     }

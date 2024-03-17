@@ -25,17 +25,62 @@ describe('Navigation', () => {
     // Shows a log-in
     cy.getByData('start-game').click();
 
-    cy.get('button').should("contain.text", 'Submit')
+    cy.get('button').should('contain.text', 'Submit');
   });
 });
 
-describe('User can sign in', () => {
-  it('should be able to sign in', () => {
+describe('Authentication', () => {
+  it('User should be able to sign in', () => {
     cy.visit('/', { failOnStatusCode: false });
 
     // check if Sign-in button exists (the user is signed-out)
     cy.getByData('sign-in-button').should('exist');
 
     cy.signIn();
+  });
+});
+
+describe('Game Creation', () => {
+  beforeEach(() => {
+    cy.visit('/new-game', { failOnStatusCode: false });
+  });
+  it('User can enter basic form data', () => {
+    cy.getByData('game-title').should('exist').type('Test Game');
+    cy.getByData('game-description').should('exist').type('Test game description');
+
+    // Using the exact value does not change the slider value
+    // Eg. 300 does not set it to 5 minutes (300 seconds), but 295 does.
+    cy.getByData('time-limit').invoke('val', 295).trigger('change')
+    cy.getByData('minute-marker-5').should('have.class', 'font-bold')
+    cy.getByData('time-limit').invoke('val', 1850).trigger('change')
+    cy.getByData('minute-marker-30').should('have.class', 'font-bold')
+
+    // Enter data into challenges
+
+    // Test Trivia input
+    cy.getByData('challenge-0-trivia-clue').type('Trivia question #1')
+    cy.getByData('challenge-0-trivia-clue').should('have.value', 'Trivia question #1')
+    cy.getByData('challenge-0-trivia-answer').type('Trivia answer #1')
+    cy.getByData('challenge-0-trivia-answer').should('have.value', 'Trivia answer #1')
+
+    // Test Caesar Cypher input
+    cy.getByData('challenge-1-caesar-cypher-answer').type('Encrypt this clue')
+    cy.getByData('1-encrypt-button').click()
+    cy.getByData('challenge-1-caesar-cypher-clue').should('not.have.value', '')
+
+    // Test Word Scramble input
+    cy.getByData('challenge-2-word-scramble-answer').type('scramble these words')
+    cy.getByData('2-scramble-button').click()
+    cy.getByData('challenge-2-word-scramble-clue').should('have.descendants', 'li')
+
+    // Add a new challenge
+    cy.getByData('add-challenge').click()
+    cy.getByData('challenge-3-trivia-clue').should('exist') 
+    // This is flaky - later on it may not create a trivia challenge by default
+
+    // User is not logged in, so game will not save to DB
+    cy.getByData('create-game').click()
+    cy.getByData('play-game').should('exist')
+    cy.getByData('logged-out-message').should('exist')
   });
 });
