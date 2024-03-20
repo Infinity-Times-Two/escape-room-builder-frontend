@@ -4,6 +4,7 @@ import CompositeContextProvider from './contexts/combinedContexts';
 import { Work_Sans, Cabin } from 'next/font/google';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
+import { neobrutalism } from '@clerk/themes';
 import './globals.css';
 
 const workSans = Work_Sans({
@@ -23,10 +24,13 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
   return (
     <html lang='en'>
-      <ClerkProvider>
+      <ClerkProvider
+        appearance={{
+          baseTheme: neobrutalism,
+        }}
+      >
         <body
           className={`${cabin.variable} ${workSans.variable} flex flex-col min-h-screen`}
         >

@@ -85,6 +85,12 @@ export default function CaesarCypherChallenge({
     }
   };
 
+  useEffect(() => {
+    if (typeof clue === 'string' && typeof clue !== 'undefined') {
+      setEncryptedClue(clue);
+    }
+  }, []);
+
   // Clear encrypted word when form is reset
   useEffect(() => {
     if (clue?.length === 0) {

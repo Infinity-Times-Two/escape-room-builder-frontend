@@ -39,9 +39,9 @@ export default function PlayGame({ params }: { params: { game: string } }) {
       const savedGame: Game | undefined = savedGamesArray?.find(
         (game) => game.id === params.game
       );
-      setSavedGames(savedGamesArray)
+      setSavedGames(savedGamesArray);
       if (savedGame) {
-        console.log('Found from saved games')
+        console.log('Found from saved games');
         setSingleGame(savedGame);
       }
     }
@@ -51,7 +51,7 @@ export default function PlayGame({ params }: { params: { game: string } }) {
       const loadedGame: Game | undefined = loadedGamesArray?.find(
         (game) => game.id === params.game
       );
-      setLoadedGames(loadedGamesArray)
+      setLoadedGames(loadedGamesArray);
       if (loadedGame) {
         console.log('Found from loaded games');
         setSingleGame(loadedGame);
@@ -60,18 +60,23 @@ export default function PlayGame({ params }: { params: { game: string } }) {
 
     // Check if it's the single game already loaded to be played
     if (singleGame.id === params.game) {
-      console.log('Game already in state')
-    }
-    else if (localStorageSingleGame?.id === params.game) {
+      console.log('Game already in state');
+    } else if (localStorageSingleGame?.id === params.game) {
       const parsedGame = JSON.parse(localStorageGame);
-      console.log('Grabbed Single Game from local storage')
+      console.log('Grabbed Single Game from local storage');
       setSingleGame(parsedGame);
     } else {
       // Otherwise, fetch from the DB
       console.log('Fetching game from DB');
       fetchSingleGame();
     }
-  }, [setSingleGame, setSavedGames, setLoadedGames, params.game, singleGame.id]);
+  }, [
+    setSingleGame,
+    setSavedGames,
+    setLoadedGames,
+    params.game,
+    singleGame.id,
+  ]);
 
   const { setExpiry } = useContext(TimerContext);
 
@@ -94,22 +99,31 @@ export default function PlayGame({ params }: { params: { game: string } }) {
         <>
           <h2>{singleGame.gameTitle}</h2>
           <p>{singleGame.gameDescription}</p>
-          <Link
-            href={`./${singleGame.id}/${singleGame.challenges[0].id}`}
-            data-test='start-game'
-          >
-            <button
-              className='xl'
-              onClick={() =>
-                setExpiry(
-                  Date.now() +
-                    (singleGame.timeLimit * 1000)
-                )
-              }
+          <div className='flex flex-row justify-center gap-8'>
+            <Link
+              href={`/edit/${singleGame.id}`}
+              data-test='edit-game'
             >
-              <span>Play</span>
-            </button>
-          </Link>
+              <button
+                className='xl'
+              >
+                <span>Edit</span>
+              </button>
+            </Link>
+            <Link
+              href={`./${singleGame.id}/${singleGame.challenges[0].id}`}
+              data-test='start-game'
+            >
+              <button
+                className='xl green'
+                onClick={() =>
+                  setExpiry(Date.now() + singleGame.timeLimit * 1000)
+                }
+              >
+                <span>Play</span>
+              </button>
+            </Link>
+          </div>
 
           <div className='chip'>
             <span>{formattedTime} minutes</span>

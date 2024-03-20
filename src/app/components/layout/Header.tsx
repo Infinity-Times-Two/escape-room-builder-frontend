@@ -24,11 +24,8 @@ export default function Header() {
 
     const fetchUser = async (id: string | undefined | null) => {
       if (id !== null && id !== undefined) {
-        console.log('Looking for user in DB');
         const response = await fetch(`/api/user/${id}`);
         const data = await response.json();
-        console.log('Found user');
-        console.log(data);
         setUser({
           id: data.userId,
           firstName: data.firstName,
@@ -38,24 +35,17 @@ export default function Header() {
           isAdmin: data.isAdmin,
         });
         if (typeof data.firstName === 'undefined') {
-          console.log('Fetching first name...');
-          const response = await fetch(`/api/updateUser/${id}`);
-          const data = await response.json();
-          console.log('Got first name:');
-          console.log(data.firstName);
+          const firstName = await updateUser(id);
           setUser((prevUser) => {
-            const updatedUser = { ...prevUser, firstName: data.firstName };
+            const updatedUser = { ...prevUser, firstName: firstName };
             return updatedUser;
           });
         }
 
         if (data?.message === 'User not found') {
-          console.log('Creating user...');
           createUser(id);
           const response = await fetch(`/api/user/${id}`);
           const data = await response.json();
-          console.log('User created');
-          console.log(data);
           setUser({
             id: data.userId,
             firstName: data.firstName,
@@ -68,7 +58,6 @@ export default function Header() {
         }
         return data;
       } else {
-        console.log('No user info');
       }
     };
 

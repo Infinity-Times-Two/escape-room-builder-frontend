@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Link from 'next/link';
 import NewChallenge from './NewChallenge';
 
-export default function NewGameForm() {
+export default function NewGameForm({ editGame }: { editGame?: string }) {
   const { user } = useContext(UserContext);
   let author: string;
   if (user.firstName === '') {
@@ -53,17 +53,29 @@ export default function NewGameForm() {
     ],
   };
 
-  const [newGame, setNewGame] = useState<Game>(() => {
-    const localStorageData = localStorage.getItem('newGameForm');
-    return localStorageData ? JSON.parse(localStorageData) : defaultGameData;
-  });
-
   const [nextChallenge, setNextChallenge] = useState('trivia');
   const [submitError, setSubmitError] = useState(false);
   const [submitErrorMessage, setSubmitErrorMessage] = useState('');
+  const [editError, setEditError] = useState(false);
+  const [editMessage, setEditMessage] = useState('');
 
   const { setSavedGames } = useContext(SavedGamesContext);
   const { singleGame, setSingleGame } = useContext(SingleGameContext);
+
+  const [newGame, setNewGame] = useState<Game>(() => {
+    const localStorageData = localStorage.getItem('newGameForm');
+    console.log(editGame);
+    console.log(singleGame.id);
+    let gameData = defaultGameData;
+    if (localStorageData) {
+      gameData = JSON.parse(localStorageData);
+    }
+    if (editGame === singleGame.id) {
+      return singleGame;
+    } else {
+    }
+    return localStorageData ? gameData : defaultGameData;
+  });
 
   // Reusable function to save form to localStorage
   const saveForm = (updatedGame: Game) => {
@@ -72,6 +84,12 @@ export default function NewGameForm() {
 
   // Set game ID and colours when loading a new form
   useEffect(() => {
+    if (editGame) {
+      setSingleGame((prevGame: Game) => {
+        const newGame = { ...prevGame, id: '' };
+        return newGame;
+      });
+    }
     if (newGame.id === '') {
       const newId = uuidv4();
       setNewGame((prevGame: Game) => {
@@ -285,7 +303,18 @@ export default function NewGameForm() {
 
     // Add this game to saved games in state & local storage
     setSavedGames((prevGames: Game[]) => {
-      const newGames = [...prevGames, newGame];
+      let newGames: Game[];
+      if (editGame) {
+        newGames = prevGames.map((game) => {
+          if (game.id === editGame) {
+            return newGame;
+          } else {
+            return game;
+          }
+        });
+      } else {
+        newGames = [...prevGames, newGame];
+      }
       localStorage.setItem('savedGames', JSON.stringify(newGames));
       return newGames;
     });
@@ -293,18 +322,37 @@ export default function NewGameForm() {
     // Add to main games table in DB
     // TO DO: Allow user to mark a game as public or private
     if (user.id !== '') {
-      const response = await fetch('/api/games', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newGame),
-      });
-      const data = await response.json();
-      console.log('Response from saving to DB:');
-      console.log(data);
+      if (editGame) {
+        setEditError(false);
+        console.log('Editing game in DB...');
+        const response = await fetch(`/api/game/${editGame}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newGame),
+        });
+        const data = await response.json();
+        console.log('Response from saving edited game to DB:');
+        console.log(data);
+        if (data.message === 'Game updated successfully') {
+          setEditMessage('Your game was updated successfully!');
+        } else {
+          setEditError(true);
+          setEditMessage(data.message);
+        }
+      } else {
+        const response = await fetch('/api/games', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newGame),
+        });
+        const data = await response.json();
+        console.log('Response from saving to DB:');
+        console.log(data);
+      }
     }
 
     // Add game ID to the user's saved games array in escape-room-users table in DB
-    if (user.id !== '') {
+    if (user.id !== '' && !editGame) {
       const response = await fetch(`/api/updateUser/${user.id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -424,73 +472,108 @@ export default function NewGameForm() {
               );
             })
           )}
-          {singleGame?.id !== newGame.id && (
-            <>
-              <div className='flex flex-row flex-wrap gap-8 w-full'>
-                <div className='flex flex-row gap-8 border-2 border-black p-8 rounded-xl bg-white/50 w-full'>
-                  <fieldset className='flex flex-col flex-shrink gap-4'>
-                    <legend className='mb-4'>Choose a challenge type:</legend>
-                    <div className='flex flex-row-reverse justify-end gap-2'>
-                      <label htmlFor='trivia'>Trivia</label>
-                      <input
-                        type='radio'
-                        name='challengeType'
-                        id='trivia'
-                        value='trivia'
-                        className='radio radio-primary'
-                        onChange={handleNextChallenge}
-                        checked={nextChallenge === 'trivia'}
-                        required
-                      />
-                    </div>
-                    <div className='flex flex-row-reverse justify-end gap-2'>
-                      <label htmlFor='caesarCypher'>Caesar Cypher</label>
-                      <input
-                        type='radio'
-                        name='challengeType'
-                        id='caesarCypher'
-                        value='caesar cypher'
-                        className='radio radio-primary'
-                        onChange={handleNextChallenge}
-                        checked={nextChallenge === 'caesar cypher'}
-                      />
-                    </div>
-                    <div className='flex flex-row-reverse justify-end gap-2'>
-                      <label htmlFor='wordScramble'>Word Scramble</label>
-                      <input
-                        type='radio'
-                        name='challengeType'
-                        id='wordScramble'
-                        value='word scramble'
-                        className='radio radio-primary'
-                        onChange={handleNextChallenge}
-                        checked={nextChallenge === 'word scramble'}
-                      />
-                    </div>
-                  </fieldset>
-                  <div className='grid place-items-center flex-grow'>
-                    <button
-                      onClick={handleAddChallenge}
-                      data-test='add-challenge'
-                      data-testid={`add-${nextChallenge.replaceAll(
-                        ' ',
-                        '-'
-                      )}-challenge`}
-                    >
-                      <span>Add {nextChallenge} Challenge</span>
-                    </button>
+
+          <>
+            <div className='flex flex-row flex-wrap gap-8 w-full'>
+              <div className='flex flex-row gap-8 border-2 border-black p-8 rounded-xl bg-white/50 w-full'>
+                <fieldset className='flex flex-col flex-shrink gap-4'>
+                  <legend className='mb-4'>Choose a challenge type:</legend>
+                  <div className='flex flex-row-reverse justify-end gap-2'>
+                    <label htmlFor='trivia'>Trivia</label>
+                    <input
+                      type='radio'
+                      name='challengeType'
+                      id='trivia'
+                      value='trivia'
+                      className='radio radio-primary'
+                      onChange={handleNextChallenge}
+                      checked={nextChallenge === 'trivia'}
+                      required
+                    />
                   </div>
+                  <div className='flex flex-row-reverse justify-end gap-2'>
+                    <label htmlFor='caesarCypher'>Caesar Cypher</label>
+                    <input
+                      type='radio'
+                      name='challengeType'
+                      id='caesarCypher'
+                      value='caesar cypher'
+                      className='radio radio-primary'
+                      onChange={handleNextChallenge}
+                      checked={nextChallenge === 'caesar cypher'}
+                    />
+                  </div>
+                  <div className='flex flex-row-reverse justify-end gap-2'>
+                    <label htmlFor='wordScramble'>Word Scramble</label>
+                    <input
+                      type='radio'
+                      name='challengeType'
+                      id='wordScramble'
+                      value='word scramble'
+                      className='radio radio-primary'
+                      onChange={handleNextChallenge}
+                      checked={nextChallenge === 'word scramble'}
+                    />
+                  </div>
+                </fieldset>
+                <div className='grid place-items-center flex-grow'>
+                  <button
+                    onClick={handleAddChallenge}
+                    data-test='add-challenge'
+                    data-testid={`add-${nextChallenge.replaceAll(
+                      ' ',
+                      '-'
+                    )}-challenge`}
+                  >
+                    <span>Add {nextChallenge} Challenge</span>
+                  </button>
                 </div>
               </div>
-              <button
-                onClick={handleSubmit}
-                data-test='create-game'
-                data-testid='create-game'
-              >
-                <span>Create Game</span>
-              </button>
-            </>
+            </div>
+          </>
+
+          {/* Show by default on edit page */}
+          {editGame === newGame.id && (
+            <button
+              onClick={handleSubmit}
+              data-test='edit-game'
+              data-testid='edit-game'
+            >
+              <span>Update Game</span>
+            </button>
           )}
+
+          {/* Show by default on create page */}
+          {!editGame && singleGame?.id !== newGame.id && (
+            <button
+              onClick={handleSubmit}
+              data-test='create-game'
+              data-testid='create-game'
+            >
+              <span>Create Game</span>
+            </button>
+          )}
+
+          {editMessage && (
+            <div role='alert' className='alert alert-info'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+                className='stroke-current shrink-0 w-6 h-6'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
+                ></path>
+              </svg>
+              <span data-test='logged-out-message'>{editMessage}</span>
+            </div>
+          )}
+
+          {/* Show after creating game or after editing game*/}
           {singleGame?.id === newGame.id && (
             <Link
               key={newGame.id}
@@ -548,9 +631,11 @@ export default function NewGameForm() {
           )}
         </div>
       </form>
-      <button className='red self-end' onClick={handleReset} role='reset'>
-        <span>Reset</span>
-      </button>
+      {!editGame && (
+        <button className='red self-end' onClick={handleReset} role='reset'>
+          <span>Reset</span>
+        </button>
+      )}
     </>
   );
 }

@@ -71,6 +71,12 @@ export default function WordScrambleChallenge({
   };
 
   useEffect(() => {
+    if (typeof clue !== 'string' && typeof clue !== 'undefined') {
+      setWords(clue);
+    }
+  }, []);
+
+  useEffect(() => {
     setError(false);
   }, [answer]);
 
@@ -161,7 +167,9 @@ export default function WordScrambleChallenge({
       </div>
       <Card>
         <div
-          className={`flex flex-row gap-2 flex0wrap justify-center h-[100px] w-full ${submitError && words.length === 0 && 'bg-red-100'}`}
+          className={`flex flex-row gap-2 flex0wrap justify-center h-[100px] w-full ${
+            submitError && words.length === 0 && 'bg-red-100'
+          }`}
           data-test={`${dataTest}-clue`}
         >
           <FlipMove
