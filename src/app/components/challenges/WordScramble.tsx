@@ -22,21 +22,23 @@ export default function WordScrambleChallenge({
       : [{ clue: currentChallenge.clue, active: true }]
   );
 
-  const shuffleClues = (array: { clue: string; active: boolean }[]) => {
-    let newArray = [...array];
-    for (let i = newArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-    }
-    return newArray;
-  };
+  // Shuffling here is no longer required because it's now handled on game creation
 
-  useEffect(() => {
-    const newClues = shuffleClues(clues);
-    setClues(newClues);
-    // including clues in the dependency array causes an infinite loop, so:
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // const shuffleClues = (array: { clue: string; active: boolean }[]) => {
+  //   let newArray = [...array];
+  //   for (let i = newArray.length - 1; i > 0; i--) {
+  //     const j = Math.floor(Math.random() * (i + 1));
+  //     [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  //   }
+  //   return newArray;
+  // };
+
+  // useEffect(() => {
+  //   const newClues = shuffleClues(clues);
+  //   setClues(newClues);
+  //   // including clues in the dependency array causes an infinite loop, so:
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const router = useRouter();
 

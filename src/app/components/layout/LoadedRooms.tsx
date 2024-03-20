@@ -14,6 +14,7 @@ export default function LoadedRooms() {
       const data = await response.json();
       if (Array.isArray(data.games)) {
         setLoadedGames(data.games);
+        localStorage.setItem('loadedGames', JSON.stringify(data.games))
       }
     };
     fetchRooms();

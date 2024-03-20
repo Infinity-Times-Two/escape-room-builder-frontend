@@ -6,12 +6,11 @@ export default function Play() {
   return (
     <div className='flex flex-col items-center justify-start min-h-screen gap-8'>
       <h1>Play</h1>
-      {/* <h2>Your Saved Rooms:</h2>
-      <SavedRooms />
-      <h2>Loaded Rooms:</h2> */}
+
       <Suspense fallback={<p>Loading...</p>}>
         <LoadedRooms />
       </Suspense>
+      <SavedRooms />
     </div>
   );
 }

@@ -5,21 +5,15 @@ import { LoadedGamesContext } from '@/app/contexts/loadedGamesContext';
 import { SingleGameContext } from '@/app/contexts/singleGameContext';
 import { useContext, useEffect, useState } from 'react';
 import { TimerContext } from '../../contexts/timerContext';
-
-import { Game } from '../../types/types';
+import { Game } from '@/app/types/types';
 
 export default function PlayGame({ params }: { params: { game: string } }) {
   const { singleGame, setSingleGame } = useContext(SingleGameContext);
-  const [loading, setLoading] = useState(true);
-  // Set state if game in localStorage exists
-  useEffect(() => {
-    const localStorageGame: any = localStorage.getItem('singleGame');
-    if (localStorageGame !== null) {
-      const parsedGame = JSON.parse(localStorageGame);
-      setSingleGame(parsedGame);
-    }
-  }, [setSingleGame]);
+  const { savedGames, setSavedGames } = useContext(SavedGamesContext);
+  const { loadedGames, setLoadedGames } = useContext(LoadedGamesContext);
+  const [loading, setLoading] = useState(false);
 
+  // Set state if game in localStorage exists, otherwise fetch from DB
   useEffect(() => {
     const fetchSingleGame = async () => {
       setLoading(true);
@@ -30,26 +24,54 @@ export default function PlayGame({ params }: { params: { game: string } }) {
       localStorage.setItem('singleGame', JSON.stringify(data));
       setLoading(false);
     };
-    fetchSingleGame();
-  }, [setSingleGame, params.game]);
 
-  // const { savedGames } = useContext(SavedGamesContext);
-  // const { loadedGames } = useContext(LoadedGamesContext);
+    // Grab everything from LS in case it's not in state (eg. brand new user arrives at this page from a shared link)
+    const localStorageGame: any = localStorage.getItem('singleGame');
+    const localStorageSavedGames: any = localStorage.getItem('savedGames');
+    const localStorageLoadedGames: any = localStorage.getItem('loadedGames');
 
-  // const loadedGame: Game | undefined = loadedGames?.find(
-  //   (game) => game.id === params.game
-  // );
-  // const savedGame: Game | undefined = savedGames?.find(
-  //   (game) => game.id === params.game
-  // );
+    const localStorageSingleGame: Game | null = JSON.parse(localStorageGame);
+    const savedGamesArray: Game[] | null = JSON.parse(localStorageSavedGames);
+    const loadedGamesArray: Game[] | null = JSON.parse(localStorageLoadedGames);
 
-  // if (loadedGame) {
-  //   currentGame = loadedGame;
-  // } else if (savedGame) {
-  //   currentGame = savedGame;
-  // } else if (singleGame) {
-  //   currentGame = singleGame;
-  // }
+    // Check if the game is saved
+    if (savedGamesArray) {
+      const savedGame: Game | undefined = savedGamesArray?.find(
+        (game) => game.id === params.game
+      );
+      setSavedGames(savedGamesArray)
+      if (savedGame) {
+        console.log('Found from saved games')
+        setSingleGame(savedGame);
+      }
+    }
+
+    // Check if the game was already loaded
+    if (loadedGamesArray) {
+      const loadedGame: Game | undefined = loadedGamesArray?.find(
+        (game) => game.id === params.game
+      );
+      setLoadedGames(loadedGamesArray)
+      if (loadedGame) {
+        console.log('Found from loaded games');
+        setSingleGame(loadedGame);
+      }
+    }
+
+    // Check if it's the single game already loaded to be played
+    if (singleGame.id === params.game) {
+      console.log('Game already in state')
+    }
+    else if (localStorageSingleGame?.id === params.game) {
+      const parsedGame = JSON.parse(localStorageGame);
+      console.log('Grabbed Single Game from local storage')
+      setSingleGame(parsedGame);
+    } else {
+      // Otherwise, fetch from the DB
+      console.log('Fetching game from DB');
+      fetchSingleGame();
+    }
+  }, [setSingleGame, setSavedGames, setLoadedGames, params.game, singleGame.id]);
 
   const { setExpiry } = useContext(TimerContext);
 
@@ -60,9 +82,6 @@ export default function PlayGame({ params }: { params: { game: string } }) {
       </div>
     );
   }
-
-  console.log(`Current time: ${Date.now()}`);
-  console.log(`Expiry time: ${Date.now() + singleGame.timeLimit * 1000}`);
 
   const timeInMinutes = (singleGame.timeLimit / 60).toFixed(2);
   const formattedTime = parseFloat(timeInMinutes);
@@ -75,15 +94,16 @@ export default function PlayGame({ params }: { params: { game: string } }) {
         <>
           <h2>{singleGame.gameTitle}</h2>
           <p>{singleGame.gameDescription}</p>
-          <Link href={`./${singleGame.id}/${singleGame.challenges[0].id}`} data-test='start-game'>
+          <Link
+            href={`./${singleGame.id}/${singleGame.challenges[0].id}`}
+            data-test='start-game'
+          >
             <button
               className='xl'
               onClick={() =>
                 setExpiry(
                   Date.now() +
-                    (singleGame && singleGame.timeLimit
-                      ? singleGame?.timeLimit * 1000
-                      : 600)
+                    (singleGame.timeLimit * 1000)
                 )
               }
             >
