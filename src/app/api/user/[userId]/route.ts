@@ -32,10 +32,13 @@ export async function GET(
       throw error;
     }
   };
-
-  const response = await getUser(params.userId);
-  if (!response.Item) {
-    return Response.json({ message: 'User not found' });
+  try {
+    const response = await getUser(params.userId);
+    if (!response.Item) {
+      return Response.json({ message: 'User not found' });
+    }
+    return Response.json(response.Item);
+  } catch (error) {
+    return Response.json(error);
   }
-  return Response.json(response.Item);
 }
