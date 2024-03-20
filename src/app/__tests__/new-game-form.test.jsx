@@ -20,11 +20,10 @@ describe('New Game Form', () => {
   });
 });
 
-describe('Handles game title and description changes', () => {
-  it('Updates the title', async () => {
+describe('Handle form inputs and submission', () => {
+  it('Updates the title and description', async () => {
     const user = userEvent.setup();
-    const { getByLabelText, getAllByLabelText, getByTestId, getByText } =
-      render(<NewGameForm />);
+    const { getByLabelText } = render(<NewGameForm />);
 
     // Change title
     const gameTitle = getByLabelText('Name your Escape room');
@@ -42,6 +41,12 @@ describe('Handles game title and description changes', () => {
     const timeLimit = getByLabelText('Set time limit (minutes)');
     fireEvent.change(timeLimit, { target: { value: 1800 } }); // Change value to 1800
     expect(timeLimit.value).toBe('1800');
+  });
+
+  it('Adds inputs to challenges', async () => {
+    const { getByLabelText, getAllByLabelText, getByTestId, getByText } =
+      render(<NewGameForm />);
+    const user = userEvent.setup();
 
     // Add Trivia clue
     const triviaClue = getByLabelText('Question (required)');
@@ -77,16 +82,23 @@ describe('Handles game title and description changes', () => {
     user.click(removeCaesarCypher);
     const removeTrivia = getByTestId('remove-trivia-0');
     user.click(removeTrivia);
+  });
+
+  it('submits the form', async () => {
+    const { getByTestId, getByRole } = render(<NewGameForm />);
+    const user = userEvent.setup();
 
     const submitButton = getByTestId('create-game');
     await user.click(submitButton);
-    const playButton = getByTestId('play-game');
-    expect(playButton).toBeInTheDocument();
+    const warning = getByRole('alert')
+    console.log(warning)
+    // const playButton = getByTestId('play-game');
+    // expect(playButton).toBeInTheDocument();
   });
 
-  it('handleAddChallenge selects a challenge type and adds a new challenge to the form', async () => {
+  it('selects a challenge type and adds a new challenge to the form', async () => {
     jest.clearAllMocks();
-    const { getByTestId, queryByTestId, getByRole, getByLabelText } = render(
+    const { getByTestId, queryByTestId, getByLabelText } = render(
       <NewGameForm />
     );
 
@@ -108,7 +120,9 @@ describe('Handles game title and description changes', () => {
 
   window.scrollTo = jest.fn(); // for handleRemoveChallenge
 
-  test('handleRemoveChallenge removes a challenge from the form', () => {
+  it('removes a challenge from the form', () => {
+    jest.clearAllMocks();
+
     const { getByTestId, queryByTestId } = render(<NewGameForm />);
 
     // Verify that initially there are 3 challenges

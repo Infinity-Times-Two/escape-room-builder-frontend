@@ -6,19 +6,16 @@ import RemoveButton from '../../ui/RemoveButton';
 
 export const shuffleWords = (array: string[]) => {
   let newArray = [...array];
-  console.log(`newArray: ${newArray}`)
   while (
     // keep shuffling if the clue array is the same as the answer
     newArray.length === array.length &&
     newArray.every((element, index) => element === array[index])
   ) {
-    console.log('shuffling...')
     for (let i = newArray.length - 1; i >= 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
     }
   }
-  console.log('done!')
   return newArray;
 };
 
@@ -54,17 +51,14 @@ export default function WordScrambleChallenge({
   const shuffle = (e: any) => {
     e.preventDefault();
     if (answer !== undefined) {
-      console.log('shuffling...')
       clue = answer.trim().split(' ');
       if (clue.length > 2) {
         setError(false);
         const shuffledClue = shuffleWords(clue);
         setWords(shuffledClue);
         onClueChange(shuffledClue, index);
-        console.timeLog(`shuffled words: ${shuffledClue}`)
       } else {
         setErrorMessage('Please enter at least 3 words');
-        console.log('Enter 3 words')
         setError(true);
       }
     }
