@@ -4,6 +4,21 @@ import FlipMove from 'react-flip-move';
 import Card from '../../ui/Card';
 import RemoveButton from '../../ui/RemoveButton';
 
+export const shuffleWords = (array: string[]) => {
+  let newArray = [...array];
+  while (
+    // keep shuffling if the clue array is the same as the answer
+    newArray.length === array.length &&
+    newArray.every((element, index) => element === array[index])
+  ) {
+    for (let i = newArray.length - 1; i >= 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+  }
+  return newArray;
+};
+
 export default function WordScrambleChallenge({
   index,
   clue,
@@ -14,7 +29,7 @@ export default function WordScrambleChallenge({
   onAnswerChange,
   onRemove,
   challengeType,
-  dataTest
+  dataTest,
 }: {
   index: number;
   clue: string | string[] | undefined;
@@ -30,22 +45,6 @@ export default function WordScrambleChallenge({
   const [words, setWords] = useState<string[]>([]);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
-  // TO DO: Shuffle again if the new clue is the same as the previous clue
-  const shuffleWords = (array: string[]) => {
-    let newArray = [...array];
-    while (
-      // keep shuffling if the clue array is the same as the answer
-      newArray.length === array.length &&
-      newArray.every((element, index) => element === array[index])
-    ) {
-      for (let i = newArray.length - 1; i >= 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-      }
-    }
-    return newArray;
-  };
 
   const shuffle = (e: any) => {
     e.preventDefault();
@@ -64,7 +63,6 @@ export default function WordScrambleChallenge({
   };
 
   const handleKeyDown = (e: any) => {
-    e.preventDefault();
     if (e.key === 'Enter') {
       shuffle(e);
     }
@@ -77,9 +75,9 @@ export default function WordScrambleChallenge({
   // Clear scrambled words when form is reset
   useEffect(() => {
     if (clue?.length === 1 && clue[0].length === 0) {
-      setWords([])
+      setWords([]);
     }
-  }, [clue])
+  }, [clue]);
 
   type Props = {
     word: string;
@@ -100,6 +98,7 @@ export default function WordScrambleChallenge({
       key={`${challengeType}-${index}`}
       className='flex flex-col gap-8 border-2 border-black p-8 rounded-xl bg-white/50 relative'
       id={`${challengeType}-${index}`}
+      data-testid={`${challengeType.replaceAll(" ", "-")}-${index}`}
     >
       <p className='absolute top-0 left-0 p-6 text-2xl'>{index + 1}</p>
       <h3 className='mb-6'>New {challengeType} Challenge</h3>
@@ -128,7 +127,7 @@ export default function WordScrambleChallenge({
         />
       </div>
       <div className='flex flex-row'>
-        <button onClick={shuffle} data-test={`${index}-scramble-button`}>
+        <button onClick={shuffle} data-testid={`${index}-scramble-button`}>
           <span>Scramble</span>
         </button>
         {error && (
@@ -151,7 +150,10 @@ export default function WordScrambleChallenge({
         )}
       </div>
       <Card>
-        <div className='flex flex-row gap-2 flex0wrap justify-center' data-test={`${dataTest}-clue`}>
+        <div
+          className='flex flex-row gap-2 flex0wrap justify-center'
+          data-test={`${dataTest}-clue`}
+        >
           <FlipMove
             staggerDurationBy='50'
             duration={600}
@@ -164,7 +166,10 @@ export default function WordScrambleChallenge({
           </FlipMove>
         </div>
       </Card>
-      <RemoveButton onRemove={onRemove} />
+      <RemoveButton
+        onRemove={onRemove}
+        testId={`remove-word-scramble-${index}`}
+      />
     </div>
   );
 }

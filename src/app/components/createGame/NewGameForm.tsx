@@ -415,13 +415,13 @@ export default function NewGameForm() {
                     </div>
                   </fieldset>
                   <div className='grid place-items-center flex-grow'>
-                    <button onClick={handleAddChallenge} data-test='add-challenge'>
+                    <button onClick={handleAddChallenge} data-test='add-challenge' data-testid={`add-${nextChallenge.replaceAll(" ", "-")}-challenge`}>
                       <span>Add {nextChallenge} Challenge</span>
                     </button>
                   </div>
                 </div>
               </div>
-              <button onClick={handleSubmit} data-test='create-game'>
+              <button onClick={handleSubmit} data-test='create-game' role='create-game'>
                 <span>Create Game</span>
               </button>
             </>
@@ -461,7 +461,7 @@ export default function NewGameForm() {
           )}
         </div>
       </form>
-      <button className='red self-end' onClick={handleReset}>
+      <button className='red self-end' onClick={handleReset} role='reset'>
         <span>Reset</span>
       </button>
     </>

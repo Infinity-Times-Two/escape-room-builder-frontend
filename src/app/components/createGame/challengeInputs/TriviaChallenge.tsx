@@ -29,6 +29,7 @@ export default function TriviaChallenge({
       className='border-2 border-black p-8 rounded-xl bg-white/50 relative'
       key={`${challengeType}-${index}`}
       id={`${challengeType}-${index}`}
+      data-testid={`${challengeType}-${index}`}
     >
       <p className='absolute top-0 left-0 p-6 text-2xl'>{index + 1}</p>
       <h3 className='mb-6'>New {challengeType} Challenge</h3>
@@ -52,7 +53,7 @@ export default function TriviaChallenge({
         key={`challenge-answer-${index}`}
         dataTest={`${dataTest}-answer`}
       />
-      <RemoveButton onRemove={onRemove} />
+      <RemoveButton onRemove={onRemove} testId={`remove-trivia-${index}`} />
     </div>
   );
 }

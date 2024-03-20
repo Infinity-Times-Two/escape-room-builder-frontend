@@ -2,6 +2,27 @@ import Input from '../../ui/Input';
 import { useState, useEffect } from 'react';
 import RemoveButton from '../../ui/RemoveButton';
 
+export const encrypt = (answer: string | undefined, seed: number) => {
+  let originalWord: string[];
+  let encryptedWord: string[] = [];
+
+  if (typeof answer === 'string') {
+    const lowerCaseAnswer = answer.toLowerCase();
+    originalWord = Array.from(lowerCaseAnswer);
+    originalWord.forEach((letter) => {
+      let newLetter = letter.charCodeAt(0);
+      if (newLetter !== 32) {
+        newLetter = letter.charCodeAt(0) + seed;
+      }
+      if (newLetter > 122) {
+        newLetter = newLetter - 26;
+      }
+      encryptedWord.push(String.fromCharCode(newLetter));
+    });
+  }
+  return encryptedWord.toString().toLowerCase().replaceAll(',', '');
+};
+
 export default function CaesarCypherChallenge({
   index,
   clue,
@@ -12,7 +33,7 @@ export default function CaesarCypherChallenge({
   onAnswerChange,
   onRemove,
   challengeType,
-  dataTest
+  dataTest,
 }: {
   index: number;
   clue: string | string[] | undefined;
@@ -28,7 +49,7 @@ export default function CaesarCypherChallenge({
   const [encryptedClue, setEncryptedClue] = useState<string>('');
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [seed, setSeed] = useState('')
+  const [seed, setSeed] = useState('');
 
   useEffect(() => {
     if (typeof answer !== 'undefined' && answer !== '') {
@@ -38,34 +59,11 @@ export default function CaesarCypherChallenge({
     }
   }, [answer]);
 
-  const encryptCaesarCypher = (answer: string | undefined) => {
-    // leetcode mode ON
-    let originalWord: string[];
-    let encryptedWord: string[] = [];
-
-    if (typeof answer === 'string') {
-      const lowerCaseAnswer = answer.toLowerCase();
-      originalWord = Array.from(lowerCaseAnswer);
-      const randomSeed = Math.floor(Math.random() * 25) + 1;
-      setSeed(String.fromCharCode(97 + randomSeed).toUpperCase());
-      originalWord.forEach((letter) => {
-        let newLetter = letter.charCodeAt(0);
-        if (newLetter !== 32) {
-          newLetter = letter.charCodeAt(0) + randomSeed;
-        }
-        if (newLetter > 122) {
-          newLetter = newLetter - 26;
-        }
-        encryptedWord.push(String.fromCharCode(newLetter));
-        setEncryptedClue(encryptedWord.toString());
-      });
-    }
-    return encryptedWord;
-  };
-
   const onEncrypt = (e: any) => {
     e.preventDefault();
-    setEncryptedClue('')
+    setEncryptedClue('');
+    const randomSeed = Math.floor(Math.random() * 25) + 1;
+    setSeed(String.fromCharCode(97 + randomSeed).toUpperCase());
     // let regex = /^[A-Za-z]+$/;
     if (typeof answer === 'string' && answer.length < 3) {
       setError(true);
@@ -73,11 +71,9 @@ export default function CaesarCypherChallenge({
       return;
     }
     setError(false);
-    clue = encryptCaesarCypher(answer)
-      .toString()
-      .toLowerCase()
-      .replaceAll(',', '');
+    clue = encrypt(answer, randomSeed);
     onClueChange(clue, index);
+    setEncryptedClue(clue.toString());
   };
 
   const handleKeyDown = (e: any) => {
@@ -87,18 +83,19 @@ export default function CaesarCypherChallenge({
     }
   };
 
-    // Clear encrypted word when form is reset
-    useEffect(() => {
-      if (clue?.length === 0) {
-        setEncryptedClue('')
-      }
-    }, [clue])
+  // Clear encrypted word when form is reset
+  useEffect(() => {
+    if (clue?.length === 0) {
+      setEncryptedClue('');
+    }
+  }, [clue]);
 
   return (
     <div
       className='border-2 border-black p-8 rounded-xl bg-white/50 relative'
       key={`${challengeType}-${index}`}
       id={`${challengeType}-${index}`}
+      data-testid={`${challengeType.replaceAll(" ", "-")}-${index}`} // this needs to be refactored to just include a hypen (word scramble, too)
     >
       <p className='absolute top-0 left-0 p-6 text-2xl'>{index + 1}</p>
       <h3 className='mb-6'>New {challengeType} Challenge</h3>
@@ -122,7 +119,12 @@ export default function CaesarCypherChallenge({
         dataTest={`${dataTest}-answer`}
       />
       <div className='flex flex-row'>
-        <button onClick={onEncrypt} disabled={error} data-test={`${index}-encrypt-button`}>
+        <button
+          role='encrypt'
+          onClick={onEncrypt}
+          disabled={error}
+          data-test={`${index}-encrypt-button`}
+        >
           <span>Encrypt</span>
         </button>
         {error && (
@@ -162,7 +164,9 @@ export default function CaesarCypherChallenge({
           </div>
         )}
       </div>
-      <p>Encrypted clue:</p>
+      <label htmlFor={`challenge-caesar-cypher-clue-${index}`}>
+        Encrypted clue:
+      </label>
       <Input
         fieldType={`challenge-caesar-cypher-clue-${index}`}
         value={encryptedClue.toString().replaceAll(',', '')}
@@ -173,7 +177,7 @@ export default function CaesarCypherChallenge({
         disabled
         dataTest={`${dataTest}-clue`}
       />
-      <RemoveButton onRemove={onRemove} />
+      <RemoveButton onRemove={onRemove} testId={`remove-caesar-cypher-${index}`}/>
     </div>
   );
 }
