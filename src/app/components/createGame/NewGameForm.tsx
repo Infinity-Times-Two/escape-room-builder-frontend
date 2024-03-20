@@ -304,14 +304,16 @@ export default function NewGameForm() {
     }
 
     // Add game ID to the user's saved games array in escape-room-users table in DB
-    const response = await fetch(`/api/updateUser/${user.id}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ savedGame: newGame.id }),
-    });
-    const data = await response.json();
-    console.log("Response from adding game to user's saved games in DB:");
-    console.log(data);
+    if (user.id !== '') {
+      const response = await fetch(`/api/updateUser/${user.id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ savedGame: newGame.id }),
+      });
+      const data = await response.json();
+      console.log("Response from adding game to user's saved games in DB:");
+      console.log(data);
+    }
   };
 
   // Reset the current game form
@@ -483,7 +485,7 @@ export default function NewGameForm() {
               <button
                 onClick={handleSubmit}
                 data-test='create-game'
-                role='create-game'
+                data-testid='create-game'
               >
                 <span>Create Game</span>
               </button>
@@ -495,7 +497,11 @@ export default function NewGameForm() {
               href={`/game/${newGame.id}`}
               className='hover:no-underline self-center'
             >
-              <button className='green w-60' data-test='play-game'>
+              <button
+                className='green w-60'
+                data-test='play-game'
+                data-testid='play-game'
+              >
                 <span>Play Game!</span>
               </button>
             </Link>

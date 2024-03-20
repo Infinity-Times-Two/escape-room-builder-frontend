@@ -3,6 +3,12 @@ import userEvent from '@testing-library/user-event';
 import { render, fireEvent } from '@testing-library/react';
 import NewGameForm from '../components/createGame/NewGameForm';
 
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    json: () => Promise.resolve({ status: 200 }),
+  })
+);
+
 describe('New Game Form', () => {
   it('renders all inputs', () => {
     const { getByLabelText, getByText } = render(<NewGameForm />);
@@ -65,9 +71,21 @@ describe('Handles game title and description changes', () => {
     await user.keyboard(' words{enter}');
     expect(scrambleAnswer[2].value).toBe('Unscramble these words');
     expect(warning).not.toBeInTheDocument();
+
+    // Test submit button
+    const removeCaesarCypher = getByTestId('remove-caesar-cypher-1');
+    user.click(removeCaesarCypher);
+    const removeTrivia = getByTestId('remove-trivia-0');
+    user.click(removeTrivia);
+
+    const submitButton = getByTestId('create-game');
+    await user.click(submitButton);
+    const playButton = getByTestId('play-game');
+    expect(playButton).toBeInTheDocument();
   });
 
   it('handleAddChallenge selects a challenge type and adds a new challenge to the form', async () => {
+    jest.clearAllMocks();
     const { getByTestId, queryByTestId, getByRole, getByLabelText } = render(
       <NewGameForm />
     );
@@ -118,4 +136,58 @@ describe('Handles game title and description changes', () => {
     expect(gameTitle.value).toBe('');
     expect(gameDescription.value).toBe('');
   });
+
+  // it('submits the form successfully', async () => {
+  //   // Mock initial state data
+  //   const mockState = {
+  //     id: '7386dc95-6a91-4e28-861c-a231db02e003',
+  //     gameTitle: 'New room',
+  //     gameDescription: 'New room description',
+  //     timeLimit: 1800,
+  //     theme: '',
+  //     author: 'James',
+  //     bodyBg: 'green',
+  //     titleBg: 'red',
+  //     challenges: [
+  //       {
+  //         id: 'challenge-0',
+  //         type: 'trivia',
+  //         description: '',
+  //         clue: 'Trivia question #1',
+  //         answer: 'Trivia answer #1',
+  //       },
+  //       {
+  //         id: 'challenge-1',
+  //         type: 'caesar cypher',
+  //         description: 'Decrypt this word',
+  //         clue: 'ynnjc',
+  //         answer: 'apple',
+  //       },
+  //       {
+  //         id: 'challenge-2',
+  //         type: 'word scramble',
+  //         description: 'Unscramble these words',
+  //         clue: ['Life,', 'everything', 'and', 'universe', 'the'],
+  //         answer: 'Life, the universe and everything',
+  //       },
+  //       {
+  //         id: 'challenge-3',
+  //         type: 'trivia',
+  //         description: '',
+  //         clue: 'Last trivia question',
+  //         answer: 'Answer',
+  //       },
+  //     ],
+  //   };
+
+  //   const { getByTestId, getByRole } = render(<NewGameForm />, {
+  //     // Pass the custom state to the component
+  //     initialState: mockState,
+  //   });
+  //   const user = userEvent.setup();
+  //   const submitButton = getByRole('create-game');
+  //   await user.click(submitButton);
+  //   const playButton = getByTestId('play-game')
+  //   expect(playButton).toBeInTheDocument();
+  // });
 });

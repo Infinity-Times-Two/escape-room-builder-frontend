@@ -76,6 +76,7 @@ describe('Game Creation', () => {
     // Add a new challenge
     cy.getByData('add-challenge').click()
     cy.getByData('challenge-3-trivia-clue').should('exist') 
+    cy.getByData('remove-trivia-3').click();
     // This is flaky - later on it may not create a trivia challenge by default
 
     // User is not logged in, so game will not save to DB
