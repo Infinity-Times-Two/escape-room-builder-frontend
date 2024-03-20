@@ -127,7 +127,7 @@ export default function WordScrambleChallenge({
         />
       </div>
       <div className='flex flex-row'>
-        <button onClick={shuffle} data-testid={`${index}-scramble-button`}>
+        <button onClick={shuffle} data-test={`${index}-scramble-button`} data-testid={`${index}-scramble-button`}> {/* data-test is for Cypress, data-testid is for Jest. TO DO: Refactor to use one of those options for both */}
           <span>Scramble</span>
         </button>
         {error && (
