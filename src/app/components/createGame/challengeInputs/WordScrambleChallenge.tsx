@@ -30,6 +30,7 @@ export default function WordScrambleChallenge({
   onRemove,
   challengeType,
   dataTest,
+  submitError,
 }: {
   index: number;
   clue: string | string[] | undefined;
@@ -41,6 +42,7 @@ export default function WordScrambleChallenge({
   onRemove(e: any): void;
   challengeType: string;
   dataTest: string;
+  submitError: boolean;
 }) {
   const [words, setWords] = useState<string[]>([]);
   const [error, setError] = useState(false);
@@ -98,7 +100,7 @@ export default function WordScrambleChallenge({
       key={`${challengeType}-${index}`}
       className='flex flex-col gap-8 border-2 border-black p-8 rounded-xl bg-white/50 relative'
       id={`${challengeType}-${index}`}
-      data-testid={`${challengeType.replaceAll(" ", "-")}-${index}`}
+      data-testid={`${challengeType.replaceAll(' ', '-')}-${index}`}
     >
       <p className='absolute top-0 left-0 p-6 text-2xl'>{index + 1}</p>
       <h3 className='mb-6'>New {challengeType} Challenge</h3>
@@ -115,19 +117,27 @@ export default function WordScrambleChallenge({
         />
       </div>
       <div>
-        <label htmlFor={`challenge-answer-${index}`}>Answer</label>
+        <label htmlFor={`challenge-answer-${index}`}>Answer (required)</label>
         <Input
           fieldType={`challenge-answer-${index}`}
           value={answer}
-          placeholder=''
+          placeholder='Answer*'
           onChange={onAnswerChange}
           key={`challenge-answer-${index}`}
           onKeyDown={handleKeyDown}
           dataTest={`${dataTest}-answer`}
+          submitError={submitError}
+          required
         />
       </div>
       <div className='flex flex-row'>
-        <button onClick={shuffle} data-test={`${index}-scramble-button`} data-testid={`${index}-scramble-button`}> {/* data-test is for Cypress, data-testid is for Jest. TO DO: Refactor to use one of those options for both */}
+        <button
+          onClick={shuffle}
+          data-test={`${index}-scramble-button`}
+          data-testid={`${index}-scramble-button`}
+        >
+          {' '}
+          {/* data-test is for Cypress, data-testid is for Jest. TO DO: Refactor to use one of those options for both */}
           <span>Scramble</span>
         </button>
         {error && (
@@ -151,7 +161,7 @@ export default function WordScrambleChallenge({
       </div>
       <Card>
         <div
-          className='flex flex-row gap-2 flex0wrap justify-center'
+          className={`flex flex-row gap-2 flex0wrap justify-center h-[100px] w-full ${submitError && words.length === 0 && 'bg-red-100'}`}
           data-test={`${dataTest}-clue`}
         >
           <FlipMove

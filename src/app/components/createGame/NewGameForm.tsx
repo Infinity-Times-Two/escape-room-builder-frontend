@@ -59,6 +59,8 @@ export default function NewGameForm() {
   });
 
   const [nextChallenge, setNextChallenge] = useState('trivia');
+  const [submitError, setSubmitError] = useState(false);
+  const [submitErrorMessage, setSubmitErrorMessage] = useState('');
 
   const { setSavedGames } = useContext(SavedGamesContext);
   const { singleGame, setSingleGame } = useContext(SingleGameContext);
@@ -220,14 +222,58 @@ export default function NewGameForm() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setSubmitError(false);
+    setSubmitErrorMessage('');
+
+    // Check if any challenge clue is empty
+    const hasEmptyClue = newGame.challenges.some(
+      (challenge) =>
+        challenge.clue === '' ||
+        challenge.clue === undefined ||
+        challenge.clue === null
+    );
+
+    const hasEmptyAnswer = newGame.challenges.some((challenge) => {
+      if (typeof challenge.answer === 'string') {
+        if (
+          challenge.answer === '' ||
+          challenge.answer === undefined ||
+          challenge.answer === null
+        ) {
+          return true;
+        }
+      } else if (typeof challenge.answer === 'object') {
+        if (challenge.answer[0] === '') {
+          return true;
+        }
+      }
+    });
+
+    // If any challenge clue is empty, stop submission
+    if (hasEmptyClue && hasEmptyAnswer) {
+      console.log('Cannot submit: Some challenge clues and answers are empty.');
+      setSubmitError(true);
+      setSubmitErrorMessage('Some challenge clues and answers are empty');
+      return;
+    } else if (hasEmptyClue) {
+      console.log('Cannot submit: Some challenge clues are empty.');
+      setSubmitError(true);
+      setSubmitErrorMessage('Some challenge clues are empty');
+      return;
+    } else if (hasEmptyAnswer) {
+      console.log('Cannot submit: Some challenge answers are empty.');
+      setSubmitError(true);
+      setSubmitErrorMessage('Some challenge answers are empty');
+      return;
+    }
 
     // Format clues for DB
     newGame.challenges.map((challenge) => {
       if (typeof challenge.clue === 'string') {
-        let sentence = challenge.clue.trim();
+        challenge.clue = challenge.clue.trim();
         if (challenge.type === 'word scramble') {
           let sentenceArray: string[] = [];
-          sentenceArray = sentence.split(' ');
+          sentenceArray = challenge.clue.split(' ');
           challenge.clue = sentenceArray;
         }
       }
@@ -271,6 +317,8 @@ export default function NewGameForm() {
   // Reset the current game form
   const handleReset = (e: any) => {
     e.preventDefault();
+    setSubmitError(false);
+    setSubmitErrorMessage('');
     setNewGame(defaultGameData);
   };
 
@@ -328,7 +376,7 @@ export default function NewGameForm() {
                         : 'flex items-center justify-center p-2 w-[2.5rem] min-h-[2.5rem]'
                     }
                   >
-                    {String(item).padStart(2, "0")}
+                    {String(item).padStart(2, '0')}
                   </span>
                 );
               })}
@@ -365,7 +413,11 @@ export default function NewGameForm() {
                   onAnswerChange={onAnswerChange}
                   onRemove={onRemove}
                   index={index}
-                  dataTest={`${challenge.id}-${String(challenge.type).replace(" ", "-")}`} // Mmm.. maybe refactor challenge type names?
+                  dataTest={`${challenge.id}-${String(challenge.type).replace(
+                    ' ',
+                    '-'
+                  )}`} // Mmm.. maybe refactor challenge type names?
+                  submitError={submitError}
                 />
               );
             })
@@ -415,13 +467,24 @@ export default function NewGameForm() {
                     </div>
                   </fieldset>
                   <div className='grid place-items-center flex-grow'>
-                    <button onClick={handleAddChallenge} data-test='add-challenge' data-testid={`add-${nextChallenge.replaceAll(" ", "-")}-challenge`}>
+                    <button
+                      onClick={handleAddChallenge}
+                      data-test='add-challenge'
+                      data-testid={`add-${nextChallenge.replaceAll(
+                        ' ',
+                        '-'
+                      )}-challenge`}
+                    >
                       <span>Add {nextChallenge} Challenge</span>
                     </button>
                   </div>
                 </div>
               </div>
-              <button onClick={handleSubmit} data-test='create-game' role='create-game'>
+              <button
+                onClick={handleSubmit}
+                data-test='create-game'
+                role='create-game'
+              >
                 <span>Create Game</span>
               </button>
             </>
@@ -457,6 +520,24 @@ export default function NewGameForm() {
                 save across devices, please <Link href='/sign-in'>sign in</Link>{' '}
                 or <Link href='/sign-up'>sign up</Link>.
               </span>
+            </div>
+          )}
+          {submitError && (
+            <div role='alert' className='alert alert-warning mx-4 self-center'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                className='stroke-current shrink-0 h-6 w-6'
+                fill='none'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'
+                />
+              </svg>
+              <span>{submitErrorMessage}</span>
             </div>
           )}
         </div>

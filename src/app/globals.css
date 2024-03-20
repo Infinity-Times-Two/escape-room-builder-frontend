@@ -30,6 +30,10 @@ header {
   background-color: hsl(32, 100%, 94%);
 }
 
+.card:has(div.bg-red-100) {
+  background-color: rgb(254, 226, 226)
+}
+
 /* Patterned background experiment:
 
 body {

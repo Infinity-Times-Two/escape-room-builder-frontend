@@ -10,9 +10,10 @@ type InputProps = {
   required?: boolean;
   onKeyDown?: (event: React.KeyboardEvent<HTMLElement>) => void;
   dataTest?: string;
+  submitError?: boolean;
 };
 
-export default function Input({ fieldType, placeholder, onChange, value, disabled, required, onKeyDown, dataTest }: InputProps) {
+export default function Input({ fieldType, placeholder, onChange, value, disabled, required, onKeyDown, dataTest, submitError }: InputProps) {
   return (
     <div className='rounded-md bg-black font-semibold m-2'>
       <input
@@ -24,7 +25,7 @@ export default function Input({ fieldType, placeholder, onChange, value, disable
         onChange={onChange}
         onKeyDown={onKeyDown}
         value={value}
-        className='rounded px-4 pt-3 pb-4 bg-white text-5xl w-full -translate-x-1 -translate-y-1 input-bordered border-black border-2 focus:outline-none focus:border-black w-full'
+        className={` rounded px-4 pt-3 pb-4 ${submitError && value === '' ? 'bg-red-100' : 'bg-white'} text-5xl w-full -translate-x-1 -translate-y-1 input-bordered border-black border-2 focus:outline-none focus:border-black w-full`}
         disabled={disabled}
         required={required}
       />

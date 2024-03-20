@@ -38,7 +38,7 @@ describe('Handles game title and description changes', () => {
     expect(timeLimit.value).toBe('1800');
 
     // Add Trivia clue
-    const triviaClue = getByLabelText('Question');
+    const triviaClue = getByLabelText('Question (required)');
     await user.click(triviaClue);
     await user.keyboard('Trivia question #1');
     expect(triviaClue.value).toBe('Trivia question #1');
@@ -50,7 +50,7 @@ describe('Handles game title and description changes', () => {
     expect(cypherDesc.value).toBe('Decrypt this phrase');
 
     // Add Word Scramble answer
-    const scrambleAnswer = getAllByLabelText('Answer');
+    const scrambleAnswer = getAllByLabelText('Answer (required)');
     const scrambleButton = getByTestId('2-scramble-button');
     await user.click(scrambleAnswer[2]);
 
