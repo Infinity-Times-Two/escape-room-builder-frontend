@@ -3,26 +3,55 @@ import Link from 'next/link';
 import { SavedGamesContext } from '@/app/contexts/savedGamesContext';
 import { LoadedGamesContext } from '@/app/contexts/loadedGamesContext';
 import { SingleGameContext } from '@/app/contexts/singleGameContext';
+import { UserContext } from '@/app/contexts/userContext';
 import { useContext, useEffect, useState } from 'react';
 import { TimerContext } from '../../contexts/timerContext';
 import { Game } from '@/app/types/types';
+import { useRouter } from 'next/navigation';
 
 export default function PlayGame({ params }: { params: { game: string } }) {
   const { singleGame, setSingleGame } = useContext(SingleGameContext);
   const { savedGames, setSavedGames } = useContext(SavedGamesContext);
-  const { loadedGames, setLoadedGames } = useContext(LoadedGamesContext);
+  const { loadedGames } = useContext(LoadedGamesContext);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const { user } = useContext(UserContext);
+
+  const router = useRouter();
+  const showEdit = user.savedGames.includes(params.game);
+  useEffect(() => {
+    console.log('single game:');
+    console.log(singleGame);
+  }, [singleGame]);
 
   // Set state if game in localStorage exists, otherwise fetch from DB
   useEffect(() => {
+    const saveSingleGame = (newGame: Game) => {
+      localStorage.setItem('singleGame', JSON.stringify(newGame));
+      setSingleGame(newGame);
+    };
+
     const fetchSingleGame = async () => {
       setLoading(true);
-      const response = await fetch(`/api/game/${params.game}`);
-      const data = await response.json();
-      console.log('Fetched game data from the server.');
-      setSingleGame(data);
-      localStorage.setItem('singleGame', JSON.stringify(data));
-      setLoading(false);
+      setError(false);
+      try {
+        const response = await fetch(`/api/game/${params.game}`);
+        const data = await response.json();
+        console.log('Fetched game data from the server.');
+        console.log(data);
+        localStorage.setItem('singleGame', JSON.stringify(data));
+        if (data.length === undefined) {
+          setError(true);
+        } else {
+          saveSingleGame(data);
+        }
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+        setError(true);
+      }
     };
 
     // Grab everything from LS in case it's not in state (eg. brand new user arrives at this page from a shared link)
@@ -34,49 +63,115 @@ export default function PlayGame({ params }: { params: { game: string } }) {
     const savedGamesArray: Game[] | null = JSON.parse(localStorageSavedGames);
     const loadedGamesArray: Game[] | null = JSON.parse(localStorageLoadedGames);
 
-    // Check if the game is saved
-    if (savedGamesArray) {
-      const savedGame: Game | undefined = savedGamesArray?.find(
-        (game) => game.id === params.game
-      );
-      setSavedGames(savedGamesArray);
+    // Load the game from 'saved games' state or local storage if it exists
+    if (savedGames) {
+      const savedGame = savedGames.find((game) => game.id === params.game);
       if (savedGame) {
-        console.log('Found from saved games');
-        setSingleGame(savedGame);
+        console.log('Found from saved games in state');
+        saveSingleGame(savedGame);
+      }
+    } else if (savedGamesArray) {
+      const savedGame = savedGamesArray.find((game) => game.id === params.game);
+      if (savedGame) {
+        console.log('Found from saved games in local storage');
+        saveSingleGame(savedGame);
       }
     }
 
-    // Check if the game was already loaded
-    if (loadedGamesArray) {
-      const loadedGame: Game | undefined = loadedGamesArray?.find(
+    // Load the game from 'loaded games' state or local storage if it exists
+    if (loadedGames) {
+      const loadedGame = loadedGames.find((game) => game.id === params.game);
+      if (loadedGame) {
+        console.log('Found from loaded games in state');
+        saveSingleGame(loadedGame);
+      }
+    } else if (loadedGamesArray) {
+      const loadedGame = loadedGamesArray.find(
         (game) => game.id === params.game
       );
-      setLoadedGames(loadedGamesArray);
       if (loadedGame) {
-        console.log('Found from loaded games');
-        setSingleGame(loadedGame);
+        console.log('Found from loaded games in local storage');
+        saveSingleGame(loadedGame);
       }
     }
 
-    // Check if it's the single game already loaded to be played
-    if (singleGame.id === params.game) {
-      console.log('Game already in state');
-    } else if (localStorageSingleGame?.id === params.game) {
-      const parsedGame = JSON.parse(localStorageGame);
-      console.log('Grabbed Single Game from local storage');
-      setSingleGame(parsedGame);
-    } else {
-      // Otherwise, fetch from the DB
-      console.log('Fetching game from DB');
+    // If the game was not found in state or local storage, fetch it from DB
+    if (!localStorageSingleGame) {
       fetchSingleGame();
     }
-  }, [
-    setSingleGame,
-    setSavedGames,
-    setLoadedGames,
-    params.game,
-    singleGame.id,
-  ]);
+  }, []);
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    try {
+      try {
+        const response = await fetch(`/api/game/${params.game}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        const data = await response.json();
+        console.log('Response from deleting game from DB:');
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+      try {
+        const response = await fetch(
+          `/api/updateUser/${user.id}/${params.game}`,
+          {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
+        const data = await response.json();
+        console.log(
+          "Response from deleting game from user's saved games in DB:"
+        );
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+      setSavedGames((prevGames: Game[]) => {
+        const newGames = prevGames.filter((game) => game.id !== params.game);
+        localStorage.setItem('savedGames', JSON.stringify(newGames));
+        return newGames;
+      });
+    } catch (error) {
+      return error;
+    } finally {
+      setDeleting(false);
+      setDeleteModal(false);
+      router.push('/');
+    }
+  };
+
+  const DeleteModal = () => {
+    return (
+      <dialog id='my_modal_1' className='modal' open>
+        <div className='modal-box bg-white'>
+          <h3 className='font-bold text-lg'>Hold up!</h3>
+          <p className='py-4'>
+            {!deleting
+              ? 'Are you sure you want to delete this game? This cannot be reversed!'
+              : 'Deleting room...'}
+          </p>
+          <div className='modal-action'>
+            <form method='dialog'>
+              <button
+                className='small green'
+                onClick={() => setDeleteModal(false)}
+              >
+                <span>No, nevermind!</span>
+              </button>
+              <button className='small red' onClick={handleDelete}>
+                <span>Yes, delete it!</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+    );
+  };
 
   const { setExpiry } = useContext(TimerContext);
 
@@ -93,23 +188,20 @@ export default function PlayGame({ params }: { params: { game: string } }) {
 
   return (
     <div className='flex flex-col items-center justify-start p-16 min-h-screen gap-8'>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
+      {error && <p>There was an error</p>}
+      {loading && <p>Loading...</p>}
+      {!error && !loading && singleGame.challenges.length !== 0 && (
         <>
           <h2>{singleGame.gameTitle}</h2>
           <p>{singleGame.gameDescription}</p>
           <div className='flex flex-row justify-center gap-8'>
-            <Link
-              href={`/edit/${singleGame.id}`}
-              data-test='edit-game'
-            >
-              <button
-                className='xl'
-              >
-                <span>Edit</span>
-              </button>
-            </Link>
+            {showEdit && (
+              <Link href={`/edit/${singleGame.id}`} data-test='edit-game'>
+                <button className='xl'>
+                  <span>Edit</span>
+                </button>
+              </Link>
+            )}
             <Link
               href={`./${singleGame.id}/${singleGame.challenges[0].id}`}
               data-test='start-game'
@@ -131,6 +223,12 @@ export default function PlayGame({ params }: { params: { game: string } }) {
           <div className='chip'>
             <span>{singleGame.challenges.length} challenges</span>
           </div>
+          {showEdit && (
+            <button className='small red' onClick={() => setDeleteModal(true)}>
+              <span>Delete Game</span>
+            </button>
+          )}
+          {deleteModal && <DeleteModal />}
         </>
       )}
     </div>

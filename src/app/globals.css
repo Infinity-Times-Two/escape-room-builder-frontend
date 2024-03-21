@@ -31,7 +31,24 @@ header {
 }
 
 .card:has(div.bg-red-100) {
-  background-color: rgb(254, 226, 226)
+  background-color: rgb(254, 226, 226);
+}
+
+@keyframes skeleton {
+  from {
+    background-position: -10000px 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
+.skel {
+  border-radius: 10px;
+  background-color: #dfdbe5;
+  background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.25'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  will-change: background-position;
+  animation: skeleton 180s linear infinite;
 }
 
 /* Patterned background experiment:
@@ -92,11 +109,11 @@ button {
 }
 
 button:disabled {
-  @apply bg-gray-500
+  @apply bg-gray-500;
 }
 
 button:disabled > span {
-  @apply bg-gray-300 text-gray-500 border-gray-500 hover:-translate-y-0.5 hover:-translate-x-0.5
+  @apply bg-gray-300 text-gray-500 border-gray-500 hover:-translate-y-0.5 hover:-translate-x-0.5;
 }
 
 button > span {
@@ -104,7 +121,7 @@ button > span {
 }
 
 button > span:active {
-  @apply translate-x-0 translate-y-0
+  @apply translate-x-0 translate-y-0;
 }
 
 button.xl > span {
@@ -180,6 +197,16 @@ div.badge.orange > span:hover {
 
 div.chip {
   @apply block rounded-full bg-white w-max text-black text-2xl font-semibold border-2 border-black py-1.5 px-9 tracking-wider;
+  font-family: var(--font-work-sans);
+}
+
+div.chip {
+  @apply block rounded-full bg-white w-max text-black text-2xl font-semibold border-2 border-black py-1.5 px-9 tracking-wider;
+  font-family: var(--font-work-sans);
+}
+
+.skel.chip {
+  @apply block rounded-full bg-white w-max text-black text-2xl font-semibold border-2 border-gray-200 py-1.5 px-9 tracking-wider;
   font-family: var(--font-work-sans);
 }
 

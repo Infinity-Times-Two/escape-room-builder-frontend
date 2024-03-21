@@ -89,6 +89,7 @@ export default function CaesarCypherChallenge({
     if (typeof clue === 'string' && typeof clue !== 'undefined') {
       setEncryptedClue(clue);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Clear encrypted word when form is reset
@@ -155,7 +156,7 @@ export default function CaesarCypherChallenge({
             <span>{errorMessage}</span>
           </div>
         )}
-        {encryptedClue && (
+        {encryptedClue && seed && (
           <div role='alert' className='alert alert-info mx-4 self-center'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
