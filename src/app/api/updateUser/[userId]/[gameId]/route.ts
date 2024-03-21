@@ -7,6 +7,7 @@ import {
 } from '@aws-sdk/lib-dynamodb';
 
 export async function DELETE(
+  req: NextApiRequest,
   res: NextApiResponse,
   { params }: { params: { userId: string; gameId: string } }
 ) {
