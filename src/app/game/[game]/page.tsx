@@ -22,8 +22,10 @@ export default function PlayGame({ params }: { params: { game: string } }) {
   const router = useRouter();
 
   // Check if the user created this game, either in user's savedGames array from DB or savedGames in state
-  const showEdit = user.savedGames.includes(params.game) || savedGames.some(item => item.id === params.game);
-  
+  const showEdit =
+    user.savedGames.includes(params.game) ||
+    savedGames.some((item) => item.id === params.game);
+
   useEffect(() => {
     console.log('single game:');
     console.log(singleGame);
@@ -160,15 +162,19 @@ export default function PlayGame({ params }: { params: { game: string } }) {
           </p>
           <div className='modal-action'>
             <form method='dialog'>
-              <button
-                className='small green'
-                onClick={() => setDeleteModal(false)}
-              >
-                <span>No, nevermind!</span>
-              </button>
-              <button className='small red' onClick={handleDelete}>
-                <span>Yes, delete it!</span>
-              </button>
+              {!deleting && (
+                <>
+                  <button
+                    className='small green'
+                    onClick={() => setDeleteModal(false)}
+                  >
+                    <span>No, nevermind!</span>
+                  </button>
+                  <button className='small red' onClick={handleDelete}>
+                    <span>Yes, delete it!</span>
+                  </button>
+                </>
+              )}
             </form>
           </div>
         </div>
