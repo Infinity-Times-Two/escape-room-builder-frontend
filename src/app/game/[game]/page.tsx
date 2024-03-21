@@ -20,7 +20,10 @@ export default function PlayGame({ params }: { params: { game: string } }) {
   const { user } = useContext(UserContext);
 
   const router = useRouter();
-  const showEdit = user.savedGames.includes(params.game);
+
+  // Check if the user created this game, either in user's savedGames array from DB or savedGames in state
+  const showEdit = user.savedGames.includes(params.game) || savedGames.some(item => item.id === params.game);
+  
   useEffect(() => {
     console.log('single game:');
     console.log(singleGame);
