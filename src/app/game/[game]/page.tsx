@@ -39,12 +39,14 @@ export default function PlayGame({ params }: { params: { game: string } }) {
     };
 
     const fetchSingleGame = async () => {
+      console.log(singleGame);
       setLoading(true);
       setError(false);
       try {
+        console.log('Fetching game data from the DB...');
         const response = await fetch(`/api/game/${params.game}`);
         const data = await response.json();
-        console.log('Fetched game data from the server.');
+        console.log('Fetched game data from the DB.');
         console.log(data);
         localStorage.setItem('singleGame', JSON.stringify(data));
         if (data.length === undefined) {
@@ -60,48 +62,41 @@ export default function PlayGame({ params }: { params: { game: string } }) {
     };
 
     // Grab everything from LS in case it's not in state (eg. brand new user arrives at this page from a shared link)
-    const localStorageGame: any = localStorage.getItem('singleGame');
     const localStorageSavedGames: any = localStorage.getItem('savedGames');
     const localStorageLoadedGames: any = localStorage.getItem('loadedGames');
 
-    const localStorageSingleGame: Game | null = JSON.parse(localStorageGame);
     const savedGamesArray: Game[] | null = JSON.parse(localStorageSavedGames);
     const loadedGamesArray: Game[] | null = JSON.parse(localStorageLoadedGames);
 
-    // Load the game from 'saved games' state or local storage if it exists
-    if (savedGames) {
-      const savedGame = savedGames.find((game) => game.id === params.game);
-      if (savedGame) {
-        console.log('Found from saved games in state');
-        saveSingleGame(savedGame);
-      }
-    } else if (savedGamesArray) {
-      const savedGame = savedGamesArray.find((game) => game.id === params.game);
-      if (savedGame) {
-        console.log('Found from saved games in local storage');
-        saveSingleGame(savedGame);
-      }
+    // Check if the game is in local storage
+
+    const lsGame = localStorage.getItem('singleGame');
+    let localStorageGame;
+    if (lsGame !== null) {
+      localStorageGame = JSON.parse(lsGame);
     }
 
-    // Load the game from 'loaded games' state or local storage if it exists
-    if (loadedGames) {
-      const loadedGame = loadedGames.find((game) => game.id === params.game);
-      if (loadedGame) {
-        console.log('Found from loaded games in state');
-        saveSingleGame(loadedGame);
-      }
-    } else if (loadedGamesArray) {
-      const loadedGame = loadedGamesArray.find(
-        (game) => game.id === params.game
-      );
-      if (loadedGame) {
-        console.log('Found from loaded games in local storage');
-        saveSingleGame(loadedGame);
-      }
+    if (localStorageGame && localStorageGame.id === params.game) {
+      console.log('Found game in local storage (singleGame)');
+      saveSingleGame(localStorageGame);
+      return; // Exit useEffect early if game is found in local storage
     }
 
-    // If the game was not found in state or local storage, fetch it from DB
-    if (!localStorageSingleGame) {
+    // Check savedGames in state, savedGamesArray, loadedGames in state, and loadedGamesArray
+    if (savedGames || savedGamesArray || loadedGames || loadedGamesArray) {
+      const gameFromState =
+        savedGames?.find((game) => game.id === params.game) ||
+        savedGamesArray?.find((game) => game.id === params.game) ||
+        loadedGames?.find((game) => game.id === params.game) ||
+        loadedGamesArray?.find((game) => game.id === params.game);
+      if (gameFromState) {
+        console.log('Found game in state');
+        saveSingleGame(gameFromState);
+        return; // Exit useEffect early if game is found in state
+      }
+
+      // If the game was not found in state or local storage, fetch it from DB
+      console.log('Fetching game data from DB');
       fetchSingleGame();
     }
   }, []);

@@ -40,7 +40,7 @@ describe('Authentication', () => {
   });
 });
 
-describe.only('Game Creation and Editing while logged out', () => {
+describe('Game Creation and Editing while logged out', () => {
   beforeEach(() => {
     cy.visit('/new-game', { failOnStatusCode: false });
   });
