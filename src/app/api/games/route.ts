@@ -12,7 +12,7 @@ export async function GET(req: Request, res: any) {
   try {
     const env = process.env.NODE_ENV === 'development' ? 'dev' : 'main';
     const response = await fetch(
-      `https://api-erb.cloudzack.com/${env}/games`, {
+      `https://api-erb.cloudzack.com/dev/games`, {
       headers: {
         'Content-Type': 'application/json',
         'x-api-Key':
@@ -39,7 +39,7 @@ export async function POST(req: Request, res: Response) {
     throw new Error('PROD_API is not defined');
   }
   const env = process.env.NODE_ENV === 'development' ? 'dev' : 'main'
-  const response = await fetch(`https://api-erb.cloudzack.com/${env}/games`, {
+  const response = await fetch(`https://api-erb.cloudzack.com/dev/games`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
