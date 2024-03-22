@@ -261,11 +261,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
       // if (typeof challenge.answer === 'string') {
 
       // Currently answer is always a string
-      if (
-        challenge.answer === '' ||
-        challenge.answer === undefined ||
-        challenge.answer === null
-      ) {
+      if (challenge.answer === '') {
         return true;
       }
       // } else if (challenge.answer.length === 1) {

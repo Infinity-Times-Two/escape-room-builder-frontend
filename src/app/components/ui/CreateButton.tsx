@@ -8,6 +8,7 @@ export default function CreateButton() {
   return (
     <Link href='/new-game'>
       <button
+        data-testid='create'
         data-test='create'
         className='xl green'
         onClick={removeGameFormData}

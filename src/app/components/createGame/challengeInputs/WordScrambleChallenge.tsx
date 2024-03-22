@@ -81,13 +81,11 @@ export default function WordScrambleChallenge({
   useEffect(() => {
     if (typeof clue !== 'string' && typeof clue !== 'undefined') {
       setWords(clue);
-      console.log('setting clue')
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    console.log('clearing error')
     setError(false);
   }, [answer]);
 
@@ -95,7 +93,6 @@ export default function WordScrambleChallenge({
   useEffect(() => {
     if (clue?.length === 1 && clue[0].length === 0) {
       setWords([]);
-      console.log('clearing clue')
     }
   }, [clue]);
 

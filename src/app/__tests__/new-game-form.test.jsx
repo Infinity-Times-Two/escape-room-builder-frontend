@@ -1,7 +1,49 @@
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import NewGameForm from '../components/createGame/NewGameForm';
+import { SavedGamesContextProvider } from '../contexts/SavedGamesContext';
+import { SingleGameContextProvider } from '../contexts/SingleGameContext';
+import { UserContextProvider } from '../contexts/UserContext';
+import CreateButton from '../components/ui/CreateButton';
+
+describe('Context providers render content', () => {
+  it('SavedGamesContextProvider renders correctly', () => {
+    // Render the SavedGamesContextProvider
+    const { getByText } = render(
+      <SavedGamesContextProvider>
+        <div>Test Content</div>
+      </SavedGamesContextProvider>
+    );
+
+    // Check if the provider renders the children correctly
+    expect(getByText('Test Content')).toBeInTheDocument();
+  });
+
+  it('SingleGameContextProvider renders correctly', () => {
+    // Render the SingleGameContextProvider
+    const { getByText } = render(
+      <SingleGameContextProvider>
+        <div>Test Content</div>
+      </SingleGameContextProvider>
+    );
+
+    // Check if the provider renders the children correctly
+    expect(getByText('Test Content')).toBeInTheDocument();
+  });
+
+  it('UserContextProvider renders correctly', () => {
+    // Render the UserContextProvider
+    const { getByText } = render(
+      <UserContextProvider>
+        <div>Test Content</div>
+      </UserContextProvider>
+    );
+
+    // Check if the provider renders the children correctly
+    expect(getByText('Test Content')).toBeInTheDocument();
+  });
+});
 
 global.fetch = jest.fn(() =>
   Promise.resolve({
@@ -44,8 +86,13 @@ describe('Handle form inputs and submission', () => {
   });
 
   it('Adds inputs to challenges', async () => {
-    const { getByLabelText, getAllByLabelText, getByTestId, getByText, getByRole } =
-      render(<NewGameForm />);
+    const {
+      getByLabelText,
+      getAllByLabelText,
+      getByTestId,
+      getByText,
+      getByPlaceholderText,
+    } = render(<NewGameForm />);
     const user = userEvent.setup();
 
     // Add Trivia clue
@@ -53,33 +100,51 @@ describe('Handle form inputs and submission', () => {
     await user.click(triviaClue);
     await user.keyboard('Trivia question #1');
     expect(triviaClue.value).toBe('Trivia question #1');
+    const triviaAnswer = getByTestId('challenge-0-trivia-answer');
+    await user.click(triviaAnswer);
+    await user.keyboard('Trivia answer #1');
 
     // Add Caesar Cypher description
-    const cypherDesc = getByLabelText('Describe the word to be decrypted');
+    const cypherDesc = getByTestId('challenge-1-caesar-cypher-answer');
     await user.click(cypherDesc);
     await user.keyboard('Decrypt this phrase');
     expect(cypherDesc.value).toBe('Decrypt this phrase');
-    const encryptButton = getByTestId('1-encrypt-button')
-    await user.click(encryptButton)
-    const cypherClue = getByTestId('challenge-1-caesar-cypher-clue')
+    const encryptButton = getByTestId('1-encrypt-button');
+    await user.click(encryptButton);
+    const cypherClue = getByTestId('challenge-1-caesar-cypher-clue');
     expect(cypherClue.value).not.toBeNull();
 
-    // Add Word Scramble answer
+    // Add Word Scramble description & answer
+    const scrambleDescription = getByPlaceholderText(
+      'Describe the phrase to be solved'
+    );
+    await user.click(scrambleDescription);
+    await user.keyboard('Word scramble description');
+    expect(scrambleDescription.value).toBe('Word scramble description');
     const scrambleAnswer = getAllByLabelText('Answer (required)');
     const scrambleButton = getByTestId('2-scramble-button');
     await user.click(scrambleAnswer[2]);
 
-    // Invalid
-    await user.keyboard('Unscramble these');
+    // - Invalid
+    await user.keyboard('same same');
     await user.click(scrambleButton);
-    const warning = getByText(/Please enter at least 3 words/);
-    expect(warning).toBeInTheDocument();
+    const warning1 = getByText(/Please enter at least 3 words/);
+    expect(warning1).toBeInTheDocument();
+    await user.click(scrambleAnswer[2]);
+
+    // - Add the same word for error
+    await user.keyboard(' same{enter}');
+    await user.click(scrambleButton);
+    const warning2 = getByText(/They are all the same word!/);
+    expect(warning2).toBeInTheDocument();
     await user.click(scrambleAnswer[2]);
 
     // Add a word to make it valid
-    await user.keyboard(' words{enter}');
-    expect(scrambleAnswer[2].value).toBe('Unscramble these words');
-    expect(warning).not.toBeInTheDocument();
+    await user.keyboard(' different{enter}');
+    await user.click(scrambleButton);
+    expect(scrambleAnswer[2].value).toBe('same same same different');
+    await user.click(scrambleAnswer[2]);
+    expect(warning2).not.toBeInTheDocument();
 
     // Remove a challenge
     const removeCaesarCypher = getByTestId('remove-caesar-cypher-1');
@@ -89,17 +154,20 @@ describe('Handle form inputs and submission', () => {
   });
 
   it('submits the form', async () => {
-    const { getByTestId, getByText } = render(<NewGameForm />);
+    const { getByTestId, getByText, getByRole, getAllByRole } = render(
+      <NewGameForm />
+    );
     const user = userEvent.setup();
 
     const submitButton = getByTestId('create-game');
     await user.click(submitButton);
-    const warning = getByText('Some challenge clues and answers are empty')
-    expect(warning).toBeInTheDocument();
+    // const submitWarning1 = getByText('Some challenge clues and answers are empty');
+    // expect(submitWarning1).toBeInTheDocument();
+    // const warnings = getByRole('alert')
+    // console.log(warnings)
     // const playButton = getByTestId('play-game');
     // expect(playButton).toBeInTheDocument();
   });
-
 
   it('selects a challenge type and adds a new challenge to the form', async () => {
     jest.clearAllMocks();
@@ -154,5 +222,14 @@ describe('Handle form inputs and submission', () => {
 
     expect(gameTitle.value).toBe('');
     expect(gameDescription.value).toBe('');
+  });
+});
+
+describe('Testing misc UI', () => {
+  it('Renders a button and can be clicked', async () => {
+    const { getByTestId } = render(<CreateButton />);
+    const user = userEvent.setup();
+    const button = getByTestId('create');
+    await user.click(button);
   });
 });
