@@ -24,11 +24,8 @@ export default function Header() {
 
     const fetchUser = async (id: string | undefined | null) => {
       if (id !== null && id !== undefined) {
-        console.log('Looking for user in DB');
         const response = await fetch(`/api/user/${id}`);
         const data = await response.json();
-        console.log('Found user');
-        console.log(data);
         setUser({
           id: data.userId,
           firstName: data.firstName,
@@ -38,24 +35,17 @@ export default function Header() {
           isAdmin: data.isAdmin,
         });
         if (typeof data.firstName === 'undefined') {
-          console.log('Fetching first name...');
-          const response = await fetch(`/api/updateUser/${id}`);
-          const data = await response.json();
-          console.log('Got first name:');
-          console.log(data.firstName);
+          const firstName = await updateUser(id);
           setUser((prevUser) => {
-            const updatedUser = { ...prevUser, firstName: data.firstName };
+            const updatedUser = { ...prevUser, firstName: firstName };
             return updatedUser;
           });
         }
 
         if (data?.message === 'User not found') {
-          console.log('Creating user...');
           createUser(id);
           const response = await fetch(`/api/user/${id}`);
           const data = await response.json();
-          console.log('User created');
-          console.log(data);
           setUser({
             id: data.userId,
             firstName: data.firstName,
@@ -68,7 +58,14 @@ export default function Header() {
         }
         return data;
       } else {
-        console.log('No user info');
+        setUser({
+          id: '',
+          firstName: '',
+          nickName: '',
+          savedGames: [],
+          createdGames: [],
+          isAdmin: false,
+        });
       }
     };
 
@@ -78,7 +75,7 @@ export default function Header() {
   return (
     <header className='grid grid-cols-1 sm:grid-cols-2 items-center border-b border-black sm:px-16'>
       <h1 className='text-xl xs:text-2xl justify-self-center xs:justify-self-start pt-6 pb-2 sm:pb-6'>
-        <Link href='/'>Escape Room Builder</Link>
+        <Link href='/' data-test='home-link'>Escape Room Builder</Link>
       </h1>
       <div className='flex flex-row items-center justify-self-center sm:justify-self-end space-x-4 sm:space-x-8 pb-6 pt-2 sm:pt-6'>
         <Link href='/about'>About</Link>

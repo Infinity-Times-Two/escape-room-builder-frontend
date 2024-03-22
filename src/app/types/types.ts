@@ -5,6 +5,7 @@ export interface Game {
   timeLimit: number;
   theme: string;
   author: string;
+  authorId: string;
   titleBg: string;
   bodyBg: string;
   challenges: Challenge[];

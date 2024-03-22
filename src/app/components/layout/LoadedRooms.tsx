@@ -4,6 +4,7 @@ import GameCard from '../ui/GameCard';
 import { useContext, useEffect } from 'react';
 import { LoadedGamesContext } from '@/app/contexts/loadedGamesContext';
 import { Game } from '@/app/types/types';
+import GameCardSkeleton from '../ui/GameCardSkeleton';
 
 export default function LoadedRooms() {
   const { loadedGames, setLoadedGames } = useContext(LoadedGamesContext);

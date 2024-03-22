@@ -40,7 +40,7 @@ describe('Authentication', () => {
   });
 });
 
-describe('Game Creation', () => {
+describe('Game Creation and Editing while logged out', () => {
   beforeEach(() => {
     cy.visit('/new-game', { failOnStatusCode: false });
   });
@@ -83,5 +83,28 @@ describe('Game Creation', () => {
     cy.getByData('create-game').click()
     cy.getByData('play-game').should('exist')
     cy.getByData('logged-out-message').should('exist')
+
+    // Open the game
+    cy.getByData('play-game').click();
+    cy.location().should((url) => {
+      expect(url.pathname).to.match(/\/game\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/i)
+    })
+    cy.getByData('edit-game').click();
+    cy.location().should((url) => {
+      expect(url.pathname).to.match(/\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/i)
+    })
+    
+    cy.getByData('game-title').should('exist').type(' - edited');
+    cy.getByData('edit-game').click();
+
+    cy.getByData('play-game').click();
+    cy.get('h2').contains('edited');
+
+    cy.getByData('start-game').click();
+    cy.get('h2').contains('Trivia question #1')
+
+    cy.getByData('home-link').click();
+    cy.getByData('play').click();
+    cy.get('h3').contains('Test Game - edited')
   });
 });

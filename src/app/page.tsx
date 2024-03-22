@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import CreateButton from './components/ui/CreateButton';
 
 export default function Home() {
   return (
@@ -9,11 +10,7 @@ export default function Home() {
             <span>Play</span>
           </button>
         </Link>
-        <Link href='/new-game'>
-          <button data-test='create' className='xl green'>
-            <span>Create</span>
-          </button>
-        </Link>
+        <CreateButton />
       </div>
       <p></p>
     </div>

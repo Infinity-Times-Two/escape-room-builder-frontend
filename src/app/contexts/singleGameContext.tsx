@@ -21,6 +21,7 @@ const defaultContextValue: SingleGameContextType = {
     timeLimit: 300,
     theme: '',
     author: '',
+    authorId: '',
     bodyBg: '',
     titleBg: '',
     challenges: [
@@ -60,6 +61,7 @@ const SingleGameContextProvider = (props: PropsWithChildren<{}>) => {
     timeLimit: 300,
     theme: '',
     author: '',
+    authorId: '',
     bodyBg: '',
     titleBg: '',
     challenges: [

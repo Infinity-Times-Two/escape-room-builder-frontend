@@ -1,5 +1,7 @@
+'use client'
 import { useContext, useEffect, useState } from 'react';
 import { TimerContext } from '@/app/contexts/timerContext';
+import { useRouter } from 'next/navigation';
 
 export default function Timer(props: { timeLeft: number }) {
   // Adapted from https://www.digitalocean.com/community/tutorials/react-countdown-timer-react-hooks
@@ -9,8 +11,9 @@ export default function Timer(props: { timeLeft: number }) {
     return difference;
   };
 
-  const { expiry, setFinishTime } = useContext(TimerContext);
+  const { expiry, finishTime, setFinishTime } = useContext(TimerContext);
   const [timeRemaining, setTimeRemaining] = useState(props.timeLeft);
+  const router = useRouter();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -19,7 +22,10 @@ export default function Timer(props: { timeLeft: number }) {
         setFinishTime(props.timeLeft - timeRemaining);
       }
     }, 1000);
-
+    const now = Date.now()
+    if (expiry < finishTime) {
+      router.push('/lose')
+    }
     return () => clearTimeout(timer);
   });
 

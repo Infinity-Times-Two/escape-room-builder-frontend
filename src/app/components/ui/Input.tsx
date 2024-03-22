@@ -19,6 +19,8 @@ export default function Input({ fieldType, placeholder, onChange, value, disable
       <input
         data-type={fieldType}
         data-test={dataTest}
+        data-testid={dataTest}
+        // Need to refactor Cypress to accept data-test
         name={fieldType}
         id={fieldType}
         placeholder={placeholder}

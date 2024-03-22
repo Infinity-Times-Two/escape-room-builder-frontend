@@ -85,6 +85,13 @@ export default function CaesarCypherChallenge({
     }
   };
 
+  useEffect(() => {
+    if (typeof clue === 'string' && typeof clue !== 'undefined') {
+      setEncryptedClue(clue);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Clear encrypted word when form is reset
   useEffect(() => {
     if (clue?.length === 0) {
@@ -128,6 +135,7 @@ export default function CaesarCypherChallenge({
           onClick={onEncrypt}
           disabled={error}
           data-test={`${index}-encrypt-button`}
+          data-testid={`${index}-encrypt-button`}
         >
           <span>Encrypt</span>
         </button>
@@ -149,7 +157,7 @@ export default function CaesarCypherChallenge({
             <span>{errorMessage}</span>
           </div>
         )}
-        {encryptedClue && (
+        {encryptedClue && seed && (
           <div role='alert' className='alert alert-info mx-4 self-center'>
             <svg
               xmlns='http://www.w3.org/2000/svg'

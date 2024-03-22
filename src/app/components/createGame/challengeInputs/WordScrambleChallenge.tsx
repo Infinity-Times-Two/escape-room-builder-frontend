@@ -52,8 +52,16 @@ export default function WordScrambleChallenge({
     e.preventDefault();
     if (answer !== undefined) {
       clue = answer.trim().split(' ');
+      
       if (clue.length > 2) {
         setError(false);
+        // Check if all words are the same
+        
+        if (clue.every((value, index, arr) => value === arr[0])) {
+          setErrorMessage('What?! They are all the same word!')
+          setError(true);
+          return;
+        }
         const shuffledClue = shuffleWords(clue);
         setWords(shuffledClue);
         onClueChange(shuffledClue, index);
@@ -69,6 +77,13 @@ export default function WordScrambleChallenge({
       shuffle(e);
     }
   };
+
+  useEffect(() => {
+    if (typeof clue !== 'string' && typeof clue !== 'undefined') {
+      setWords(clue);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     setError(false);
@@ -161,7 +176,9 @@ export default function WordScrambleChallenge({
       </div>
       <Card>
         <div
-          className={`flex flex-row gap-2 flex0wrap justify-center h-[100px] w-full ${submitError && words.length === 0 && 'bg-red-100'}`}
+          className={`flex flex-row gap-2 flex0wrap justify-center h-[100px] w-full ${
+            submitError && words.length === 0 && 'bg-red-100'
+          }`}
           data-test={`${dataTest}-clue`}
         >
           <FlipMove
