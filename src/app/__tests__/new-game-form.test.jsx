@@ -1,10 +1,10 @@
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import NewGameForm from '../components/createGame/NewGameForm';
-import { SavedGamesContextProvider } from '../contexts/SavedGamesContext';
-import { SingleGameContextProvider } from '../contexts/SingleGameContext';
-import { UserContextProvider } from '../contexts/UserContext';
+import { SavedGamesContextProvider } from '../contexts/savedGamesContext';
+import { SingleGameContextProvider } from '../contexts/singleGameContext';
+import { UserContextProvider } from '../contexts/userContext';
 import CreateButton from '../components/ui/CreateButton';
 
 describe('Context providers render content', () => {
