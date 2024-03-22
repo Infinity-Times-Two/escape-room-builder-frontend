@@ -135,6 +135,7 @@ export default function CaesarCypherChallenge({
           onClick={onEncrypt}
           disabled={error}
           data-test={`${index}-encrypt-button`}
+          data-testid={`${index}-encrypt-button`}
         >
           <span>Encrypt</span>
         </button>

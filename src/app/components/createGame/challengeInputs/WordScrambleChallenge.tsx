@@ -52,8 +52,16 @@ export default function WordScrambleChallenge({
     e.preventDefault();
     if (answer !== undefined) {
       clue = answer.trim().split(' ');
+      
       if (clue.length > 2) {
         setError(false);
+        // Check if all words are the same
+        
+        if (clue.every((value, index, arr) => value === arr[0])) {
+          setErrorMessage('What?! They are all the same word!')
+          setError(true);
+          return;
+        }
         const shuffledClue = shuffleWords(clue);
         setWords(shuffledClue);
         onClueChange(shuffledClue, index);

@@ -90,7 +90,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
 
   // Set game ID and colours when loading a new form
   useEffect(() => {
-    if (editGame) {
+    if (!editGame) {
       setSingleGame((prevGame: Game) => {
         const newGame = { ...prevGame, id: '' };
         return newGame;
@@ -258,19 +258,21 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     );
 
     const hasEmptyAnswer = newGame.challenges.some((challenge) => {
-      if (typeof challenge.answer === 'string') {
-        if (
-          challenge.answer === '' ||
-          challenge.answer === undefined ||
-          challenge.answer === null
-        ) {
-          return true;
-        }
-      } else if (typeof challenge.answer === 'object') {
-        if (challenge.answer[0] === '') {
-          return true;
-        }
+      // if (typeof challenge.answer === 'string') {
+
+      // Currently answer is always a string
+      if (
+        challenge.answer === '' ||
+        challenge.answer === undefined ||
+        challenge.answer === null
+      ) {
+        return true;
       }
+      // } else if (challenge.answer.length === 1) {
+      // if (challenge.answer[0] === '') {
+      //   return true;
+      // }
+      // }
     });
 
     // If any challenge clue is empty, stop submission

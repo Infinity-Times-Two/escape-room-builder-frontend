@@ -44,7 +44,7 @@ describe('Handle form inputs and submission', () => {
   });
 
   it('Adds inputs to challenges', async () => {
-    const { getByLabelText, getAllByLabelText, getByTestId, getByText } =
+    const { getByLabelText, getAllByLabelText, getByTestId, getByText, getByRole } =
       render(<NewGameForm />);
     const user = userEvent.setup();
 
@@ -59,6 +59,10 @@ describe('Handle form inputs and submission', () => {
     await user.click(cypherDesc);
     await user.keyboard('Decrypt this phrase');
     expect(cypherDesc.value).toBe('Decrypt this phrase');
+    const encryptButton = getByTestId('1-encrypt-button')
+    await user.click(encryptButton)
+    const cypherClue = getByTestId('challenge-1-caesar-cypher-clue')
+    expect(cypherClue.value).not.toBeNull();
 
     // Add Word Scramble answer
     const scrambleAnswer = getAllByLabelText('Answer (required)');
@@ -77,7 +81,7 @@ describe('Handle form inputs and submission', () => {
     expect(scrambleAnswer[2].value).toBe('Unscramble these words');
     expect(warning).not.toBeInTheDocument();
 
-    // Test submit button
+    // Remove a challenge
     const removeCaesarCypher = getByTestId('remove-caesar-cypher-1');
     user.click(removeCaesarCypher);
     const removeTrivia = getByTestId('remove-trivia-0');
@@ -85,16 +89,17 @@ describe('Handle form inputs and submission', () => {
   });
 
   it('submits the form', async () => {
-    const { getByTestId, getByRole } = render(<NewGameForm />);
+    const { getByTestId, getByText } = render(<NewGameForm />);
     const user = userEvent.setup();
 
     const submitButton = getByTestId('create-game');
     await user.click(submitButton);
-    const warning = getByRole('alert')
-    console.log(warning)
+    const warning = getByText('Some challenge clues and answers are empty')
+    expect(warning).toBeInTheDocument();
     // const playButton = getByTestId('play-game');
     // expect(playButton).toBeInTheDocument();
   });
+
 
   it('selects a challenge type and adds a new challenge to the form', async () => {
     jest.clearAllMocks();
