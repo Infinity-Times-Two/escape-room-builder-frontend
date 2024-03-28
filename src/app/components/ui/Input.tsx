@@ -27,7 +27,7 @@ export default function Input({ fieldType, placeholder, onChange, value, disable
         onChange={onChange}
         onKeyDown={onKeyDown}
         value={value}
-        className={` rounded px-4 pt-3 pb-4 ${submitError && value === '' ? 'bg-red-100' : 'bg-white'} text-5xl w-full -translate-x-1 -translate-y-1 input-bordered border-black border-2 focus:outline-none focus:border-black w-full`}
+        className={` rounded px-4 pt-3 pb-3 ${submitError && value === '' ? 'bg-red-100' : 'bg-white'} text-3xl w-full -translate-x-1 -translate-y-1 input-bordered border-black border-2 focus:outline-none focus:border-black w-full`}
         disabled={disabled}
         required={required}
       />

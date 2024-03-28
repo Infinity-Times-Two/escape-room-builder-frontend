@@ -24,10 +24,7 @@ body {
   color: rgb(var(--foreground-rgb));
   background: #fff8f0;
   font-family: var(--font-cabin);
-}
-
-header {
-  background-color: hsl(32, 100%, 94%);
+  background-image: url('/noise.png');
 }
 
 .card:has(div.bg-red-100) {
@@ -51,20 +48,21 @@ header {
   animation: skeleton 180s linear infinite;
 }
 
-/* Patterned background experiment:
-
 body {
   color: rgb(var(--foreground-rgb));
-  background-color: #fff8f0;
-background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff2e3' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+  /* background-color: hsl(32, 100%, 97%); */
+
+  background-image: 
+    linear-gradient(
+      54deg in lch,
+      color(display-p3 25% 25% 100%) 6% 6%, color(display-p3 100% 85% 30%) 100%
+    )
+  ;
 }
 
 header {
-  background-color: #fff2e3;
-background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff8f0' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: url('/noise.png');
 }
-
-*/
 
 p {
   font-weight: 600;
@@ -93,6 +91,10 @@ h6 {
 h1 {
   font-size: 48px;
   margin-inline: 12px;
+  color: black;
+  -webkit-text-fill-color: white; /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: black;
 }
 
 h2 {
@@ -103,6 +105,11 @@ h3 {
   font-size: 32px;
 }
 
+.header {
+  @apply font-bold uppercase justify-self-center pt-6 pb-2;
+  font-family: var(--font-work-sans);
+  font-size: 18px;
+}
 button {
   @apply rounded-md bg-black font-semibold m-2 self-center;
   font-family: var(--font-work-sans);

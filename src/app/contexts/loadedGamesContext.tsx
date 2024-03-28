@@ -1,5 +1,5 @@
 'use client';
-import { useState, createContext, useMemo, PropsWithChildren } from 'react';
+import { useState, useEffect, useMemo, createContext, PropsWithChildren } from 'react';
 
 import { Game } from '../types/types'
 
@@ -18,6 +18,21 @@ const LoadedGamesContext = createContext(defaultContextValue);
 const LoadedGamesContextProvider = (props: PropsWithChildren<{}>) => {
 
   const [loadedGames, setLoadedGames] = useState<Game[] | undefined>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      // Fetch data from the server
+      const response = await fetch('/api/games');
+      const data = await response.json();
+      console.log(`setting games: ${data}`)
+      setLoadedGames(data.games);
+      return data;
+    };
+    
+    fetchData()
+  }, [])
+
+
 
   const value = useMemo(
     () => ({

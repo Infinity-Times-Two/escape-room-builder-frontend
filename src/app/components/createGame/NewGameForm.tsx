@@ -10,6 +10,15 @@ import { v4 as uuidv4 } from 'uuid';
 import Link from 'next/link';
 import NewChallenge from './NewChallenge';
 
+/***
+ * TO DO: Refactor this form to use a server action for submission
+ * https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations#forms
+ * 
+ * On second thought - if we want logged-out users to be able to create & play a game, 
+ * does it make sense to use a server action?
+ */
+
+
 export default function NewGameForm({ editGame }: { editGame?: string }) {
   const { user } = useContext(UserContext);
 

@@ -26,13 +26,13 @@ export default async function RootLayout({
 }) {
   return (
     <html lang='en'>
-      <ClerkProvider
-        appearance={{
-          baseTheme: neobrutalism,
-        }}
+      <body
+        className={`${cabin.variable} ${workSans.variable} flex flex-col min-h-screen`}
       >
-        <body
-          className={`${cabin.variable} ${workSans.variable} flex flex-col min-h-screen`}
+        <ClerkProvider
+          appearance={{
+            baseTheme: neobrutalism,
+          }}
         >
           <CompositeContextProvider>
             <Header />
@@ -41,8 +41,8 @@ export default async function RootLayout({
             </main>
             <Footer />
           </CompositeContextProvider>
-        </body>
-      </ClerkProvider>
+        </ClerkProvider>
+      </body>
     </html>
   );
 }

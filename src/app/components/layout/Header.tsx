@@ -74,9 +74,9 @@ export default function Header() {
 
   return (
     <header className='grid grid-cols-1 sm:grid-cols-2 items-center border-b border-black sm:px-16'>
-      <h1 className='text-xl xs:text-2xl justify-self-center xs:justify-self-start pt-6 pb-2 sm:pb-6'>
+      <p className='header'>
         <Link href='/' data-test='home-link'>Escape Room Builder</Link>
-      </h1>
+      </p>
       <div className='flex flex-row items-center justify-self-center sm:justify-self-end space-x-4 sm:space-x-8 pb-6 pt-2 sm:pt-6'>
         <Link href='/about'>About</Link>
         <SignedIn>
