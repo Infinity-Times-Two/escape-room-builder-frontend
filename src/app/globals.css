@@ -152,12 +152,12 @@ button.red > span {
 }
 
 div.badge {
-  @apply block h-8 rounded-full bg-black font-semibold m-2 p-0 border-0 w-max;
+  @apply block h-8 rounded-full bg-black font-semibold m-2 p-0 border-0 w-max text-center;
   font-family: var(--font-work-sans);
 }
 
 div.badge > span {
-  @apply block -translate-x-1 -translate-y-1 rounded-full bg-white text-black border-2 border-black py-1 px-8 uppercase tracking-wider cursor-pointer;
+  @apply min-h-8 min-w-24 block -translate-x-1 -translate-y-1 rounded-full bg-white text-black border-2 border-black py-1 px-8 uppercase tracking-wider cursor-pointer;
 }
 
 div.badge.red {

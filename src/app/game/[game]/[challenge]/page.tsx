@@ -90,9 +90,9 @@ export default function ChallengePage({
 
   return (
     <div className='pt-16 sm:pt-0'>
-      <h1 className='mb-8'>
+      <h2 className='mb-8'>
         {currentChallenge?.type}: {currentChallenge?.description}
-      </h1>
+      </h2>
       <SingleChallenge
         currentChallenge={currentChallenge}
         nextChallenge={nextChallenge}
