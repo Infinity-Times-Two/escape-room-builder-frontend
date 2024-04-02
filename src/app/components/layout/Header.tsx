@@ -77,7 +77,7 @@ export default function Header() {
       <p className='header'>
         <Link href='/' data-test='home-link'>Escape Room Builder</Link>
       </p>
-      <div className='flex flex-row items-center justify-self-center sm:justify-self-end space-x-4 sm:space-x-8 pb-6 pt-2 sm:pt-6'>
+      <div className='flex flex-row min-h-[110px] items-center justify-self-center sm:justify-self-end space-x-4 sm:space-x-8 pb-6 pt-2 sm:pt-6'>
         <Link href='/about'>About</Link>
         <SignedIn>
           <UserButton />

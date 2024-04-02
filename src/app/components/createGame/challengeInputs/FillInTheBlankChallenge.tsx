@@ -1,25 +1,9 @@
 import Input from '../../ui/Input';
 import { useState, forwardRef, useEffect } from 'react';
-import FlipMove from 'react-flip-move';
 import Card from '../../ui/Card';
 import RemoveButton from '../../ui/RemoveButton';
 
-export const shuffleWords = (array: string[]) => {
-  let newArray = [...array];
-  while (
-    // keep shuffling if the clue array is the same as the answer
-    newArray.length === array.length &&
-    newArray.every((element, index) => element === array[index])
-  ) {
-    for (let i = newArray.length - 1; i >= 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-    }
-  }
-  return newArray;
-};
-
-export default function WordScrambleChallenge({
+export default function FillInTheBlankChallenge({
   index,
   clue,
   description,
@@ -45,67 +29,45 @@ export default function WordScrambleChallenge({
   submitError: boolean;
 }) {
   const [words, setWords] = useState<string[]>([]);
+  const [wordsWithBlanks, setWordsWithBlanks] = useState<string[]>([]);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const shuffle = (e: any) => {
-    e.preventDefault();
-    if (answer !== undefined) {
-      clue = answer.trim().split(' ');
-      
-      if (clue.length > 2) {
-        setError(false);
-        // Check if all words are the same
-        
-        if (clue.every((value, index, arr) => value === arr[0])) {
-          setErrorMessage('What?! They are all the same word!')
-          setError(true);
-          return;
-        }
-        const shuffledClue = shuffleWords(clue);
-        setWords(shuffledClue);
-        onClueChange(shuffledClue, index);
-      } else {
-        setErrorMessage('Please enter at least 3 words');
-        setError(true);
-      }
-    }
-  };
-
-  const handleKeyDown = (e: any) => {
-    if (e.key === 'Enter') {
-      shuffle(e);
-    }
-  };
-
-  useEffect(() => {
-    if (typeof clue !== 'string' && typeof clue !== 'undefined') {
-      setWords(clue);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   useEffect(() => {
     setError(false);
+    let newWords: string[] = [];
+    if (typeof answer !== 'undefined') {
+      newWords = answer.split(' ');
+    }
+    setWords(newWords);
   }, [answer]);
 
-  // Clear scrambled words when form is reset
   useEffect(() => {
-    if (clue?.length === 1 && clue[0].length === 0) {
-      setWords([]);
-    }
-  }, [clue]);
+    onClueChange(words, index);
+  }, [words]);
+
+  // Clear scrambled words when form is reset
+  // useEffect(() => {
+  //   if (clue?.length === 1 && clue[0].length === 0) {
+  //     setWords([]);
+  //   }
+  // }, [clue]);
+
+  const markWord = (word: string, index: number) => {
+    const updatedWord = '~' + word;
+    const updatedWords = [...wordsWithBlanks];
+    updatedWords[index] = updatedWord;
+    setWordsWithBlanks(updatedWords);
+  };
 
   type Props = {
     word: string;
   };
 
   const Badge = forwardRef<HTMLLIElement, Props>(({ word }, ref) => (
-    <li ref={ref}>
-      <div className='badge orange'>
-        <span>{word}</span>
-      </div>
-    </li>
+    <div className='badge orange inline'>
+      <span>{word}</span>
+    </div>
   ));
 
   Badge.displayName = 'Badge';
@@ -118,7 +80,9 @@ export default function WordScrambleChallenge({
       data-testid={`${challengeType}-${index}`}
     >
       <p className='absolute top-0 left-0 p-6 text-2xl'>{index + 1}</p>
-      <h3 className='mb-6'>New {challengeType.replaceAll("-", " ")} Challenge</h3>
+      <h3 className='mb-6'>
+        New {challengeType.replaceAll('-', ' ')} Challenge
+      </h3>
       <div>
         <label htmlFor={`challenge-description-${index}`}>
           Description (optional)
@@ -139,22 +103,12 @@ export default function WordScrambleChallenge({
           placeholder='Answer*'
           onChange={onAnswerChange}
           key={`challenge-answer-${index}`}
-          onKeyDown={handleKeyDown}
           dataTest={`${dataTest}-answer`}
           submitError={submitError}
           required
         />
       </div>
       <div className='flex flex-row'>
-        <button
-          onClick={shuffle}
-          data-test={`${index}-scramble-button`}
-          data-testid={`${index}-scramble-button`}
-        >
-          {' '}
-          {/* data-test is for Cypress, data-testid is for Jest. TO DO: Refactor to use one of those options for both */}
-          <span>Scramble</span>
-        </button>
         {error && (
           <div role='alert' className='alert alert-warning mx-4 self-center'>
             <svg
@@ -174,23 +128,36 @@ export default function WordScrambleChallenge({
           </div>
         )}
       </div>
-      <Card>
+      <Card maxWidth='max-w-[800px]'>
         <div
-          className={`flex flex-row gap-2 flex0wrap justify-center h-[100px] w-full ${
+          className={`flex flex-col gap-2 flex-wrap justify-center h-[100px] w-full ${
             submitError && words.length === 0 && 'bg-red-100'
           }`}
           data-test={`${dataTest}-clue`}
         >
-          <FlipMove
-            staggerDurationBy='50'
-            duration={600}
-            typeName='ul'
-            className='flex flex-row flex-wrap justify-center'
-          >
+          <div className='flex flex-row flex-wrap justify-center list-none gap-x-1.5'>
             {words.map((word: string, index: number) => (
-              <Badge key={`${word}-${index}`} word={word} />
+              <span
+                className={`text-xl`}
+                onClick={() => markWord(word, index)}
+                key={`${word}-${index}`}
+              >
+                {word}
+              </span>
             ))}
-          </FlipMove>
+          </div>
+          
+          <div className='flex flex-row flex-wrap justify-center list-none gap-x-1.5'>
+            {wordsWithBlanks.map((word: string, index: number) => (
+              <span
+                className={`text-xl`}
+                onClick={() => markWord(word, index)}
+                key={`${word}-${index}`}
+              >
+                {word}
+              </span>
+            ))}
+          </div>
         </div>
       </Card>
       <RemoveButton

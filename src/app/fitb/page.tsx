@@ -1,13 +1,21 @@
 import FillInTheBlankChallenge from '../components/challenges/FillInTheBlank';
+import FillInTheBlankRandomChallenge from '../components/challenges/FillInTheBlankRandom';
 
 const currentChallenge = {
+  id: 'Challenge 1',
+  type: 'fill-in-the-blanks',
+  description: 'Fill in the blanks',
+  clue: ['one', 'two', '~three', 'four', '~five', 'six', '~seven', 'eight', 'nine', 'ten', '~apple', '~orange', '~banana'],
+  answer: 'one two three four five six seven eight nine ten',
+}
+
+const currentChallengeRandom = {
   id: 'Challenge 1',
   type: 'fill-in-the-blanks',
   description: 'Fill in the blanks',
   clue: ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'],
   answer: 'one two three four five six seven eight nine ten',
 }
-const nextChallenge = 2;
 const singleGame = {
   id: '1',
   gameTitle: 'Test FITB',
@@ -23,7 +31,7 @@ const singleGame = {
       id: 'Challenge 1',
       type: '',
       description: '',
-      clue: ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'],
+      clue: ['one', 'two', '~three', 'four', '~five', 'six', '~seven', 'eight', 'nine', 'ten', '~apple', '~orange', '~banana'],
       answer: 'one two three four five six seven eight nine ten',
     },
   ],

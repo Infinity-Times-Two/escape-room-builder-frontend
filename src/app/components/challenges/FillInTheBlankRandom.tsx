@@ -14,56 +14,26 @@ interface FillInTheBlankChallengeProps {
 interface Word {
   word: string;
   hidden: boolean;
-  remove: boolean;
   index: number;
 }
-
-//****************************
-//
-// currentChallenge.clue is be an array of strings.
-// The array starts with the answer words in order,
-// and extra incorrect words come after the answer
-//
-// Strings that begin with ~ are to be removed from the answer
-// and supplied as clues. The ~strings embedded in the answer are correct,
-// the ~strings at the end of the array are incorrect.
-//
-// The displayed answer is trimmed of the incorrect ~strings by comparing
-// the answer length and subtracting the difference with the clue length.
-//
-// currentChallenge.answer is a string with the anwser.
-// It's only used to find the total number of words in the answer
-// and to determine challenge success on submit
-//
-//****************************
 
 export default function FillInTheBlankRandomChallenge({
   currentChallenge,
   nextChallenge,
   currentGame,
 }: FillInTheBlankChallengeProps) {
+  
   const [answer, setAnswer] = useState<Word[]>(
     Array.isArray(currentChallenge.clue)
-      ? currentChallenge.clue.map((word, index) => {
-          if (word[0] === '~') {
-            return {
-              word,
-              hidden: false, // whether it is hidden from clue words
-              remove: true, // whether to display a "blank" to be filled
-              index: index,
-            };
-          } else {
-            return {
-              word,
-              hidden: false,
-              remove: false,
-              index: index,
-            };
-          }
-        })
-      : []
+      ? currentChallenge.clue.map((word, index) => ({
+          word,
+          hidden: false,
+          index: index,
+        }))
+      : [{ word: currentChallenge.clue, hidden: false, index: 0 }]
   );
 
+  let numberOfWords = Math.ceil(answer.length * 0.25);
   const [removedWords, setRemovedWords] = useState<Word[]>([]);
 
   const [removedWordIndexes, setRemovedWordIndexes] = useState<number[]>([]);
@@ -74,58 +44,48 @@ export default function FillInTheBlankRandomChallenge({
 
   const router = useRouter();
 
-  // Filter correct and incorrect answer words from answer array
-  const filterWords = () => {
+  // Select a % of words to be removed from the answer
+  const selectWords = () => {
     let newRemovedWords: Word[] = [];
     setRemovedWordIndexes([]);
     // Making a copy with [...answer] causes extra words to be selected when useEffect runs twice in development
     let newAnswer = Array.isArray(currentChallenge.clue)
-      ? currentChallenge.clue.map((word, index) => {
-          if (word[0] === '~') {
-            const removedWord = {
-              word: word.slice(1),
-              hidden: false,
-              remove: true,
-              index: index,
-            };
-            newRemovedWords.push(removedWord);
-            setRemovedWords(newRemovedWords);
-            setRemovedWordIndexes((prev) => [...prev, index].sort(sortNumbers));
-            const newWord = {
-              ...removedWord,
-              word: '',
-            };
-            return newWord;
-          } else {
-            return {
-              word,
-              hidden: false,
-              remove: false,
-              index: index,
-            };
-          }
-        })
-      : [];
+      ? currentChallenge.clue.map((word, index) => ({
+          word,
+          hidden: false,
+          index: index,
+        }))
+      : [{ word: currentChallenge.clue, hidden: false, index: 0 }];
 
-    // Remove extra words from the end of the answer
-    const elementsToDelete =
-      answer.length - currentChallenge.answer.split(' ').length;
-    newAnswer.splice(newAnswer.length - elementsToDelete, elementsToDelete);
+    while (newRemovedWords.length < numberOfWords) {
+      let randomIndex = Math.floor(Math.random() * newAnswer.length);
+      // Skip this unless it generated a unique randomIndex
+      // This:
+      // 1. Saves the indexes of the removed words to help add them to the answer
+      // 2. Saves the removed words
+      if (!newRemovedWords.some((element) => element.index === randomIndex)) {
+        setRemovedWordIndexes((prev) => [...prev, randomIndex].sort());
+        newRemovedWords.push({
+          word: newAnswer[randomIndex].word,
+          hidden: false,
+          index: newAnswer[randomIndex].index,
+        });
+        newAnswer[randomIndex].word = '';
+        newAnswer[randomIndex].hidden = true;
+      }
+    }
+    setRemovedWords(newRemovedWords);
     setAnswer(newAnswer);
     setLoading(false);
   };
 
   // "Sends" the clicked word to the first blank word in the answer box
   const handleClueClick = (word: Word) => {
-    if (nextIndex === -1) return; // Don't add any more words if all blanks are full
-    // Remove the word from clue words
     let newWords = [...removedWords];
     newWords.map((newWord) => {
       newWord.word === word.word ? (newWord.hidden = !newWord.hidden) : newWord;
     });
     setRemovedWords(newWords);
-
-    // Add the word to the first blank space in the answer
     let newAnswer = [...answer];
     newAnswer.map((revealWord) => {
       if (revealWord.index === removedWordIndexes[nextIndex]) {
@@ -148,13 +108,13 @@ export default function FillInTheBlankRandomChallenge({
   const handleAnswerClick = (word: Word) => {
     let newWords = [...removedWords];
 
-    // Toggles visiblity, doesn't rearrange
+    // Just toggles visiblity, doesn't rearrange
     newWords.map((newWord) => {
       newWord.word === word.word ? (newWord.hidden = !newWord.hidden) : newWord;
     });
     setRemovedWords(newWords);
 
-    // Makes the clicked answer word blank and decrements next index (where the next word will be placed)
+    // Makes the clicked answer word blank and finds first available index with empty string
     let newAnswer = [...answer];
     newAnswer.map((revealWord) => {
       if (revealWord.index === word.index) {
@@ -165,7 +125,7 @@ export default function FillInTheBlankRandomChallenge({
         // get the index of the removedWordIndex
         const matchesIndex = (index: number) => index === firstAvailableIndex;
         const next = removedWordIndexes.findIndex(matchesIndex);
-        setNextIndex(next);
+        setNextIndex((prevIndex) => (prevIndex = next));
       }
       return revealWord;
     });
@@ -173,16 +133,14 @@ export default function FillInTheBlankRandomChallenge({
   };
 
   useEffect(() => {
-    filterWords();
+    selectWords();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Concatenates all answer words to be checked against the answer. ❤️ reduce!
-    const checkAnswer = answer
-      .reduce((acc, cur) => acc + cur.word + ' ', '')
-      .trim();
+    const checkAnswer = answer.reduce((acc, cur) => acc + cur.word + ' ', '').trim();
 
     if (checkAnswer === currentChallenge.answer.toLowerCase()) {
       if (nextChallenge === currentGame.challenges.length) {
@@ -210,15 +168,11 @@ export default function FillInTheBlankRandomChallenge({
             </div>
           ))}
           {loading && (
-            // <div className='flex flex-row flex-wrap gap-y-4 gap-x-8 justify-center'>
-            <>
-              <div className='skel h-8 w-32 m-2'></div>
-              <div className='skel h-8 w-32 m-2'></div>
-              <div className='skel h-8 w-32 m-2'></div>
-              <div className='skel h-8 w-32 m-2'></div>
-              <div className='skel h-8 w-32 m-2``'></div>
-            </>
-            // </div>
+            <div className='flex flex-row flex-wrap m-2 gap-y-10 gap-x-4 justify-center'>
+              <div className='skel h-8 w-32'></div>
+              <div className='skel h-8 w-20'></div>
+              <div className='skel h-8 w-28'></div>
+            </div>
           )}
         </div>
       </Card>
@@ -226,14 +180,14 @@ export default function FillInTheBlankRandomChallenge({
         <div className='flex flex-row gap-2 flex-wrap justify-center items-center'>
           {!loading &&
             answer.map((word: Word) =>
-              !word.hidden && !word.remove ? (
+              !word.hidden ? (
                 removedWordIndexes.some((index) => word.index === index) ? (
                   <div key={word.index} className={`badge orange`}>
-                    <span>{' ' /* one of the "blanks" to be filled */}</span>
+                    <span>{word.word}</span>
                   </div>
                 ) : (
                   <span className='text-xl font-bold' key={word.index}>
-                    {word.word /* a regular word in the answer */}
+                    {word.word}
                   </span>
                 )
               ) : (
@@ -242,7 +196,7 @@ export default function FillInTheBlankRandomChallenge({
                   className={`badge orange`}
                   onClick={() => handleAnswerClick(word)}
                 >
-                  <span>{word.word /* a word added to a "blank space" */}</span>
+                  <span>{word.word}</span>
                 </div>
               )
             )}
@@ -275,8 +229,4 @@ export default function FillInTheBlankRandomChallenge({
       )}
     </div>
   );
-}
-
-function sortNumbers(a: number, b: number) {
-  return a - b;
 }

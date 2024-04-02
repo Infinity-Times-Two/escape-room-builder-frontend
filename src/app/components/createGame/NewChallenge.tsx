@@ -1,6 +1,7 @@
 import TriviaChallenge from './challengeInputs/TriviaChallenge';
 import CaesarCypherChallenge from './challengeInputs/CaesarCypherChallenge';
 import WordScrambleChallenge from './challengeInputs/WordScrambleChallenge';
+import FillInTheBlankChallenge from './challengeInputs/FillInTheBlankChallenge';
 import { Challenge } from '@/app/types/types';
 
 export default function NewChallenge({
@@ -47,7 +48,7 @@ export default function NewChallenge({
         />
       );
     }
-    case 'caesar cypher': {
+    case 'caesar-cypher': {
       return (
         <CaesarCypherChallenge
           key={challenge.id}
@@ -65,9 +66,27 @@ export default function NewChallenge({
         />
       );
     }
-    case 'word scramble': {
+    case 'word-scramble': {
       return (
         <WordScrambleChallenge
+          key={challenge.id}
+          challengeType={challenge.type}
+          clue={clue}
+          description={description}
+          answer={answer}
+          onClueChange={onClueChange}
+          onDescriptionChange={onDescriptionChange}
+          onAnswerChange={onAnswerChange}
+          onRemove={onRemove}
+          index={index}
+          dataTest={dataTest}
+          submitError={submitError}
+        />
+      );
+    }
+    case 'fill-in-the-blank': {
+      return (
+        <FillInTheBlankChallenge
           key={challenge.id}
           challengeType={challenge.type}
           clue={clue}

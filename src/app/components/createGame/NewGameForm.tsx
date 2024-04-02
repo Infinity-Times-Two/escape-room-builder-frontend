@@ -48,25 +48,25 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     challenges: [
       {
         id: 'challenge-0',
-        type: 'trivia',
+        type: 'fill-in-the-blank',
         description: '',
         clue: '',
         answer: '',
       },
-      {
-        id: 'challenge-1',
-        type: 'caesar cypher',
-        description: '',
-        clue: '',
-        answer: '',
-      },
-      {
-        id: 'challenge-2',
-        type: 'word scramble',
-        description: '',
-        clue: [''],
-        answer: '',
-      },
+      // {
+      //   id: 'challenge-1',
+      //   type: 'caesar-cypher',
+      //   description: '',
+      //   clue: '',
+      //   answer: '',
+      // },
+      // {
+      //   id: 'challenge-2',
+      //   type: 'word-scramble',
+      //   description: '',
+      //   clue: [''],
+      //   answer: '',
+      // },
     ],
   };
 
@@ -171,7 +171,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
   const handleClueChange = (e: any, type: string, index: number) => {
     let clue: string | string[];
     // Caesar Cypher and Word Scramble clues come from the actual value passed to onClueChange, not the event target
-    if (type === 'caesar cypher' || type === 'word scramble') {
+    if (type === 'caesar-cypher' || type === 'word-scramble') {
       clue = e;
     } else if (type === 'trivia') {
       clue = e.target.value;
@@ -302,7 +302,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     newGame.challenges.map((challenge) => {
       if (typeof challenge.clue === 'string') {
         challenge.clue = challenge.clue.trim();
-        if (challenge.type === 'word scramble') {
+        if (challenge.type === 'word-scramble') {
           let sentenceArray: string[] = [];
           sentenceArray = challenge.clue.split(' ');
           challenge.clue = sentenceArray;
@@ -390,7 +390,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     <>
       <form>
         <div className='flex flex-col gap-12'>
-          <div className='flex flex-col gap-4'>
+          {/* <div className='flex flex-col gap-4'>
             <h1>Create your escape room</h1>
             <h2>Room Info</h2>
             <label htmlFor='gameTitle'>Name your Escape room</label>
@@ -444,7 +444,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
                 );
               })}
             </div>
-          </div>
+          </div> */}
           <h2>Challenges</h2>
 
           {newGame.challenges.length === 0 ? (
@@ -510,10 +510,10 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
                       type='radio'
                       name='challengeType'
                       id='caesarCypher'
-                      value='caesar cypher'
+                      value='caesar-cypher'
                       className='radio radio-primary'
                       onChange={handleNextChallenge}
-                      checked={nextChallenge === 'caesar cypher'}
+                      checked={nextChallenge === 'caesar-cypher'}
                     />
                   </div>
                   <div className='flex flex-row-reverse justify-end gap-2'>
@@ -522,10 +522,22 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
                       type='radio'
                       name='challengeType'
                       id='wordScramble'
-                      value='word scramble'
+                      value='word-scramble'
                       className='radio radio-primary'
                       onChange={handleNextChallenge}
-                      checked={nextChallenge === 'word scramble'}
+                      checked={nextChallenge === 'word-scramble'}
+                    />
+                  </div>
+                  <div className='flex flex-row-reverse justify-end gap-2'>
+                    <label htmlFor='fillInTheBlank'>Fill in the Blank</label>
+                    <input
+                      type='radio'
+                      name='challengeType'
+                      id='fillInTheBlank'
+                      value='fill-in-the-blank'
+                      className='radio radio-primary'
+                      onChange={handleNextChallenge}
+                      checked={nextChallenge === 'fill-in-the-blank'}
                     />
                   </div>
                 </fieldset>
@@ -533,12 +545,9 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
                   <button
                     onClick={handleAddChallenge}
                     data-test='add-challenge'
-                    data-testid={`add-${nextChallenge.replaceAll(
-                      ' ',
-                      '-'
-                    )}-challenge`}
+                    data-testid={`add-${nextChallenge}-challenge`}
                   >
-                    <span>Add {nextChallenge} Challenge</span>
+                    <span>Add {nextChallenge.replaceAll("-", " ")} Challenge</span>
                   </button>
                 </div>
               </div>
