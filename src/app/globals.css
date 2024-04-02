@@ -24,7 +24,6 @@ body {
   color: rgb(var(--foreground-rgb));
   background: #fff8f0;
   font-family: var(--font-cabin);
-  background-image: url('/noise.png');
 }
 
 .card:has(div.bg-red-100) {
@@ -50,18 +49,6 @@ body {
 
 body {
   color: rgb(var(--foreground-rgb));
-  /* background-color: hsl(32, 100%, 97%); */
-
-  background-image: 
-    linear-gradient(
-      54deg in lch,
-      color(display-p3 25% 25% 100%) 6% 6%, color(display-p3 100% 85% 30%) 100%
-    )
-  ;
-}
-
-header {
-  background-image: url('/noise.png');
 }
 
 p {
@@ -91,10 +78,6 @@ h6 {
 h1 {
   font-size: 48px;
   margin-inline: 12px;
-  color: black;
-  -webkit-text-fill-color: white; /* Will override color (regardless of order) */
-  -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: black;
 }
 
 h2 {
