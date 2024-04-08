@@ -40,7 +40,7 @@ describe('Authentication', () => {
   });
 });
 
-describe.only('Game Creation and Editing while logged out', () => {
+describe('Game Creation and Editing while logged out', () => {
   beforeEach(() => {
     cy.visit('/new-game', { failOnStatusCode: false });
   });
@@ -88,17 +88,19 @@ describe.only('Game Creation and Editing while logged out', () => {
 
     // Add a new challenge
     cy.getByData('add-challenge').click();
-    cy.getByData('challenge-4-trivia-clue').should('exist');
-    cy.getByData('remove-trivia-4').click();
+    cy.getByData('challenge-3-trivia-clue').should('exist');
+    cy.getByData('remove-trivia-3').click();
     // This is flaky - later on it may not create a trivia challenge by default
 
     // Test Fill In The Blank input
+    cy.get('#fillInTheBlank').click()
+    cy.getByData('add-challenge').click()
     cy.getByData('challenge-3-fill-in-the-blank-answer').type(
       'Fill in the blanks'
     );
     cy.getByData('challenge-3-fill-in-the-blank-highlight-word-3').click();
     cy.getByData('challenge-3-fill-in-the-blank-incorrect-words').type(
-      'incorrect words'
+      'incorrect, words'
     );
     cy.getByData('challenge-3-fill-in-the-blank-FITB-clue-words')
       .children()
