@@ -316,6 +316,9 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
           challenge.clue = sentenceArray;
         }
       }
+      if (challenge.type === 'fill-in-the-blank') {
+        challenge.answer = challenge.answer.replaceAll('"', '');
+      }
     });
 
     // Set this game to be the current game in state (if the player chooses to play the game)
@@ -400,7 +403,6 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
         <div className='flex flex-col gap-12'>
           <div className='flex flex-col gap-4'>
             <h1>Create your escape room</h1>
-            <h2>Room Info</h2>
             <label htmlFor='gameTitle'>Name your Escape room</label>
             <Input
               fieldType='gameTitle'
@@ -411,7 +413,6 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
               dataTest='game-title'
             />
           </div>
-          <p>By: {author}</p>
           <div className='flex flex-col gap-4 max-w-full'>
             <label htmlFor='gameDescription'>Describe your Escape room</label>
             <TextArea
@@ -424,9 +425,14 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
           </div>
           <div className='flex flex-col gap-4'>
             <label htmlFor='timeLimit'>
-              Set time limit:{' '}
+              Time limit:{' '}
               <span className='countdown'>
-                <span style={{ '--value': newGame.timeLimit } as React.CSSProperties}></span>
+                <span
+                  style={
+                    { '--value': newGame.timeLimit / 60 } as React.CSSProperties
+                  }
+                  className='text-right mr-1'
+                ></span>
               </span>
               minutes
             </label>

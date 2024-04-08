@@ -73,13 +73,13 @@ export default function Header() {
   }, [userId, setUser]);
 
   return (
-    <header className='grid grid-cols-1 sm:grid-cols-2 items-center bg-blue-400/25 border-b border-black sm:px-16'>
-      <p className='header'>
+    <header className='flex flex-col sm:flex-row items-center gap-4 bg-blue-400/25 border-b border-black py-4 sm:py-6 sm:px-16'>
+      <p className='header text-4xl font-black text-center sm:text-left uppercase flex-grow'>
         <Link href='/' data-test='home-link'>
           Escape Room Builder
         </Link>
       </p>
-      <div className='flex flex-row min-h-[110px] items-center justify-self-center sm:justify-self-end space-x-4 sm:space-x-8 pb-6 pt-2 sm:pt-6'>
+      <div className='flex flex-row items-center justify-self-center sm:justify-self-end space-x-4 sm:space-x-8'>
         <SignedIn>
             <div className='bg-white p-1 rounded-full hover:bg-emerald-100 transition-all'>
               <UserButton />

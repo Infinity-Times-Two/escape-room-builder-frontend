@@ -116,8 +116,16 @@ export default function FillInTheBlankChallenge({
       : [];
 
     // Remove extra words from the end of the answer
+    // Get the total number of actual words (not elements) from the answer array
+    const totalNumberOfWords = answer.reduce(
+      (accumulator, currentValue) =>
+        accumulator + currentValue.word.split(' ').length,
+      0
+    );
+    // Get the total number of actual words in the challenge answer string and find the difference
     const elementsToDelete =
-      answer.length - currentChallenge.answer.split(' ').length;
+      totalNumberOfWords - currentChallenge.answer.split(' ').length;
+    // Remove the extra (incorrect) clue words from the end of the array
     newAnswer.splice(newAnswer.length - elementsToDelete, elementsToDelete);
     setAnswer(newAnswer);
     setLoading(false);
@@ -194,7 +202,7 @@ export default function FillInTheBlankChallenge({
       .toLowerCase();
 
     // console.log('check answer:', checkAnswer)
-    // console.log(currentChallenge.answer.toLowerCase)
+    // console.log('currentChallenge.answer: ', currentChallenge.answer.toLowerCase())
 
     if (checkAnswer === currentChallenge.answer.toLowerCase()) {
       if (nextChallenge === currentGame.challenges.length) {

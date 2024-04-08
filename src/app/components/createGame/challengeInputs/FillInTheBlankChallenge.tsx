@@ -37,12 +37,19 @@ export default function FillInTheBlankChallenge({
 
   useEffect(() => {
     setError(false);
-    let newWords: string[];
     if (typeof answer !== 'undefined' && answer !== '') {
-      // Separate out words and punctuation
-      const punctuation = /[\w']+|[.,!?;]/g;
-      let matches = answer?.match(punctuation);
-      newWords = matches ? matches : [];
+      // Regular expression to match quoted phrases or words/punctuation
+      const regex = /"[^"]+"|[\w']+|[.,!?;]/g;
+      let matches = answer.match(regex);
+      let newWords = matches
+        ? matches.map((match) => {
+            // Remove quotes from quoted phrases
+            if (match.startsWith('"') && match.endsWith('"')) {
+              return match.slice(1, -1);
+            }
+            return match;
+          })
+        : [];
       setWords(newWords);
       // If words have been selected to be removed, this will "reset" them
       // TODO: Figure out how to allow the user to continue typing wihout losing "removed" words
@@ -53,7 +60,7 @@ export default function FillInTheBlankChallenge({
     const newClue = [...words, ...incorrectWords];
     console.log(words);
     onClueChange(newClue, index);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [words, incorrectWords]);
 
   const markWord = (word: string, index: number) => {
@@ -90,13 +97,20 @@ export default function FillInTheBlankChallenge({
   type Props = {
     word: string;
     onClick?: () => void;
+    dataTest: string;
   };
 
-  const Badge = forwardRef<HTMLLIElement, Props>(({ word, onClick }, ref) => (
-    <div className='badge blue inline' onClick={onClick}>
-      <span>{word}</span>
-    </div>
-  ));
+  const Badge = forwardRef<HTMLLIElement, Props>(
+    ({ word, onClick, dataTest }, ref) => (
+      <div
+        className='badge blue inline'
+        onClick={onClick}
+        data-testid={dataTest}
+      >
+        <span>{word}</span>
+      </div>
+    )
+  );
 
   Badge.displayName = 'Badge';
 
@@ -104,7 +118,7 @@ export default function FillInTheBlankChallenge({
   useEffect(() => {
     if (clue?.length === 1 && clue[0].length === 0) {
       setWords([]);
-      setIncorrectWords([])
+      setIncorrectWords([]);
     }
   }, [clue]);
 
@@ -132,7 +146,16 @@ export default function FillInTheBlankChallenge({
         />
       </div>
       <div>
-        <label htmlFor={`challenge-answer-${index}`}>Answer (required)</label>
+        <div className='flex flex-row w-full justify-between'>
+          <label
+            htmlFor={`challenge-answer-${index}`}
+            className='tooltip tooltip-open tooltip-right tooltip-primary grow-1 whitespace-nowrap pr-2'
+            data-tip='Tip: Wrap multiple word clues with quotes!'
+          >
+            Answer (required)
+          </label>
+          <div className='w-full'></div>
+        </div>
         <Input
           fieldType={`challenge-answer-${index}`}
           value={answer}
@@ -205,6 +228,7 @@ export default function FillInTheBlankChallenge({
                     onClick={() => markWord(word, index)}
                     key={`${word}-${index}`}
                     data-test={`${dataTest}-highlight-word-${index}`}
+                    data-testid={`${dataTest}-highlight-word-${index}`}
                   >
                     {word}
                   </span>
@@ -222,11 +246,16 @@ export default function FillInTheBlankChallenge({
                       key={`${word}-${index}`}
                       word={word.substring(1)}
                       onClick={() => markWord(word, index)}
+                      dataTest={`${dataTest}-correct-clue-word-${index}`}
                     />
                   )
               )}
               {incorrectWords.map((word: string, index: number) => (
-                <Badge key={`${word}-${index}`} word={word.substring(1)} />
+                <Badge
+                  key={`${word}-${index}`}
+                  word={word.substring(1)}
+                  dataTest={`${dataTest}-incorrect-clue-word-${index}`}
+                />
               ))}
             </div>
           </div>
