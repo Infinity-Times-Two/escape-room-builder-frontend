@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Card from '../ui/Card';
 import Modal from '../ui/Modal';
-import IncorrectModal from '../ui/IncorrectModal';
 import { Game, Challenge } from '@/app/types/types';
+import shuffle from 'lodash.shuffle';
 
 interface FillInTheBlankChallengeProps {
   currentChallenge: Challenge;
@@ -39,6 +39,8 @@ interface Word {
 //
 // The app will display "This is the _____ answer"
 // and show ~correct, ~funny and ~wrong as possible words. It will know that ~correct is correct
+//
+// It will also account for multiple word clues
 //
 // currentChallenge.answer is a string with the anwser.
 // It is used to find the total number of words in the answer
@@ -114,19 +116,34 @@ export default function FillInTheBlankChallenge({
           }
         })
       : [];
+    newRemovedWords = shuffle(newRemovedWords);
 
+    setRemovedWords(newRemovedWords);
     // Remove extra words from the end of the answer
-    // Get the total number of actual words (not elements) from the answer array
-    const totalNumberOfWords = answer.reduce(
-      (accumulator, currentValue) =>
-        accumulator + currentValue.word.split(' ').length,
-      0
-    );
-    // Get the total number of actual words in the challenge answer string and find the difference
-    const elementsToDelete =
-      totalNumberOfWords - currentChallenge.answer.split(' ').length;
-    // Remove the extra (incorrect) clue words from the end of the array
-    newAnswer.splice(newAnswer.length - elementsToDelete, elementsToDelete);
+
+    // Get the last word of the answer
+    const answerArray = currentChallenge.answer.split(' ');
+    const lastWord = answerArray[answerArray.length - 1];
+
+    // find last index of the element containing lastWord
+    const findLastIndexWithMatch = (array: string[], searchWord: any) => {
+      for (let i = array.length - 1; i >= 0; i--) {
+        if (searchWord(array[i])) {
+          return i;
+        }
+      }
+      return -1;
+    };
+
+    let lastIndex: number = 0;
+    if (Array.isArray(currentChallenge.clue)) {
+      lastIndex = findLastIndexWithMatch(currentChallenge.clue, (item: any) =>
+        item.includes(lastWord)
+      );
+    }
+
+    // Remove words after the last word so they don't display as blanks
+    newAnswer.splice(lastIndex + 1, newAnswer.length - lastIndex);
     setAnswer(newAnswer);
     setLoading(false);
   };
@@ -188,6 +205,8 @@ export default function FillInTheBlankChallenge({
     setAnswer(newAnswer);
   };
 
+  const punctuationRegex = /^[,.!?]$/;
+
   useEffect(() => {
     filterWords();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -199,10 +218,8 @@ export default function FillInTheBlankChallenge({
     const checkAnswer = answer
       .reduce((acc, cur) => acc + cur.word + ' ', '')
       .trim()
-      .toLowerCase();
-
-    // console.log('check answer:', checkAnswer)
-    // console.log('currentChallenge.answer: ', currentChallenge.answer.toLowerCase())
+      .toLowerCase()
+      .replace(/ (\,|\!|\?|\.)/g, '$1'); // removes single space before , . ! ?
 
     if (checkAnswer === currentChallenge.answer.toLowerCase()) {
       if (nextChallenge === currentGame.challenges.length) {
@@ -242,16 +259,16 @@ export default function FillInTheBlankChallenge({
         </div>
       </Card>
       <Card>
-        <div className='flex flex-row gap-2 flex-wrap justify-center items-center'>
+        <div className='flex flex-row flex-wrap justify-center items-center'>
           {!loading &&
             answer.map((word: Word) =>
               !word.hidden && !word.remove ? (
                 removedWordIndexes.some((index) => word.index === index) ? (
-                  <div key={word.index} className={`badge orange`}>
+                  <div key={word.index} className={`badge mr-0 orange`}>
                     <span>{' ' /* one of the "blanks" to be filled */}</span>
                   </div>
                 ) : (
-                  <span className='text-xl font-bold' key={word.index}>
+                  <span className={`text-xl ${word.word.match(punctuationRegex) ? `mr-1` : `mx-1`} font-bold`} key={word.index}>
                     {word.word /* a regular word in the answer */}
                   </span>
                 )

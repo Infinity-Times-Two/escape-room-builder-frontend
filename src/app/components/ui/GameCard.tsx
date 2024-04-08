@@ -11,10 +11,6 @@ type CardProps = {
   bodyBackgroundColor: string;
 };
 
-const brickPattern = {
-  backgroundImage: `url("data:image/svg+xml,%3Csvg width='84' height='88' viewBox='0 0 84 88' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Page-1' fill='none' fill-rule='evenodd'%3E%3Cg id='brick-wall' fill='%23D3D3D3' fill-opacity='0.25'%3E%3Cpath d='M0 0h84v88H0V0zm2 2h80v40H2V2zM0 46h40v40H0V46zm44 0h40v40H44V46z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-};
-
 export default function GameCard({
   roomName,
   author,
@@ -39,7 +35,6 @@ export default function GameCard({
         : null }
         <div
           className={`card-body bg-${bodyBackgroundColor}-50 px-6 py-12 flex flex-col gap-6 rounded-md`}
-          style={brickPattern}
         >
           <div className='chip'>
             <span>{formattedTime} minutes</span>

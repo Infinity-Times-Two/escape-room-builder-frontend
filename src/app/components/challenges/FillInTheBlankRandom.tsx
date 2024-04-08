@@ -22,7 +22,6 @@ export default function FillInTheBlankRandomChallenge({
   nextChallenge,
   currentGame,
 }: FillInTheBlankChallengeProps) {
-  
   const [answer, setAnswer] = useState<Word[]>(
     Array.isArray(currentChallenge.clue)
       ? currentChallenge.clue.map((word, index) => ({
@@ -140,7 +139,9 @@ export default function FillInTheBlankRandomChallenge({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Concatenates all answer words to be checked against the answer. ❤️ reduce!
-    const checkAnswer = answer.reduce((acc, cur) => acc + cur.word + ' ', '').trim();
+    const checkAnswer = answer
+      .reduce((acc, cur) => acc + cur.word + ' ', '')
+      .trim();
 
     if (checkAnswer === currentChallenge.answer.toLowerCase()) {
       if (nextChallenge === currentGame.challenges.length) {
