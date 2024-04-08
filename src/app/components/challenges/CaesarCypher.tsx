@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Input from '../ui/Input';
+import Modal from '../ui/Modal';
 import { Game } from '@/app/types/types';
 
 interface CaesarCypherChallengeProps {
@@ -21,6 +22,7 @@ export default function CaesarCypherChallenge({
   currentGame,
 }: CaesarCypherChallengeProps) {
   const [answer, setAnswer] = useState('');
+  const [incorrect, setIncorrect] = useState<boolean>(false);
   const router = useRouter();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,7 +39,7 @@ export default function CaesarCypherChallenge({
         router.push(`./${currentGame.challenges[nextChallenge].id}`);
       }
     } else {
-      alert('incorrect');
+      setIncorrect(true);
     }
   };
 
@@ -51,10 +53,15 @@ export default function CaesarCypherChallenge({
           onChange={handleChange}
           value={answer}
         />
-        <button className='large self-center' type='submit' data-type='challenge-submit'>
+        <button
+          className='large self-center'
+          type='submit'
+          data-type='challenge-submit'
+        >
           <span>Submit</span>
         </button>
       </form>
+      {incorrect && <Modal setIncorrect={setIncorrect}>Incorrect!</Modal>}
     </div>
   );
 }

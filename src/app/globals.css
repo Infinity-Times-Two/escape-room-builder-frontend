@@ -10,6 +10,7 @@
   --btn-red-bg: hsl(0, 100%, 96%);
   --light-red: hsl(0, 100%, 96%);
   --dark-red: hsl(0, 58%, 27%);
+  --tooltip-color: #c22525;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -22,12 +23,16 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: #fff8f0;
+  @apply bg-indigo-50;
   font-family: var(--font-cabin);
 }
 
 .card:has(div.bg-red-100) {
   background-color: rgb(254, 226, 226);
+}
+
+.tooltip-primary::before {
+  color: #fff;
 }
 
 @keyframes skeleton {
@@ -47,12 +52,8 @@ body {
   animation: skeleton 180s linear infinite;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-}
-
 p {
-  font-weight: 600;
+  font-weight: 500;
   @apply tracking-wide;
 }
 
@@ -89,10 +90,51 @@ h3 {
 }
 
 .header {
-  @apply font-bold uppercase justify-self-center pt-6 pb-2;
-  font-family: var(--font-work-sans);
-  font-size: 18px;
+  background: linear-gradient(233deg, #e56420, #c22525, #3d9c31, #37bbde);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-animation: hue-rotate 20s linear infinite;
+          animation: hue-rotate 20s linear infinite;
+  display: inline-block;
 }
+
+.cl-avatarBox {
+  width: 48px;
+  height: 48px;
+}
+
+@-webkit-keyframes hue-rotate {
+  from {
+    -webkit-filter: hue-rotate(0);
+    -moz-filter: hue-rotate(0);
+    -ms-filter: hue-rotate(0);
+    filter: hue-rotate(0);
+  }
+  to {
+    -webkit-filter: hue-rotate(360deg);
+    -moz-filter: hue-rotate(360deg);
+    -ms-filter: hue-rotate(360deg);
+    filter: hue-rotate(360deg);
+  }
+}
+
+@keyframes hue-rotate {
+  from {
+    -webkit-filter: hue-rotate(0);
+    -moz-filter: hue-rotate(0);
+    -ms-filter: hue-rotate(0);
+    filter: hue-rotate(0);
+  }
+  to {
+    -webkit-filter: hue-rotate(360deg);
+    -moz-filter: hue-rotate(360deg);
+    -ms-filter: hue-rotate(360deg);
+    filter: hue-rotate(360deg);
+  }
+}
+
 button {
   @apply rounded-md bg-black font-semibold m-2 self-center;
   font-family: var(--font-work-sans);
@@ -135,12 +177,12 @@ button.red > span {
 }
 
 div.badge {
-  @apply block h-8 rounded-full bg-black font-semibold m-2 p-0 border-0 w-max;
+  @apply block h-8 rounded-full bg-black font-semibold m-2 p-0 border-0 w-max text-center;
   font-family: var(--font-work-sans);
 }
 
 div.badge > span {
-  @apply block -translate-x-1 -translate-y-1 rounded-full bg-white text-black border-2 border-black py-1 px-8 uppercase tracking-wider cursor-pointer;
+  @apply min-h-8 min-w-24 block -translate-x-1 -translate-y-1 rounded-full bg-white text-black border-2 border-black py-1 px-8 uppercase tracking-wider cursor-pointer;
 }
 
 div.badge.red {

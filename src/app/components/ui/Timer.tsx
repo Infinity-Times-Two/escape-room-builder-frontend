@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { useContext, useEffect, useState } from 'react';
 import { TimerContext } from '@/app/contexts/timerContext';
 import { useRouter } from 'next/navigation';
@@ -22,9 +22,9 @@ export default function Timer(props: { timeLeft: number }) {
         setFinishTime(props.timeLeft - timeRemaining);
       }
     }, 1000);
-    const now = Date.now()
+    const now = Date.now();
     if (expiry < finishTime) {
-      router.push('/lose')
+      router.push('/lose');
     }
     return () => clearTimeout(timer);
   });
@@ -37,7 +37,7 @@ export default function Timer(props: { timeLeft: number }) {
   if (typeof timeRemaining === 'number') {
     if (timeRemaining > 0) {
       formattedTime = {
-        minutes: (timeRemaining / 60 - 1).toFixed(),
+        minutes: Math.floor(timeRemaining / 60).toFixed(),
         seconds: (timeRemaining % 60).toFixed(),
       };
     }
@@ -45,14 +45,14 @@ export default function Timer(props: { timeLeft: number }) {
   // Note - this will be positioned relative to <main>, the nearest relatively positioned element
   return (
     <div className='flex justify-center m-6 absolute right-0 top-0 min-w-[300px]'>
-      <div className='flex flex-row nowrap justify-between gap-2 block rounded-full bg-white min-w-[250px] text-black text-xl font-semibold border-2 border-black py-1.5 px-8 tracking-wider'>
+      <div className='flex flex-row nowrap justify-between items-center gap-2 block rounded-full bg-white min-w-[250px] text-black text-xl font-semibold border-2 border-black py-1.5 px-8 tracking-wider'>
         <span>
           {/* Only render time left after first calculation */}
           Time left:
         </span>{' '}
-        <span>
-          {Number(formattedTime.minutes) < 300 &&
-            formattedTime.minutes + 'm ' + formattedTime.seconds + 's'}
+        <span className='countdown'>
+          <span style={{ '--value': formattedTime.minutes } as React.CSSProperties}></span>:
+          <span style={{ '--value': formattedTime.seconds } as React.CSSProperties}></span>
         </span>
       </div>
     </div>

@@ -104,10 +104,10 @@ export default function CaesarCypherChallenge({
       className='border-2 border-black p-8 rounded-xl bg-white/50 relative'
       key={`${challengeType}-${index}`}
       id={`${challengeType}-${index}`}
-      data-testid={`${challengeType.replaceAll(" ", "-")}-${index}`} // this needs to be refactored to just include a hypen (word scramble, too)
+      data-testid={`${challengeType}-${index}`}
     >
       <p className='absolute top-0 left-0 p-6 text-2xl'>{index + 1}</p>
-      <h3 className='mb-6'>New {challengeType} Challenge</h3>
+      <h3 className='mb-6'>New {challengeType.replaceAll("-", " ")} Challenge</h3>
       <label htmlFor={`challenge-description-${index}`} className=''>
         Describe the word to be decrypted
       </label>

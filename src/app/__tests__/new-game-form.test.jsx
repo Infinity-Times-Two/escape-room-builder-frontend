@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, getByTestId } from '@testing-library/react';
 import NewGameForm from '../components/createGame/NewGameForm';
 import { SavedGamesContextProvider } from '../contexts/savedGamesContext';
 import { SingleGameContextProvider } from '../contexts/singleGameContext';
@@ -53,7 +53,7 @@ global.fetch = jest.fn(() =>
 
 describe('New Game Form', () => {
   it('renders all inputs', () => {
-    const { getByLabelText, getByText } = render(<NewGameForm />);
+    const { getByLabelText } = render(<NewGameForm />);
 
     const gameTitle = getByLabelText('Name your Escape room');
     expect(gameTitle).toBeInTheDocument();
@@ -65,7 +65,7 @@ describe('New Game Form', () => {
 describe('Handle form inputs and submission', () => {
   it('Updates the title and description', async () => {
     const user = userEvent.setup();
-    const { getByLabelText } = render(<NewGameForm />);
+    const { getByLabelText, getByTestId } = render(<NewGameForm />);
 
     // Change title
     const gameTitle = getByLabelText('Name your Escape room');
@@ -80,7 +80,7 @@ describe('Handle form inputs and submission', () => {
     expect(gameDescription.value).toBe('New game description');
 
     // Change time limit
-    const timeLimit = getByLabelText('Set time limit (minutes)');
+    const timeLimit = getByTestId('time-limit');
     fireEvent.change(timeLimit, { target: { value: 1800 } }); // Change value to 1800
     expect(timeLimit.value).toBe('1800');
   });
@@ -223,6 +223,35 @@ describe('Handle form inputs and submission', () => {
     expect(gameTitle.value).toBe('');
     expect(gameDescription.value).toBe('');
   });
+});
+
+it('Adds a FITB challenge and renders the answer & clues', async () => {
+  jest.clearAllMocks();
+  const { getByLabelText, getByTestId, getByText } = render(<NewGameForm />);
+  const user = userEvent.setup();
+
+  const fillInTheBlankRadioButton = getByLabelText('Fill in the Blank');
+  await user.click(fillInTheBlankRadioButton);
+  const addChallengeButton = getByTestId('add-fill-in-the-blank-challenge');
+  await user.click(addChallengeButton);
+
+  const answer = getByTestId('challenge-3-fill-in-the-blank-answer')
+  await user.click(answer)
+  await user.keyboard('Challenge answer with blank spaces')
+
+  // Remove a word - expect a blank space and
+  const wordToRemove = getByTestId('challenge-3-fill-in-the-blank-highlight-word-3')
+  await user.click(wordToRemove)
+  const blank = getByText('________')
+  expect(blank).toBeInTheDocument();
+  const correctClueWord = getByTestId('challenge-3-fill-in-the-blank-correct-clue-word-3')
+  expect(correctClueWord).toBeInTheDocument();
+
+  const incorrectWordInput = getByTestId('challenge-3-fill-in-the-blank-incorrect-words')
+  await user.click(incorrectWordInput)
+  await user.keyboard('incorrect, words')
+  const incorrectClueWord = getByTestId('challenge-3-fill-in-the-blank-incorrect-clue-word-0')
+  expect(incorrectClueWord).toBeInTheDocument();
 });
 
 describe('Testing misc UI', () => {

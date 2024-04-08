@@ -115,10 +115,10 @@ export default function WordScrambleChallenge({
       key={`${challengeType}-${index}`}
       className='flex flex-col gap-8 border-2 border-black p-8 rounded-xl bg-white/50 relative'
       id={`${challengeType}-${index}`}
-      data-testid={`${challengeType.replaceAll(' ', '-')}-${index}`}
+      data-testid={`${challengeType}-${index}`}
     >
       <p className='absolute top-0 left-0 p-6 text-2xl'>{index + 1}</p>
-      <h3 className='mb-6'>New {challengeType} Challenge</h3>
+      <h3 className='mb-6'>New {challengeType.replaceAll("-", " ")} Challenge</h3>
       <div>
         <label htmlFor={`challenge-description-${index}`}>
           Description (optional)
@@ -176,7 +176,7 @@ export default function WordScrambleChallenge({
       </div>
       <Card>
         <div
-          className={`flex flex-row gap-2 flex0wrap justify-center h-[100px] w-full ${
+          className={`flex flex-row gap-2 flex0wrap justify-center min-h-[100px] w-full ${
             submitError && words.length === 0 && 'bg-red-100'
           }`}
           data-test={`${dataTest}-clue`}

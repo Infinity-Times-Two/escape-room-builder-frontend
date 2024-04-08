@@ -3,6 +3,7 @@ import SavedRooms from '../components/layout/SavedRooms';
 import LoadingRooms from '../components/layout/LoadingRooms';
 import PublicRooms from '../components/layout/PublicRooms';
 import LoadedRooms from '../components/layout/LoadedRooms';
+import GameList from '../components/layout/GameList';
 
 export default function Play() {
   return (

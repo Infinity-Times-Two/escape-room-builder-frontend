@@ -13,10 +13,10 @@ export default function TextArea({
   placeholder,
   onChange,
   value,
-  dataTest
+  dataTest,
 }: TextAreaProps) {
   return (
-    <div className='rounded-md bg-black font-semibold max-w-full m-2 min-h-32 self-start'>
+    <div className='rounded-md bg-black font-semibold w-full m-2'>
       <textarea
         data-type={fieldType}
         data-test={dataTest}
@@ -24,7 +24,7 @@ export default function TextArea({
         placeholder={placeholder}
         onChange={onChange}
         value={value}
-        className='textarea bg-white pt-4 text-2xl w-full -translate-x-1 -translate-y-1 input-bordered border-black border-2 focus:outline-none focus:border-black h-64'
+        className='textarea textarea-md bg-white pt-4 text-2xl w-full -translate-x-1 -translate-y-1 input-bordered border-black border-2 focus:outline-none focus:border-black'
       />
     </div>
   );
