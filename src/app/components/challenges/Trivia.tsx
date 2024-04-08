@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Input from '../ui/Input';
+import Modal from '../ui/Modal';
 import { Game, Challenge } from '@/app/types/types';
 
 interface TriviaChallengeProps {
-  currentChallenge: Challenge
+  currentChallenge: Challenge;
   nextChallenge: number;
-  currentGame: Game
+  currentGame: Game;
 }
 
 export default function TriviaChallenge({
@@ -15,6 +16,7 @@ export default function TriviaChallenge({
   currentGame,
 }: TriviaChallengeProps) {
   const [answer, setAnswer] = useState('');
+  const [incorrect, setIncorrect] = useState<boolean>(false);
   const router = useRouter();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,14 +33,17 @@ export default function TriviaChallenge({
         router.push(`./${currentGame.challenges[nextChallenge].id}`);
       }
     } else {
-      alert('incorrect');
+      setIncorrect(true);
     }
   };
 
   return (
     <div className='flex flex-col gap-8'>
       <h2 data-type='challenge-submit'>{currentChallenge.clue}</h2>
-      <form onSubmit={handleSubmit} className='flex flex-col gap-2 items-center gap-8'>
+      <form
+        onSubmit={handleSubmit}
+        className='flex flex-col gap-2 items-center gap-8'
+      >
         <Input
           fieldType='text'
           placeholder='Your answer'
@@ -49,6 +54,7 @@ export default function TriviaChallenge({
           <span>Submit</span>
         </button>
       </form>
+      {incorrect && <Modal setIncorrect={setIncorrect}>Incorrect!</Modal>}
     </div>
   );
 }

@@ -156,7 +156,7 @@ export default function FillInTheBlankRandomChallenge({
 
   return (
     <div className='flex flex-col gap-2 items-center max-w-full'>
-      <Card minWidth='min-w-[500px]' maxWidth='max-w-[600px]'>
+      <Card>
         <div className='flex flex-row gap-2 flex-wrap justify-center'>
           {removedWords.map((word: Word) => (
             <div
@@ -176,7 +176,7 @@ export default function FillInTheBlankRandomChallenge({
           )}
         </div>
       </Card>
-      <Card minWidth='min-w-[500px]' maxWidth='max-w-[600px]'>
+      <Card>
         <div className='flex flex-row gap-2 flex-wrap justify-center items-center'>
           {!loading &&
             answer.map((word: Word) =>

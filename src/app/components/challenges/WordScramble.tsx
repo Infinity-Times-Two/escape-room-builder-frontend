@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Card from '../ui/Card';
+import Modal from '../ui/Modal';
 import { Game, Challenge } from '@/app/types/types';
 
 interface WordScrambleChallengeProps {
@@ -15,6 +16,7 @@ export default function WordScrambleChallenge({
   currentGame,
 }: WordScrambleChallengeProps) {
   const [answer, setAnswer] = useState<string[]>([]);
+  const [incorrect, setIncorrect] = useState<boolean>(false);
 
   const [clues, setClues] = useState<{ clue: string; active: boolean }[]>(
     Array.isArray(currentChallenge.clue)
@@ -53,7 +55,7 @@ export default function WordScrambleChallenge({
         router.push(`./${currentGame.challenges[nextChallenge].id}`);
       }
     } else {
-      alert('incorrect');
+      setIncorrect(true);
     }
   };
 
@@ -114,6 +116,7 @@ export default function WordScrambleChallenge({
       <button className='large' onClick={handleSubmit} data-type='challenge-submit'>
         <span>Submit</span>
       </button>
+      {incorrect && <Modal setIncorrect={setIncorrect}>Incorrect!</Modal>}
     </div>
   );
 }

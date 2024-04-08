@@ -40,60 +40,89 @@ describe('Authentication', () => {
   });
 });
 
-describe('Game Creation and Editing while logged out', () => {
+describe.only('Game Creation and Editing while logged out', () => {
   beforeEach(() => {
     cy.visit('/new-game', { failOnStatusCode: false });
   });
   it('User can enter basic form data', () => {
     cy.getByData('game-title').should('exist').type('Test Game');
-    cy.getByData('game-description').should('exist').type('Test game description');
+    cy.getByData('game-description')
+      .should('exist')
+      .type('Test game description');
 
     // Using the exact value does not change the slider value
     // Eg. 300 does not set it to 5 minutes (300 seconds), but 295 does.
-    cy.getByData('time-limit').invoke('val', 295).trigger('change')
-    cy.getByData('minute-marker-5').should('have.class', 'font-bold')
-    cy.getByData('time-limit').invoke('val', 1850).trigger('change')
-    cy.getByData('minute-marker-30').should('have.class', 'font-bold')
+    cy.getByData('time-limit').invoke('val', 295).trigger('change');
+    cy.getByData('minute-marker-5').should('have.class', 'font-bold');
+    cy.getByData('time-limit').invoke('val', 1850).trigger('change');
+    cy.getByData('minute-marker-30').should('have.class', 'font-bold');
 
     // Enter data into challenges
 
     // Test Trivia input
-    cy.getByData('challenge-0-trivia-clue').type('Trivia question #1')
-    cy.getByData('challenge-0-trivia-clue').should('have.value', 'Trivia question #1')
-    cy.getByData('challenge-0-trivia-answer').type('Trivia answer #1')
-    cy.getByData('challenge-0-trivia-answer').should('have.value', 'Trivia answer #1')
+    cy.getByData('challenge-0-trivia-clue').type('Trivia question #1');
+    cy.getByData('challenge-0-trivia-clue').should(
+      'have.value',
+      'Trivia question #1'
+    );
+    cy.getByData('challenge-0-trivia-answer').type('Trivia answer #1');
+    cy.getByData('challenge-0-trivia-answer').should(
+      'have.value',
+      'Trivia answer #1'
+    );
 
     // Test Caesar Cypher input
-    cy.getByData('challenge-1-caesar-cypher-answer').type('Encrypt this clue')
-    cy.getByData('1-encrypt-button').click()
-    cy.getByData('challenge-1-caesar-cypher-clue').should('not.have.value', '')
+    cy.getByData('challenge-1-caesar-cypher-answer').type('Encrypt this clue');
+    cy.getByData('1-encrypt-button').click();
+    cy.getByData('challenge-1-caesar-cypher-clue').should('not.have.value', '');
 
     // Test Word Scramble input
-    cy.getByData('challenge-2-word-scramble-answer').type('scramble these words')
-    cy.getByData('2-scramble-button').click()
-    cy.getByData('challenge-2-word-scramble-clue').should('have.descendants', 'li')
+    cy.getByData('challenge-2-word-scramble-answer').type(
+      'scramble these words'
+    );
+    cy.getByData('2-scramble-button').click();
+    cy.getByData('challenge-2-word-scramble-clue').should(
+      'have.descendants',
+      'li'
+    );
 
     // Add a new challenge
-    cy.getByData('add-challenge').click()
-    cy.getByData('challenge-3-trivia-clue').should('exist') 
-    cy.getByData('remove-trivia-3').click();
+    cy.getByData('add-challenge').click();
+    cy.getByData('challenge-4-trivia-clue').should('exist');
+    cy.getByData('remove-trivia-4').click();
     // This is flaky - later on it may not create a trivia challenge by default
 
+    // Test Fill In The Blank input
+    cy.getByData('challenge-3-fill-in-the-blank-answer').type(
+      'Fill in the blanks'
+    );
+    cy.getByData('challenge-3-fill-in-the-blank-highlight-word-3').click();
+    cy.getByData('challenge-3-fill-in-the-blank-incorrect-words').type(
+      'incorrect words'
+    );
+    cy.getByData('challenge-3-fill-in-the-blank-FITB-clue-words')
+      .children()
+      .should('have.length', 3);
+
     // User is not logged in, so game will not save to DB
-    cy.getByData('create-game').click()
-    cy.getByData('play-game').should('exist')
-    cy.getByData('logged-out-message').should('exist')
+    cy.getByData('create-game').click();
+    cy.getByData('play-game').should('exist');
+    cy.getByData('logged-out-message').should('exist');
 
     // Open the game
     cy.getByData('play-game').click();
     cy.location().should((url) => {
-      expect(url.pathname).to.match(/\/game\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/i)
-    })
+      expect(url.pathname).to.match(
+        /\/game\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/i
+      );
+    });
     cy.getByData('edit-game').click();
     cy.location().should((url) => {
-      expect(url.pathname).to.match(/\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/i)
-    })
-    
+      expect(url.pathname).to.match(
+        /\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/i
+      );
+    });
+
     cy.getByData('game-title').should('exist').type(' - edited');
     cy.getByData('edit-game').click();
 
@@ -101,10 +130,10 @@ describe('Game Creation and Editing while logged out', () => {
     cy.get('h2').contains('edited');
 
     cy.getByData('start-game').click();
-    cy.get('h2').contains('Trivia question #1')
+    cy.get('h2').contains('Trivia question #1');
 
     cy.getByData('home-link').click();
     cy.getByData('play').click();
-    cy.get('h3').contains('Test Game - edited')
+    cy.get('h3').contains('Test Game - edited');
   });
 });

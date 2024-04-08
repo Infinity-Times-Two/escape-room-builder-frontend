@@ -36,7 +36,7 @@ export default async function RootLayout({
         >
           <CompositeContextProvider>
             <Header />
-            <main className='flex flex-col items-center flex-1 sm:py-20 sm:px-12 min-h-[80%] gap-8 relative'>
+            <main className='flex flex-col items-center flex-1 py-8 sm:py-20 sm:px-12 min-h-[80%] gap-8 relative max-w-full'>
               {children}
             </main>
             <Footer />

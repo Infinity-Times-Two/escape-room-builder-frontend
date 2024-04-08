@@ -22,7 +22,7 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: #fff8f0;
+  @apply bg-indigo-50;
   font-family: var(--font-cabin);
   background-image: url('/noise.png');
 }
@@ -46,22 +46,6 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.25'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   will-change: background-position;
   animation: skeleton 180s linear infinite;
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  /* background-color: hsl(32, 100%, 97%); */
-
-  background-image: 
-    linear-gradient(
-      54deg in lch,
-      color(display-p3 25% 25% 100%) 6% 6%, color(display-p3 100% 85% 30%) 100%
-    )
-  ;
-}
-
-header {
-  background-image: url('/noise.png');
 }
 
 p {
@@ -101,11 +85,59 @@ h3 {
   font-size: 32px;
 }
 
-.header {
-  @apply font-bold uppercase justify-self-center pt-6 pb-2;
+/* .header {
+  @apply flex flex-col justify-center text-center inline-block font-bold uppercase pt-6 pb-2;
   font-family: var(--font-work-sans);
   font-size: 18px;
+  background: linear-gradient(233deg, #e56420, #c22525, #3d9c31, #37bbde);
+  background-size: cover;
+  background-blend-mode: hard-light;
+  -webkit-animation: hue-rotate 3s linear infinite;
+          animation: hue-rotate 3s linear infinite;
+} */
+
+.header {
+  @apply flex flex-col justify-center text-center text-3xl font-black inline-block uppercase pt-6 pb-2;
+  background: linear-gradient(233deg, #e56420, #c22525, #3d9c31, #37bbde);
+  background-size: 200% 200%; /* Enlarge background to emphasize the animation */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-animation: hue-rotate 20s linear infinite;
+          animation: hue-rotate 20s linear infinite;
+  display: inline-block;
 }
+
+@-webkit-keyframes hue-rotate {
+  from {
+    -webkit-filter: hue-rotate(0);
+    -moz-filter: hue-rotate(0);
+    -ms-filter: hue-rotate(0);
+    filter: hue-rotate(0);
+  }
+  to {
+    -webkit-filter: hue-rotate(360deg);
+    -moz-filter: hue-rotate(360deg);
+    -ms-filter: hue-rotate(360deg);
+    filter: hue-rotate(360deg);
+  }
+}
+
+@keyframes hue-rotate {
+  from {
+    -webkit-filter: hue-rotate(0);
+    -moz-filter: hue-rotate(0);
+    -ms-filter: hue-rotate(0);
+    filter: hue-rotate(0);
+  }
+  to {
+    -webkit-filter: hue-rotate(360deg);
+    -moz-filter: hue-rotate(360deg);
+    -ms-filter: hue-rotate(360deg);
+    filter: hue-rotate(360deg);
+  }
+}
+
 button {
   @apply rounded-md bg-black font-semibold m-2 self-center;
   font-family: var(--font-work-sans);

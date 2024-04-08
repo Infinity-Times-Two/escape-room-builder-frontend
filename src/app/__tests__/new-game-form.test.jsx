@@ -65,7 +65,7 @@ describe('New Game Form', () => {
 describe('Handle form inputs and submission', () => {
   it('Updates the title and description', async () => {
     const user = userEvent.setup();
-    const { getByLabelText } = render(<NewGameForm />);
+    const { getByLabelText, getByTestId } = render(<NewGameForm />);
 
     // Change title
     const gameTitle = getByLabelText('Name your Escape room');
@@ -80,7 +80,7 @@ describe('Handle form inputs and submission', () => {
     expect(gameDescription.value).toBe('New game description');
 
     // Change time limit
-    const timeLimit = getByLabelText('Set time limit (minutes)');
+    const timeLimit = getByTestId('time-limit')
     fireEvent.change(timeLimit, { target: { value: 1800 } }); // Change value to 1800
     expect(timeLimit.value).toBe('1800');
   });

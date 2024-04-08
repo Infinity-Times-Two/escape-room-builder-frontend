@@ -4,6 +4,7 @@ import { SingleGameContext } from '@/app/contexts/singleGameContext';
 import TriviaChallenge from '@/app/components/challenges/Trivia';
 import WordScrambleChallenge from '@/app/components/challenges/WordScramble';
 import CaesarCypherChallenge from '@/app/components/challenges/CaesarCypher';
+import FillInTheBlankChallenge from '@/app/components/challenges/FillInTheBlank';
 import { Challenge, Game } from '@/app/types/types';
 
 type SingleChallengeProps = {
@@ -21,16 +22,17 @@ const SingleChallenge: React.FC<SingleChallengeProps> = ({
   const challengeType = currentChallenge.type.toLowerCase();
   switch (challengeType) {
     case 'trivia': {
-      return (<>
-        <TriviaChallenge
-          currentChallenge={currentChallenge}
-          nextChallenge={nextChallenge}
-          currentGame={singleGame}
-        />
+      return (
+        <>
+          <TriviaChallenge
+            currentChallenge={currentChallenge}
+            nextChallenge={nextChallenge}
+            currentGame={singleGame}
+          />
         </>
       );
     }
-    case 'word scramble': {
+    case 'word-scramble': {
       return (
         <WordScrambleChallenge
           currentChallenge={currentChallenge}
@@ -39,9 +41,18 @@ const SingleChallenge: React.FC<SingleChallengeProps> = ({
         />
       );
     }
-    case 'caesar cypher': {
+    case 'caesar-cypher': {
       return (
         <CaesarCypherChallenge
+          currentChallenge={currentChallenge}
+          nextChallenge={nextChallenge}
+          currentGame={singleGame}
+        />
+      );
+    }
+    case 'fill-in-the-blank': {
+      return (
+        <FillInTheBlankChallenge
           currentChallenge={currentChallenge}
           nextChallenge={nextChallenge}
           currentGame={singleGame}
@@ -91,7 +102,7 @@ export default function ChallengePage({
   return (
     <div className='pt-16 sm:pt-0'>
       <h2 className='mb-8'>
-        {currentChallenge?.type}: {currentChallenge?.description}
+        {currentChallenge?.type.replace("-", " ")}: {currentChallenge?.description}
       </h2>
       <SingleChallenge
         currentChallenge={currentChallenge}

@@ -31,7 +31,7 @@ export default function GameCard({
     <div className='rounded-md bg-black font-semibold w-[300px] sm:w-[350px] m-2 self-start '>
       <div className='card bg-white -translate-x-1 -translate-y-1 border-2 border-black rounded-md hover:-translate-y-2 hover:-translate-x-2 transition-all'>
         {roomName ? <div
-          className={`card-title flex flex-col bg-${titleBackgroundColor}-50 px-4 py-5 border-b-2 border-black rounded-t`}
+          className={`card-title flex flex-col bg-${titleBackgroundColor}-100 px-4 py-5 border-b-2 border-black rounded-t`}
         >
           <h3 className='text-center'>{roomName}</h3>
           <p className='text-base'>By {author}</p>

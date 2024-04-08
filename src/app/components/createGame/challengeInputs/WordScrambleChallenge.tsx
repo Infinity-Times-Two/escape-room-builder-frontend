@@ -176,7 +176,7 @@ export default function WordScrambleChallenge({
       </div>
       <Card>
         <div
-          className={`flex flex-row gap-2 flex0wrap justify-center h-[100px] w-full ${
+          className={`flex flex-row gap-2 flex0wrap justify-center min-h-[100px] w-full ${
             submitError && words.length === 0 && 'bg-red-100'
           }`}
           data-test={`${dataTest}-clue`}

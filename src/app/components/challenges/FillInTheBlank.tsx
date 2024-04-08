@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Card from '../ui/Card';
 import Modal from '../ui/Modal';
+import IncorrectModal from '../ui/IncorrectModal';
 import { Game, Challenge } from '@/app/types/types';
 
 interface FillInTheBlankChallengeProps {
@@ -20,24 +21,32 @@ interface Word {
 
 //****************************
 //
-// currentChallenge.clue is be an array of strings.
-// The array starts with the answer words in order,
-// and extra incorrect words come after the answer
+// currentChallenge.clue is an array of strings.
+// The array starts with the answer words in the correct order,
+// incorrect words come after the answer at the end of the array.
 //
 // Strings that begin with ~ are to be removed from the answer
 // and supplied as clues. The ~strings embedded in the answer are correct,
-// the ~strings at the end of the array are incorrect.
+// the ~strings at the end of the array are the incorrect words.
 //
 // The displayed answer is trimmed of the incorrect ~strings by comparing
 // the answer length and subtracting the difference with the clue length.
 //
+// Example:
+//
+// currentChallenge.clue = ['This', 'is', 'the', '~correct', 'answer', '~funny', '~wrong' ]
+// currentChallenge.answer = 'This is the correct answer'
+//
+// The app will display "This is the _____ answer"
+// and show ~correct, ~funny and ~wrong as possible words. It will know that ~correct is correct
+//
 // currentChallenge.answer is a string with the anwser.
-// It's only used to find the total number of words in the answer
-// and to determine challenge success on submit
+// It is used to find the total number of words in the answer
+// as well as determining challenge success on submit.
 //
 //****************************
 
-export default function FillInTheBlankRandomChallenge({
+export default function FillInTheBlankChallenge({
   currentChallenge,
   nextChallenge,
   currentGame,
@@ -69,7 +78,6 @@ export default function FillInTheBlankRandomChallenge({
   const [removedWordIndexes, setRemovedWordIndexes] = useState<number[]>([]);
   const [nextIndex, setNextIndex] = useState<number>(0);
   const [incorrect, setIncorrect] = useState<boolean>(false);
-  const [correct, setCorrect] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
   const router = useRouter();
@@ -182,12 +190,15 @@ export default function FillInTheBlankRandomChallenge({
     // Concatenates all answer words to be checked against the answer. ❤️ reduce!
     const checkAnswer = answer
       .reduce((acc, cur) => acc + cur.word + ' ', '')
-      .trim();
+      .trim()
+      .toLowerCase();
+
+    // console.log('check answer:', checkAnswer)
+    // console.log(currentChallenge.answer.toLowerCase)
 
     if (checkAnswer === currentChallenge.answer.toLowerCase()) {
       if (nextChallenge === currentGame.challenges.length) {
-        // router.push(`../${currentGame.id}/win`);
-        setCorrect(true);
+        router.push(`../${currentGame.id}/win`);
       } else {
         router.push(`./${currentGame.challenges[nextChallenge].id}`);
       }
@@ -198,7 +209,7 @@ export default function FillInTheBlankRandomChallenge({
 
   return (
     <div className='flex flex-col gap-2 items-center max-w-full'>
-      <Card minWidth='min-w-[500px]' maxWidth='max-w-[600px]'>
+      <Card>
         <div className='flex flex-row gap-2 flex-wrap justify-center'>
           {removedWords.map((word: Word) => (
             <div
@@ -222,7 +233,7 @@ export default function FillInTheBlankRandomChallenge({
           )}
         </div>
       </Card>
-      <Card minWidth='min-w-[500px]' maxWidth='max-w-[600px]'>
+      <Card>
         <div className='flex flex-row gap-2 flex-wrap justify-center items-center'>
           {!loading &&
             answer.map((word: Word) =>
@@ -270,9 +281,6 @@ export default function FillInTheBlankRandomChallenge({
         <span>Submit</span>
       </button>
       {incorrect && <Modal setIncorrect={setIncorrect}>Incorrect!</Modal>}
-      {correct && (
-        <Modal setIncorrect={() => setCorrect(false)}>Correct!</Modal>
-      )}
     </div>
   );
 }

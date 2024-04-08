@@ -13,11 +13,10 @@ import NewChallenge from './NewChallenge';
 /***
  * TO DO: Refactor this form to use a server action for submission
  * https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations#forms
- * 
- * On second thought - if we want logged-out users to be able to create & play a game, 
+ *
+ * On second thought - if we want logged-out users to be able to create & play a game,
  * does it make sense to use a server action?
  */
-
 
 export default function NewGameForm({ editGame }: { editGame?: string }) {
   const { user } = useContext(UserContext);
@@ -48,46 +47,48 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     challenges: [
       {
         id: 'challenge-0',
-        type: 'fill-in-the-blank',
+        type: 'trivia',
         description: '',
         clue: '',
         answer: '',
       },
-      // {
-      //   id: 'challenge-1',
-      //   type: 'caesar-cypher',
-      //   description: '',
-      //   clue: '',
-      //   answer: '',
-      // },
-      // {
-      //   id: 'challenge-2',
-      //   type: 'word-scramble',
-      //   description: '',
-      //   clue: [''],
-      //   answer: '',
-      // },
+      {
+        id: 'challenge-1',
+        type: 'caesar-cypher',
+        description: '',
+        clue: '',
+        answer: '',
+      },
+      {
+        id: 'challenge-2',
+        type: 'word-scramble',
+        description: '',
+        clue: [''],
+        answer: '',
+      },
     ],
   };
 
-  const [nextChallenge, setNextChallenge] = useState('trivia');
-  const [submitError, setSubmitError] = useState(false);
-  const [submitErrorMessage, setSubmitErrorMessage] = useState('');
-  const [editError, setEditError] = useState(false);
-  const [editMessage, setEditMessage] = useState('');
+  const [nextChallenge, setNextChallenge] = useState<string>('trivia');
+  const [submitError, setSubmitError] = useState<boolean>(false);
+  const [submitErrorMessage, setSubmitErrorMessage] = useState<string[]>([]);
+  const [editError, setEditError] = useState<boolean>(false);
+  const [editMessage, setEditMessage] = useState<string>('');
 
   const { setSavedGames } = useContext(SavedGamesContext);
   const { singleGame, setSingleGame } = useContext(SingleGameContext);
 
   const [newGame, setNewGame] = useState<Game>(() => {
-    const localStorageData = localStorage.getItem('newGameForm');
+    let localStorageData: string | null = '';
+    if (localStorage) {
+      localStorageData = localStorage.getItem('newGameForm');
+    }
     let gameData = defaultGameData;
     if (localStorageData) {
       gameData = JSON.parse(localStorageData);
     }
     if (editGame === singleGame.id) {
       return singleGame;
-    } else {
     }
     return localStorageData ? gameData : defaultGameData;
   });
@@ -131,7 +132,8 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
   }, [newGame.id]);
 
   useEffect(() => {
-    if (newGame.challenges.length > 3) {
+    // adding newGame.challenges scrolls to the newest challenge whenever any challenge value changes
+    if (newGame.challenges.length > 4) {
       const index = newGame.challenges.length - 1;
       const challengeType = newGame.challenges[index].type;
       const challengeId = document.getElementById(`${challengeType}-${index}`);
@@ -140,7 +142,6 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
         behavior: 'smooth',
       });
     }
-    // adding newGame.challenges would scroll to newest challenge whenever any challenge value changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newGame.challenges.length]);
 
@@ -170,8 +171,12 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
 
   const handleClueChange = (e: any, type: string, index: number) => {
     let clue: string | string[];
-    // Caesar Cypher and Word Scramble clues come from the actual value passed to onClueChange, not the event target
-    if (type === 'caesar-cypher' || type === 'word-scramble') {
+    // Array clues come from the actual value passed to onClueChange, not the event target
+    if (
+      type === 'caesar-cypher' ||
+      type === 'word-scramble' ||
+      type === 'fill-in-the-blank'
+    ) {
       clue = e;
     } else if (type === 'trivia') {
       clue = e.target.value;
@@ -256,9 +261,8 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setSubmitError(false);
-    setSubmitErrorMessage('');
+    setSubmitErrorMessage([]);
 
-    // Check if any challenge clue is empty
     const hasEmptyClue = newGame.challenges.some(
       (challenge) =>
         challenge.clue === '' ||
@@ -267,36 +271,40 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     );
 
     const hasEmptyAnswer = newGame.challenges.some((challenge) => {
-      // if (typeof challenge.answer === 'string') {
-
-      // Currently answer is always a string
       if (challenge.answer === '') {
         return true;
       }
-      // } else if (challenge.answer.length === 1) {
-      // if (challenge.answer[0] === '') {
-      //   return true;
-      // }
-      // }
     });
 
-    // If any challenge clue is empty, stop submission
-    if (hasEmptyClue && hasEmptyAnswer) {
-      console.log('Cannot submit: Some challenge clues and answers are empty.');
-      setSubmitError(true);
-      setSubmitErrorMessage('Some challenge clues and answers are empty');
-      return;
-    } else if (hasEmptyClue) {
-      console.log('Cannot submit: Some challenge clues are empty.');
-      setSubmitError(true);
-      setSubmitErrorMessage('Some challenge clues are empty');
-      return;
-    } else if (hasEmptyAnswer) {
-      console.log('Cannot submit: Some challenge answers are empty.');
-      setSubmitError(true);
-      setSubmitErrorMessage('Some challenge answers are empty');
-      return;
+    // If any required fields are empty, stop submission
+    switch (true) {
+      case newGame.gameTitle === '':
+        setSubmitError(true);
+        setSubmitErrorMessage((prev) => [
+          ...prev,
+          'Please add a title for your game.',
+        ]);
+      case newGame.gameDescription === '':
+        setSubmitError(true);
+        setSubmitErrorMessage((prev) => [
+          ...prev,
+          'Please add a short description for your game.',
+        ]);
+      case hasEmptyClue:
+        setSubmitError(true);
+        setSubmitErrorMessage((prev) => [
+          ...prev,
+          'Some challenge clues are empty.',
+        ]);
+      case hasEmptyAnswer:
+        setSubmitError(true);
+        setSubmitErrorMessage((prev) => [
+          ...prev,
+          'Some challenge answers are empty.',
+        ]);
     }
+
+    if (submitError) return;
 
     // Format clues for DB
     newGame.challenges.map((challenge) => {
@@ -381,7 +389,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
   const handleReset = (e: any) => {
     e.preventDefault();
     setSubmitError(false);
-    setSubmitErrorMessage('');
+    setSubmitErrorMessage([]);
     setNewGame(defaultGameData);
   };
 
@@ -390,7 +398,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     <>
       <form>
         <div className='flex flex-col gap-12'>
-          {/* <div className='flex flex-col gap-4'>
+          <div className='flex flex-col gap-4'>
             <h1>Create your escape room</h1>
             <h2>Room Info</h2>
             <label htmlFor='gameTitle'>Name your Escape room</label>
@@ -404,7 +412,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
             />
           </div>
           <p>By: {author}</p>
-          <div className='flex flex-col gap-4'>
+          <div className='flex flex-col gap-4 max-w-full'>
             <label htmlFor='gameDescription'>Describe your Escape room</label>
             <TextArea
               fieldType='gameDescription'
@@ -415,7 +423,13 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
             />
           </div>
           <div className='flex flex-col gap-4'>
-            <label htmlFor='timeLimit'>Set time limit (minutes)</label>
+            <label htmlFor='timeLimit'>
+              Set time limit:{' '}
+              <span className='countdown'>
+                <span style={{ '--value': newGame.timeLimit } as React.CSSProperties}></span>
+              </span>
+              minutes
+            </label>
             <input
               type='range'
               min={300}
@@ -426,8 +440,9 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
               onChange={handleTimeLimitChange}
               id='timeLimit'
               data-test='time-limit'
+              data-testid='time-limit'
             />
-            <div className='w-full flex justify-between text-sm pl-px'>
+            <div className='w-full flex justify-between text-xs sm:text-base pl-px'>
               {minutes.map((item: number) => {
                 return (
                   <span
@@ -435,8 +450,8 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
                     key={`minute-${item}`}
                     className={
                       Number(newGame.timeLimit) === item * 60
-                        ? 'flex items-center justify-center font-bold border p-2 border-black rounded-full w-[2.5rem] min-h-[2.5rem] bg-teal-100'
-                        : 'flex items-center justify-center p-2 w-[2.5rem] min-h-[2.5rem]'
+                        ? 'flex items-center justify-center p-0 sm:p-2 font-bold sm:border sm:border-black rounded-full w-[1rem] min-h-[1rem] sm:w-[2.5rem] sm:min-h-[2.5rem] bg-teal-100'
+                        : 'flex items-center justify-center p-0 sm:p-2 w-[1rem] min-h-[1rem] sm:w-[2.5rem] sm:min-h-[2.5rem]'
                     }
                   >
                     {String(item).padStart(2, '0')}
@@ -444,7 +459,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
                 );
               })}
             </div>
-          </div> */}
+          </div>
           <h2>Challenges</h2>
 
           {newGame.challenges.length === 0 ? (
@@ -488,7 +503,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
 
           <>
             <div className='flex flex-row flex-wrap gap-8 w-full'>
-              <div className='flex flex-row gap-8 border-2 border-black p-8 rounded-xl bg-white/50 w-full'>
+              <div className='flex flex-row flex-wrap gap-8 border-2 border-black p-8 rounded-xl bg-white/50 w-full'>
                 <fieldset className='flex flex-col flex-shrink gap-4'>
                   <legend className='mb-4'>Choose a challenge type:</legend>
                   <div className='flex flex-row-reverse justify-end gap-2'>
@@ -547,7 +562,9 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
                     data-test='add-challenge'
                     data-testid={`add-${nextChallenge}-challenge`}
                   >
-                    <span>Add {nextChallenge.replaceAll("-", " ")} Challenge</span>
+                    <span>
+                      Add {nextChallenge.replaceAll('-', ' ')} Challenge
+                    </span>
                   </button>
                 </div>
               </div>
@@ -667,7 +684,11 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
                   d='M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'
                 />
               </svg>
-              <span>{submitErrorMessage}</span>
+              <ul>
+                {submitErrorMessage.map((message, index) => (
+                  <li key={`${message}-${index}`}>{message}</li>
+                ))}
+              </ul>
             </div>
           )}
         </div>

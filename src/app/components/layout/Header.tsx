@@ -73,14 +73,17 @@ export default function Header() {
   }, [userId, setUser]);
 
   return (
-    <header className='grid grid-cols-1 sm:grid-cols-2 items-center border-b border-black sm:px-16'>
+    <header className='grid grid-cols-1 sm:grid-cols-2 items-center bg-blue-400/25 border-b border-black sm:px-16'>
       <p className='header'>
-        <Link href='/' data-test='home-link'>Escape Room Builder</Link>
+        <Link href='/' data-test='home-link'>
+          Escape Room Builder
+        </Link>
       </p>
       <div className='flex flex-row min-h-[110px] items-center justify-self-center sm:justify-self-end space-x-4 sm:space-x-8 pb-6 pt-2 sm:pt-6'>
-        <Link href='/about'>About</Link>
         <SignedIn>
-          <UserButton />
+            <div className='bg-white p-1 rounded-full hover:bg-emerald-100 transition-all'>
+              <UserButton />
+            </div>
         </SignedIn>
 
         <SignedOut>
