@@ -404,11 +404,6 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
       const data = await response.json();
       console.log("Response from adding game to user's saved games in DB:");
       console.log(data);
-      const addTimeStamp = await fetch(
-        `/api/updateUser/${user.id}/${newGame.id}`
-      );
-      const newTimeStamps = await addTimeStamp.json();
-      console.log(newTimeStamps);
     }
   };
 
