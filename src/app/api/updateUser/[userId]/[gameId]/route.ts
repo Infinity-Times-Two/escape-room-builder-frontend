@@ -11,7 +11,7 @@ import {
 // Front-end will not allow a user to create more than 3 games in a 24 hour period
 // The first timestamp in the array is the oldest
 export async function GET(
-  req: NextApiRequest,
+  req: Request,
   { params }: { params: { userId: string; gameId: string } }
 ) {
   const dbClient = new DynamoDBClient({

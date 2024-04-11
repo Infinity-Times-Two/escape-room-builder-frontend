@@ -130,7 +130,10 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     const now = Date.now();
     if (user.recentGameTimestamps) {
       console.log(now - user.recentGameTimestamps[0]);
-      if (now - user.recentGameTimestamps[0] < 86400000) {
+      if (
+        user.recentGameTimestamps.length === 3 &&
+        now - user.recentGameTimestamps[0] < 86400000
+      ) {
         // 86400000 = 1 day
         setTooManyGames(true);
         console.log(
