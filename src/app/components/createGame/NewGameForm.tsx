@@ -14,13 +14,10 @@ import NewChallenge from './NewChallenge';
  * TO DO: Refactor this form to use a server action for submission
  * https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations#forms
  *
- * On second thought - if we want logged-out users to be able to create & play a game,
- * does it make sense to use a server action?
  */
 
 export default function NewGameForm({ editGame }: { editGame?: string }) {
   const { user } = useContext(UserContext);
-
   let author: string;
   if (user.firstName === '') {
     author = 'Anonymous';
@@ -80,7 +77,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
 
   const [newGame, setNewGame] = useState<Game>(() => {
     let localStorageData: string | null = '';
-    if (localStorage) {
+    if (typeof localStorage !== 'undefined') {
       localStorageData = localStorage.getItem('newGameForm');
     }
     let gameData = defaultGameData;
@@ -364,7 +361,11 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
           setEditMessage(data.message);
         }
       } else {
-        const response = await fetch('/api/games', {
+        // /api/games uses AWS API Gateway endpoint
+        // const response = await fetch('/api/games', { 
+
+        // /api/createGame directly adds to DB with DynamoDB SDK
+        const response = await fetch('/api/createGame', { 
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newGame),
@@ -399,6 +400,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
   const minutes = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
   return (
     <>
+      {/* Update to <form action={...}> when this has been refactored to a server action */}
       <form>
         <div className='flex flex-col gap-12'>
           <div className='flex flex-col gap-4'>
@@ -591,6 +593,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
           {/* Show by default on create page */}
           {!editGame && singleGame?.id !== newGame.id && (
             <button
+              // remove onClick when this is refactored to a server action
               onClick={handleSubmit}
               data-test='create-game'
               data-testid='create-game'

@@ -8,6 +8,17 @@ import { useContext, useEffect, useState } from 'react';
 import { TimerContext } from '../../contexts/timerContext';
 import { Game } from '@/app/types/types';
 import { useRouter } from 'next/navigation';
+import Card from '@/app/components/ui/Card';
+
+const colorVariants: { [key: string]: string } = {
+  blue: 'bg-blue-200',
+  red: 'bg-red-200',
+  yellow: 'bg-yellow-200',
+  green: 'bg-green-200',
+  orange: 'bg-orange-200',
+  purple: 'bg-purple-200',
+  pink: 'bg-pink-200',
+};
 
 export default function PlayGame({ params }: { params: { game: string } }) {
   const { singleGame, setSingleGame } = useContext(SingleGameContext);
@@ -191,50 +202,63 @@ export default function PlayGame({ params }: { params: { game: string } }) {
   const formattedTime = parseFloat(timeInMinutes);
 
   return (
-    <div className='flex flex-col items-center justify-start p-16 min-h-screen gap-8'>
-      {error && <p>There was an error</p>}
-      {loading && <p>Loading...</p>}
-      {!error && !loading && singleGame.challenges.length !== 0 && (
-        <>
-          <h2>{singleGame.gameTitle}</h2>
-          <p>{singleGame.gameDescription}</p>
-          <div className='flex flex-row justify-center gap-8'>
-            {showEdit && (
-              <Link href={`/edit/${singleGame.id}`} data-test='edit-game'>
-                <button className='xl'>
-                  <span>Edit</span>
+    <div className='flex flex-col items-center justify-start gap-8 w-11/12 sm:w-4/5 lg:w-1/2'>
+      <Card bgColor={singleGame.titleBg}>
+        <div className='flex flex-col items-center justify-start gap-8'>
+          {error && <p>There was an error</p>}
+          {loading && <p>Loading...</p>}
+          {!error && !loading && singleGame.challenges.length !== 0 && (
+            <>
+              <h2>{singleGame.gameTitle}</h2>
+              <p>{singleGame.gameDescription}</p>
+              <div className='flex flex-row justify-center gap-8'>
+                {showEdit && (
+                  <Link href={`/edit/${singleGame.id}`} data-test='edit-game'>
+                    <button className='xl'>
+                      <span>Edit</span>
+                    </button>
+                  </Link>
+                )}
+                <Link
+                  href={`./${singleGame.id}/${singleGame.challenges[0].id}`}
+                  data-test='start-game'
+                >
+                  <button
+                    className='xl green'
+                    onClick={() =>
+                      setExpiry(Date.now() + singleGame.timeLimit * 1000)
+                    }
+                  >
+                    <span>Start</span>
+                  </button>
+                </Link>
+              </div>
+              <div className='flex flex-row gap-8'>
+                <div className='badge'>
+                  <span className='text-nowrap'>
+                    {singleGame.challenges.length}{' '}
+                    {singleGame.challenges.length > 1
+                      ? 'challenges'
+                      : 'challenge'}
+                  </span>
+                </div>
+                <div className='badge'>
+                  <span className='text-nowrap'>{formattedTime} minutes</span>
+                </div>
+              </div>
+              {showEdit && (
+                <button
+                  className='small red'
+                  onClick={() => setDeleteModal(true)}
+                >
+                  <span>Delete Game</span>
                 </button>
-              </Link>
-            )}
-            <Link
-              href={`./${singleGame.id}/${singleGame.challenges[0].id}`}
-              data-test='start-game'
-            >
-              <button
-                className='xl green'
-                onClick={() =>
-                  setExpiry(Date.now() + singleGame.timeLimit * 1000)
-                }
-              >
-                <span>Play</span>
-              </button>
-            </Link>
-          </div>
-
-          <div className='chip'>
-            <span>{formattedTime} minutes</span>
-          </div>
-          <div className='chip'>
-            <span>{singleGame.challenges.length} challenges</span>
-          </div>
-          {showEdit && (
-            <button className='small red' onClick={() => setDeleteModal(true)}>
-              <span>Delete Game</span>
-            </button>
+              )}
+              {deleteModal && <DeleteModal />}
+            </>
           )}
-          {deleteModal && <DeleteModal />}
-        </>
-      )}
+        </div>
+      </Card>
     </div>
   );
 }

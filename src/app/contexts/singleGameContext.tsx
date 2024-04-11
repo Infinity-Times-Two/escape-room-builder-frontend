@@ -104,4 +104,4 @@ const SingleGameContextProvider = (props: PropsWithChildren<{}>) => {
   );
 };
 
-export { SingleGameContext, SingleGameContextProvider };
+export { SingleGameContext, SingleGameContextProvider, defaultContextValue };

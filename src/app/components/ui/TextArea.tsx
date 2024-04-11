@@ -24,6 +24,7 @@ export default function TextArea({
         placeholder={placeholder}
         onChange={onChange}
         value={value}
+        name={fieldType}
         className='textarea textarea-md bg-white pt-4 text-2xl w-full -translate-x-1 -translate-y-1 input-bordered border-black border-2 focus:outline-none focus:border-black'
       />
     </div>

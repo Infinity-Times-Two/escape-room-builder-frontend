@@ -133,7 +133,7 @@ export default function CaesarCypherChallenge({
         <button
           role='encrypt'
           onClick={onEncrypt}
-          disabled={error}
+          aria-disabled={error}
           data-test={`${index}-encrypt-button`}
           data-testid={`${index}-encrypt-button`}
         >
@@ -186,7 +186,7 @@ export default function CaesarCypherChallenge({
         placeholder=''
         onKeyDown={handleKeyDown}
         key={`challenge-caesar-cypher-clue-${index}`}
-        disabled
+        aria-disabled
         dataTest={`${dataTest}-clue`}
         submitError={submitError}
       />

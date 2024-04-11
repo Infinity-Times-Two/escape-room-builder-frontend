@@ -4,28 +4,33 @@ import { useState, useEffect, useMemo, createContext, PropsWithChildren } from '
 import { Game } from '../types/types'
 
 interface LoadedGamesContextType {
-  loadedGames: Game[] | undefined;
-  setLoadedGames: React.Dispatch<React.SetStateAction<Game[] | undefined>>;
+  loadedGames: Game[];
+  setLoadedGames: React.Dispatch<React.SetStateAction<Game[]>>;
+  loading: boolean;
 }
 
 const defaultContextValue: LoadedGamesContextType = {
   loadedGames: [],
   setLoadedGames: () => {},
+  loading: false,
 };
 
 const LoadedGamesContext = createContext(defaultContextValue);
 
 const LoadedGamesContextProvider = (props: PropsWithChildren<{}>) => {
 
-  const [loadedGames, setLoadedGames] = useState<Game[] | undefined>([]);
+  const [loadedGames, setLoadedGames] = useState<Game[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true)
       // Fetch data from the server
       const response = await fetch('/api/games');
       const data = await response.json();
       console.log(`setting games: ${data}`)
       setLoadedGames(data.games);
+      setLoading(false)
       return data;
     };
     
@@ -36,10 +41,11 @@ const LoadedGamesContextProvider = (props: PropsWithChildren<{}>) => {
 
   const value = useMemo(
     () => ({
+      loading,
       loadedGames,
       setLoadedGames,
     }),
-    [loadedGames, setLoadedGames]
+    [loadedGames, setLoadedGames, loading]
   );
 
   return (
