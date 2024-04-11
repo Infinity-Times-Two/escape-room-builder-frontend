@@ -27,6 +27,7 @@ export async function GET(
         savedGames: [],
         createdGames: [],
         isAdmin: false,
+        recentGameTimestamps: [],
       },
       // ReturnValues: 'ALL_OLD',
     });

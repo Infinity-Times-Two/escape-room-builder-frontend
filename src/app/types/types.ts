@@ -26,4 +26,5 @@ export interface DBuser {
   savedGames: string[];
   createdGames: string[];
   isAdmin: boolean;
+  recentGameTimestamps: number[];
 }

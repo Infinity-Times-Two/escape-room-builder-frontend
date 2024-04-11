@@ -71,6 +71,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
   const [submitErrorMessage, setSubmitErrorMessage] = useState<string[]>([]);
   const [editError, setEditError] = useState<boolean>(false);
   const [editMessage, setEditMessage] = useState<string>('');
+  const [tooManyGames, setTooManyGames] = useState(false);
 
   const { setSavedGames } = useContext(SavedGamesContext);
   const { singleGame, setSingleGame } = useContext(SingleGameContext);
@@ -125,6 +126,20 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
       });
     }
     saveForm(newGame);
+
+    const now = Date.now();
+    if (user.recentGameTimestamps) {
+      console.log(now - user.recentGameTimestamps[0]);
+      if (now - user.recentGameTimestamps[0] < 86400000) {
+        // 86400000 = 1 day
+        setTooManyGames(true);
+        console.log(
+          `You can create another game in ${
+            (86400000 - (now - user.recentGameTimestamps[0])) / 1000 / 60 / 60
+          } hours.`
+        );
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newGame.id]);
 
@@ -362,10 +377,10 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
         }
       } else {
         // /api/games uses AWS API Gateway endpoint
-        // const response = await fetch('/api/games', { 
+        // const response = await fetch('/api/games', {
 
         // /api/createGame directly adds to DB with DynamoDB SDK
-        const response = await fetch('/api/createGame', { 
+        const response = await fetch('/api/createGame', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newGame),
@@ -386,6 +401,11 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
       const data = await response.json();
       console.log("Response from adding game to user's saved games in DB:");
       console.log(data);
+      const addTimeStamp = await fetch(
+        `/api/updateUser/${user.id}/${newGame.id}`
+      );
+      const newTimeStamps = await addTimeStamp.json();
+      console.log(newTimeStamps);
     }
   };
 
@@ -400,6 +420,36 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
   const minutes = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
   return (
     <>
+      {tooManyGames && (
+        <div
+          role='alert'
+          className='alert alert-error lg:max-w-2xl text-white bg-rose-900'
+        >
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            className='stroke-current shrink-0 h-6 w-6'
+            fill='none'
+            viewBox='0 0 24 24'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeWidth='2'
+              d='M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'
+            />
+          </svg>
+          <span data-test='tooManyGames-error'>
+            Only 3 games may be created per day. You can create another game in{' '}
+            {Number(
+              (86400000 - (Date.now() - user.recentGameTimestamps[0])) /
+                1000 /
+                60 /
+                60
+            ).toFixed(1)}{' '}
+            hours.
+          </span>
+        </div>
+      )}
       {/* Update to <form action={...}> when this has been refactored to a server action */}
       <form>
         <div className='flex flex-col gap-12'>
@@ -597,6 +647,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
               onClick={handleSubmit}
               data-test='create-game'
               data-testid='create-game'
+              disabled={tooManyGames}
             >
               <span>Create Game</span>
             </button>
