@@ -136,6 +136,7 @@ describe('Game Creation and Editing while logged out', () => {
 
     cy.getByData('home-link').click();
     cy.getByData('play').click();
+    cy.getByData('your-rooms').click();
     cy.get('h3').contains('Test Game - edited');
   });
 });

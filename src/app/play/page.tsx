@@ -64,7 +64,7 @@ export default function Play() {
                     } sm:flex-row w-full justify-between border-b-2 -translate-x-1 -translate-y-1 hover:-translate-y-2 hover:-translate-x-2 transition-all`}
                   >
                     <div className='flex flex-col justify-center'>
-                      <p className='text-xl'>{game.gameTitle}</p>
+                      <h3 className='text-xl'>{game.gameTitle}</h3>
                       <p className='text-xs text-neutral-500'>{game.author}</p>
                       {game.gameDescription && <p>{game.gameDescription}</p>}
                     </div>
@@ -122,6 +122,7 @@ export default function Play() {
             showRooms === 'private' ? active : null
           }`}
           onClick={() => setShowRooms('private')}
+          data-test='your-rooms'
         >
           Your Rooms
         </a>
