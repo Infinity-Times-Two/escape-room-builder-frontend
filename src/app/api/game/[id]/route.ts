@@ -1,3 +1,5 @@
+// GET, PUT and DELETE single games
+
 export async function GET(
   req: Request,
   { params }: { params: { id: string } }

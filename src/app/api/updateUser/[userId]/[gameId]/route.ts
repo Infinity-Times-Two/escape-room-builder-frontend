@@ -6,7 +6,7 @@ import {
   GetCommand,
 } from '@aws-sdk/lib-dynamodb';
 
-// This removes a gameId from a user's list of saved games
+// Removes a gameId from a user's list of saved games
 export async function DELETE(
   req: NextApiRequest,
   res: NextApiResponse,

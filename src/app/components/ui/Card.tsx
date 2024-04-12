@@ -1,4 +1,5 @@
-import { colorVariants } from "./colorVariants";
+import { colorVariants } from './colorVariants';
+
 export default function Card({
   children,
   bgColor,
@@ -6,7 +7,6 @@ export default function Card({
   bgColor?: string;
   children: React.ReactNode;
 }) {
-
 
   return (
     <div className='w-full sm:mx-8'>

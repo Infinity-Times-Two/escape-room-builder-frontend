@@ -3,6 +3,7 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { currentUser } from '@clerk/nextjs';
 
+// Adds user's first name to DB on user creation
 export async function GET(
   req: Request,
   { params }: { params: { userId: string } }
@@ -44,6 +45,7 @@ export async function GET(
   return Response.json(response);
 }
 
+// Updates a user's saved games
 export async function POST(
   req: NextRequest,
   { params }: { params: { userId: string } }

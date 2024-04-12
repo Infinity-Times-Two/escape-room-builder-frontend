@@ -379,9 +379,6 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
           setEditMessage(data.message);
         }
       } else {
-        // /api/games uses AWS API Gateway endpoint
-        // const response = await fetch('/api/games', {
-
         // /api/createGame directly adds to DB with DynamoDB SDK
         const response = await fetch('/api/createGame', {
           method: 'POST',
