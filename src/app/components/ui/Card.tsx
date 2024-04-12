@@ -1,3 +1,4 @@
+import { colorVariants } from "./colorVariants";
 export default function Card({
   children,
   bgColor,
@@ -5,15 +6,7 @@ export default function Card({
   bgColor?: string;
   children: React.ReactNode;
 }) {
-  const colorVariants: { [key: string]: string } = {
-    blue: 'bg-blue-200',
-    red: 'bg-red-200',
-    yellow: 'bg-yellow-200',
-    green: 'bg-green-200',
-    orange: 'bg-orange-200',
-    purple: 'bg-purple-200',
-    pink: 'bg-pink-200',
-  };
+
 
   return (
     <div className='w-full sm:mx-8'>

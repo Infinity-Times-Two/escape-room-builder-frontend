@@ -25,7 +25,6 @@ export async function POST(req: Request) {
     const command = new PutCommand({
       TableName: gamesTable,
       Item: game,
-      // ReturnValues: 'ALL_OLD',
     });
     try {
       const response = await docClient.send(command);
@@ -80,7 +79,7 @@ export async function POST(req: Request) {
       const response = await docClient.send(command);
       return response;
     } catch (error) {
-      return 'Internal Server Error. Shit!';
+      return Response.json(`There was error: ${error}`);
     }
   };
   const updateTimestampsResponse = await updateUser(newGame.authorId);

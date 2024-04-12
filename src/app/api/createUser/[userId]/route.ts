@@ -1,9 +1,7 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import {
   DynamoDBDocumentClient,
-  GetCommand,
   PutCommand,
-  UpdateCommand,
 } from '@aws-sdk/lib-dynamodb';
 
 export async function GET(
@@ -29,7 +27,6 @@ export async function GET(
         isAdmin: false,
         recentGameTimestamps: [],
       },
-      // ReturnValues: 'ALL_OLD',
     });
     try {
       const response = await docClient.send(command);

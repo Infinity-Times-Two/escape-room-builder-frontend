@@ -9,16 +9,7 @@ import { TimerContext } from '../../contexts/timerContext';
 import { Game } from '@/app/types/types';
 import { useRouter } from 'next/navigation';
 import Card from '@/app/components/ui/Card';
-
-const colorVariants: { [key: string]: string } = {
-  blue: 'bg-blue-200',
-  red: 'bg-red-200',
-  yellow: 'bg-yellow-200',
-  green: 'bg-green-200',
-  orange: 'bg-orange-200',
-  purple: 'bg-purple-200',
-  pink: 'bg-pink-200',
-};
+import { colorVariants } from '@/app/components/ui/colorVariants';
 
 export default function PlayGame({ params }: { params: { game: string } }) {
   const { singleGame, setSingleGame } = useContext(SingleGameContext);

@@ -19,7 +19,7 @@ const SingleChallenge: React.FC<SingleChallengeProps> = ({
   singleGame,
 }) => {
   console.log(currentChallenge.type);
-  const challengeType = currentChallenge.type.toLowerCase();
+  const challengeType = currentChallenge.type.toLowerCase().replace(" ", "-");
   switch (challengeType) {
     case 'trivia': {
       return (

@@ -7,6 +7,7 @@ import { useState, useContext, useEffect } from 'react';
 import { LoadedGamesContext } from '../contexts/loadedGamesContext';
 import { SavedGamesContext } from '../contexts/savedGamesContext';
 import { Game } from '../types/types';
+import { colorVariants } from '../components/ui/colorVariants';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -26,16 +27,6 @@ export default function Play() {
     console.log('saved games: ', savedGames);
     console.log(loading);
   });
-
-  const colorVariants: { [key: string]: string } = {
-    blue: 'bg-blue-200',
-    red: 'bg-red-200',
-    yellow: 'bg-yellow-200',
-    green: 'bg-green-200',
-    orange: 'bg-orange-200',
-    purple: 'bg-purple-200',
-    pink: 'bg-pink-200',
-  };
 
   const GameList = ({ games }: { games: Game[] }) => {
     return (
