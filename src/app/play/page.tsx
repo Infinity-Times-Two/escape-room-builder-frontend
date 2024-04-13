@@ -9,7 +9,6 @@ import { SavedGamesContext } from '../contexts/savedGamesContext';
 import { Game } from '../types/types';
 import { colorVariants } from '../components/ui/colorVariants';
 import Link from 'next/link';
-import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faStopwatch,
@@ -20,7 +19,7 @@ export default function Play() {
   const [showRooms, setShowRooms] = useState<string>('public');
   const active = `tab-active text-white [--tab-bg:indigo] [--tab-border-color:indigo]`;
   const { loadedGames, loading } = useContext(LoadedGamesContext);
-  const { savedGames } = useContext(SavedGamesContext);
+  const { savedGames, loadingSavedGames } = useContext(SavedGamesContext);
 
   useEffect(() => {
     console.log('loaded games: ', loadedGames);
@@ -54,7 +53,7 @@ export default function Play() {
                       colorVariants[game.titleBg]
                     } sm:flex-row w-full justify-between border-b-2 -translate-x-1 -translate-y-1 hover:-translate-y-2 hover:-translate-x-2 transition-all`}
                   >
-                    <div className='flex flex-col justify-center'>
+                    <div className='flex flex-col items-start'>
                       <h3 className='text-xl'>{game.gameTitle}</h3>
                       <p className='text-xs text-neutral-500'>{game.author}</p>
                       {game.gameDescription && <p>{game.gameDescription}</p>}
@@ -65,9 +64,9 @@ export default function Play() {
                           <FontAwesomeIcon icon={faCircleQuestion} />
                         </span>
                         <p className='text-nowrap'>
-                          {game.challenges.length +
+                          {game.challenges?.length +
                             ' ' +
-                            (game.challenges.length > 1
+                            (game.challenges?.length > 1
                               ? 'challenges'
                               : 'challenge')}
                         </p>

@@ -1,32 +1,36 @@
 // Get public games with optional ?limit
 
-export async function GET(req: Request, res: any) {
-  const devApiKey = process.env.DEV_API;
-  if (typeof devApiKey !== 'string') {
-    throw new Error('DEV_API is not defined');
-  }
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, ScanCommand } from '@aws-sdk/lib-dynamodb';
 
-  const prodApiKey = process.env.PROD_API;
-  if (typeof prodApiKey !== 'string') {
-    throw new Error('PROD_API is not defined');
-  }
-  
-  try {
-    const env = process.env.NODE_ENV === 'development' ? 'dev' : 'main';
-    const response = await fetch(
-      `https://api-erb.cloudzack.com/dev/games`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-Key':
-          process.env.NODE_ENV === 'development' ? devApiKey : prodApiKey,
-      },
+export async function GET(req: Request) {
+  const dbClient = new DynamoDBClient({
+    credentials: {
+      accessKeyId: process.env.DYNAMODB_ACCESS_KEY as string,
+      secretAccessKey: process.env.DYNAMODB_SECRET_KEY as string,
+    },
+  });
+
+  const docClient = DynamoDBDocumentClient.from(dbClient);
+  const env = process.env.NODE_ENV === 'development' ? '-dev' : '-main';
+  const gamesTable = process.env.AWS_GAMES_TABLE_NAME + env;
+
+  const fetchAllGames = async () => {
+    const command = new ScanCommand({
+      TableName: gamesTable,
     });
+    try {
+      const response = await docClient.send(command);
+      return response;
+    } catch (error) {
+      console.log('There was an error: ', error);
+      throw error;
+    }
+  };
 
-    const data = await response.json();
-    return Response.json(data);
-  } catch (error) {
-    return Response.json(error);
-  }
+  const response = await fetchAllGames();
+
+  return Response.json(response);
 }
 
 // Keeping this as backup, using /api/createGame instead to directly add to DB
