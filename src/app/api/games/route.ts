@@ -1,4 +1,3 @@
-'use server';
 // Get public games with optional ?limit
 
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
@@ -15,7 +14,7 @@ export async function GET(req: Request) {
 
   const docClient = DynamoDBDocumentClient.from(dbClient);
   const env = process.env.NODE_ENV === 'development' ? '-dev' : '-main';
-  const gamesTable = process.env.AWS_GAMES_TABLE_NAME + env;
+  const gamesTable = process.env.AWS_GAMES_TABLE_NAME + 'dev';
 
   const fetchAllGames = async () => {
     const command = new ScanCommand({
