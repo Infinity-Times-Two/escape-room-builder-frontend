@@ -22,7 +22,6 @@ export default function LoadedRooms() {
     }
   }, [loadedGames, setLoadedGames]);
 
-  console.log(loadedGames);
   return (
     <div className='flex flex-row flex-wrap justify-center row-wrap max-w-7xl self-start gap-8'>
       {loadedGames &&

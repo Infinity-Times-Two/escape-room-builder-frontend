@@ -130,18 +130,11 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
 
     const now = Date.now();
     if (user.recentGameTimestamps) {
-      console.log(now - user.recentGameTimestamps[0]);
       if (
         user.recentGameTimestamps.length === 3 &&
         now - user.recentGameTimestamps[0] < 86400000
       ) {
-        // 86400000 = 1 day
         setTooManyGames(true);
-        console.log(
-          `You can create another game in ${
-            (86400000 - (now - user.recentGameTimestamps[0])) / 1000 / 60 / 60
-          } hours.`
-        );
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -628,7 +621,17 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
           <div className='form-control w-24'>
             <label className='cursor-pointer label'>
               <span>Private</span>
-              <input type='checkbox' className='checkbox checkbox-secondary' checked={newGame.private} onClick={() => setNewGame((prevGame: Game) => ({ ...prevGame, private: !prevGame.private }))} />
+              <input
+                type='checkbox'
+                className='checkbox checkbox-secondary'
+                checked={newGame.private}
+                onClick={() =>
+                  setNewGame((prevGame: Game) => ({
+                    ...prevGame,
+                    private: !prevGame.private,
+                  }))
+                }
+              />
             </label>
           </div>
 

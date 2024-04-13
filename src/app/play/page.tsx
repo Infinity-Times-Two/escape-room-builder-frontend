@@ -21,12 +21,6 @@ export default function Play() {
   const { loadedGames, loading } = useContext(LoadedGamesContext);
   const { savedGames, loadingSavedGames } = useContext(SavedGamesContext);
 
-  useEffect(() => {
-    console.log('loaded games: ', loadedGames);
-    console.log('saved games: ', savedGames);
-    console.log(loading);
-  });
-
   const GameList = ({ games }: { games: Game[] }) => {
     return (
       <div

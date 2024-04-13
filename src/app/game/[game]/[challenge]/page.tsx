@@ -18,7 +18,6 @@ const SingleChallenge: React.FC<SingleChallengeProps> = ({
   nextChallenge,
   singleGame,
 }) => {
-  console.log(currentChallenge.type);
   const challengeType = currentChallenge.type.toLowerCase().replace(" ", "-");
   switch (challengeType) {
     case 'trivia': {
@@ -93,7 +92,6 @@ export default function ChallengePage({
   if (!currentChallenge) {
     return <div>Challenge not found</div>;
   }
-  console.log(currentChallenge);
   let nextChallenge: number = 1;
   if (singleGame.challenges && singleGame.challenges.length > 0) {
     nextChallenge = singleGame.challenges.indexOf(currentChallenge) + 1;

@@ -28,11 +28,6 @@ export default function PlayGame({ params }: { params: { game: string } }) {
     user.savedGames.includes(params.game) ||
     savedGames.some((item) => item.id === params.game);
 
-  useEffect(() => {
-    console.log('single game:');
-    console.log(singleGame);
-  }, [singleGame]);
-
   // Set state if game in localStorage exists, otherwise fetch from DB
   useEffect(() => {
     const saveSingleGame = (newGame: Game) => {
@@ -41,7 +36,6 @@ export default function PlayGame({ params }: { params: { game: string } }) {
     };
 
     const fetchSingleGame = async () => {
-      console.log(singleGame);
       setLoading(true);
       setError(false);
       try {

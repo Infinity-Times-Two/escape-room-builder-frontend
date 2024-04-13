@@ -58,7 +58,6 @@ export default function FillInTheBlankChallenge({
 
   useEffect(() => {
     const newClue = [...words, ...incorrectWords];
-    console.log(words);
     onClueChange(newClue, index);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [words, incorrectWords]);

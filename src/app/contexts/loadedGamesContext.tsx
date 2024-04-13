@@ -32,7 +32,6 @@ const LoadedGamesContextProvider = (props: PropsWithChildren<{}>) => {
       setLoading(true);
       const response = await fetch('/api/games');
       const data = await response.json();
-      console.log('loaded games data: ', data.Items)
       setLoadedGames(data.Items);
       setLoading(false);
       return data;
