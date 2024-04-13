@@ -5,7 +5,7 @@ import {
   GetCommand,
   UpdateCommand,
 } from '@aws-sdk/lib-dynamodb';
-import { Game } from '@/app/types/types';
+import { Game } from '../../types/types'
 
 export async function POST(req: Request) {
   const newGame = await req.json();

@@ -18,8 +18,7 @@ export async function GET(
   try {
     const env = process.env.NODE_ENV === 'development' ? 'dev' : 'main';
     const response = await fetch(
-      // use ${env} for production
-      `https://api-erb.cloudzack.com/dev/games/${gameId}`,
+      `https://api-erb.cloudzack.com/${env}/games/${gameId}`,
       {
         headers: {
           'Content-Type': 'application/json',
