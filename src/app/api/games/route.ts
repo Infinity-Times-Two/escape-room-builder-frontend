@@ -1,5 +1,5 @@
 // Get public games with optional ?limit
-
+export const dynamic = 'force-dynamic'
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, ScanCommand } from '@aws-sdk/lib-dynamodb';
 
@@ -14,7 +14,7 @@ export async function GET(req: Request) {
 
   const docClient = DynamoDBDocumentClient.from(dbClient);
   const env = process.env.NODE_ENV === 'development' ? '-dev' : '-main';
-  const gamesTable = process.env.AWS_GAMES_TABLE_NAME + 'dev';
+  const gamesTable = process.env.AWS_GAMES_TABLE_NAME + env;
 
   const fetchAllGames = async () => {
     const command = new ScanCommand({
