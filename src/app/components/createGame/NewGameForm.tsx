@@ -129,7 +129,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     saveForm(newGame);
 
     const now = Date.now();
-    if (user.recentGameTimestamps) {
+    if (user.recentGameTimestamps && !user.isAdmin) {
       if (
         user.recentGameTimestamps.length === 3 &&
         now - user.recentGameTimestamps[0] < 86400000

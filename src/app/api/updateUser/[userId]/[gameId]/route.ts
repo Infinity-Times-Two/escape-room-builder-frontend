@@ -9,7 +9,6 @@ import {
 // Removes a gameId from a user's list of saved games
 export async function DELETE(
   req: NextApiRequest,
-  res: NextApiResponse,
   { params }: { params: { userId: string; gameId: string } }
 ) {
   const dbClient = new DynamoDBClient({
