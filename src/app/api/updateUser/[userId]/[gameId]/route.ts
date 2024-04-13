@@ -1,4 +1,3 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import {
   DynamoDBDocumentClient,
@@ -8,7 +7,7 @@ import {
 
 // Removes a gameId from a user's list of saved games
 export async function DELETE(
-  req: NextApiRequest,
+  req: Request,
   { params }: { params: { userId: string; gameId: string } }
 ) {
   const dbClient = new DynamoDBClient({
