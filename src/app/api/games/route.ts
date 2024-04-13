@@ -13,6 +13,7 @@ export async function GET(req: Request) {
 
   const docClient = DynamoDBDocumentClient.from(dbClient);
   const env = process.env.NODE_ENV === 'development' ? '-dev' : '-main';
+  console.log(`ENV: ${env}`);
   const gamesTable = process.env.AWS_GAMES_TABLE_NAME + env;
 
   const fetchAllGames = async () => {

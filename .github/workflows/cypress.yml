@@ -20,7 +20,7 @@ jobs:
           build: npm run build
           start: npm start
           wait-on: 'http://localhost:3000' # Waits for above
-          # Records to Cypress Cloud 
+          # Records to Cypress Cloud
           # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
           record: true
           parallel: true # Runs test in parallel using settings above
@@ -36,3 +36,5 @@ jobs:
           PROD_API: ${{ secrets.PROD_API }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_GAMES_TABLE_NAME: ${{ secrets.AWS_GAMES_TABLE_NAME }}
+          DYNAMODB_ACCESS_KEY: ${{ secrets.DYNAMODB_ACCESS_KEY }}
+          DYNAMODB_SECRET_KEY: ${{ secrets.DYNAMODB_SECRET_KEY }}
