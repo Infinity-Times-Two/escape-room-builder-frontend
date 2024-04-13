@@ -14,13 +14,10 @@ import NewChallenge from './NewChallenge';
  * TO DO: Refactor this form to use a server action for submission
  * https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations#forms
  *
- * On second thought - if we want logged-out users to be able to create & play a game,
- * does it make sense to use a server action?
  */
 
 export default function NewGameForm({ editGame }: { editGame?: string }) {
   const { user } = useContext(UserContext);
-
   let author: string;
   if (user.firstName === '') {
     author = 'Anonymous';
@@ -44,6 +41,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     authorId: authorId,
     bodyBg: '',
     titleBg: '',
+    private: false,
     challenges: [
       {
         id: 'challenge-0',
@@ -74,13 +72,14 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
   const [submitErrorMessage, setSubmitErrorMessage] = useState<string[]>([]);
   const [editError, setEditError] = useState<boolean>(false);
   const [editMessage, setEditMessage] = useState<string>('');
+  const [tooManyGames, setTooManyGames] = useState(false);
 
   const { setSavedGames } = useContext(SavedGamesContext);
   const { singleGame, setSingleGame } = useContext(SingleGameContext);
 
   const [newGame, setNewGame] = useState<Game>(() => {
     let localStorageData: string | null = '';
-    if (localStorage) {
+    if (typeof localStorage !== 'undefined') {
       localStorageData = localStorage.getItem('newGameForm');
     }
     let gameData = defaultGameData;
@@ -128,6 +127,16 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
       });
     }
     saveForm(newGame);
+
+    const now = Date.now();
+    if (user.recentGameTimestamps) {
+      if (
+        user.recentGameTimestamps.length === 3 &&
+        now - user.recentGameTimestamps[0] < 86400000
+      ) {
+        setTooManyGames(true);
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newGame.id]);
 
@@ -364,7 +373,8 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
           setEditMessage(data.message);
         }
       } else {
-        const response = await fetch('/api/games', {
+        // /api/createGame directly adds to DB with DynamoDB SDK
+        const response = await fetch('/api/createGame', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newGame),
@@ -399,6 +409,37 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
   const minutes = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
   return (
     <>
+      {tooManyGames && (
+        <div
+          role='alert'
+          className='alert alert-error lg:max-w-2xl text-white bg-rose-900'
+        >
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            className='stroke-current shrink-0 h-6 w-6'
+            fill='none'
+            viewBox='0 0 24 24'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeWidth='2'
+              d='M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'
+            />
+          </svg>
+          <span data-test='tooManyGames-error'>
+            Only 3 games may be created per day. You can create another game in{' '}
+            {Number(
+              (86400000 - (Date.now() - user.recentGameTimestamps[0])) /
+                1000 /
+                60 /
+                60
+            ).toFixed(1)}{' '}
+            hours.
+          </span>
+        </div>
+      )}
+      {/* Update to <form action={...}> when this has been refactored to a server action */}
       <form>
         <div className='flex flex-col gap-12'>
           <div className='flex flex-col gap-4'>
@@ -577,6 +618,23 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
             </div>
           </>
 
+          <div className='form-control w-24'>
+            <label className='cursor-pointer label'>
+              <span>Private</span>
+              <input
+                type='checkbox'
+                className='checkbox checkbox-secondary'
+                checked={newGame.private}
+                onClick={() =>
+                  setNewGame((prevGame: Game) => ({
+                    ...prevGame,
+                    private: !prevGame.private,
+                  }))
+                }
+              />
+            </label>
+          </div>
+
           {/* Show by default on edit page */}
           {editGame === newGame.id && (
             <button
@@ -591,9 +649,11 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
           {/* Show by default on create page */}
           {!editGame && singleGame?.id !== newGame.id && (
             <button
+              // remove onClick when this is refactored to a server action
               onClick={handleSubmit}
               data-test='create-game'
               data-testid='create-game'
+              disabled={tooManyGames}
             >
               <span>Create Game</span>
             </button>

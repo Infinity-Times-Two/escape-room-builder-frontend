@@ -1,8 +1,5 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import {
-  DynamoDBDocumentClient,
-  PutCommand,
-} from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient, QueryCommand } from '@aws-sdk/lib-dynamodb';
 
 export async function GET(
   req: Request,
@@ -16,26 +13,28 @@ export async function GET(
   });
 
   const docClient = DynamoDBDocumentClient.from(dbClient);
+  const env = process.env.NODE_ENV === 'development' ? '-dev' : '-main';
+  const gamesTable = process.env.AWS_GAMES_TABLE_NAME + env;
 
-  const createNewUser = async (userId: string | null) => {
-    const command = new PutCommand({
-      TableName: process.env.AWS_TABLE_NAME,
-      Item: {
-        userId: userId,
-        savedGames: [],
-        createdGames: [],
-        isAdmin: false,
-        recentGameTimestamps: [],
+  const fetchUserGames = async (userId: string) => {
+    const command = new QueryCommand({
+      TableName: gamesTable,
+      IndexName: 'authorId-index',
+      KeyConditionExpression: 'authorId = :userId',
+      ExpressionAttributeValues: {
+        ':userId': userId,
       },
     });
     try {
       const response = await docClient.send(command);
       return response;
     } catch (error) {
+      console.log('There was an error: ', error);
       throw error;
     }
   };
 
-  const response = await createNewUser(params.userId);
+  const response = await fetchUserGames(params.userId);
+
   return Response.json(response);
 }

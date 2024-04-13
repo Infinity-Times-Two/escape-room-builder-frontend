@@ -16,6 +16,7 @@ const defaultContextValue: DBuserContextType = {
     savedGames: [],
     createdGames: [],
     isAdmin: false,
+    recentGameTimestamps: [],
   },
   setUser: () => {},
 };
@@ -30,6 +31,7 @@ const UserContextProvider = (props: PropsWithChildren<{}>) => {
     savedGames: [],
     createdGames: [],
     isAdmin: false,
+    recentGameTimestamps: [],
   });
 
   const value = useMemo(

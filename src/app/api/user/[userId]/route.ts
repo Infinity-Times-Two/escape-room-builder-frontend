@@ -1,15 +1,9 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
-import type { NextApiResponse } from 'next';
-
-type ResponseData = {
-  message: string;
-};
 
 export async function GET(
   req: Request,
   { params }: { params: { userId: string } },
-  res: NextApiResponse<ResponseData>
 ) {
   const dbClient = new DynamoDBClient({
     credentials: {

@@ -23,9 +23,10 @@ export default function Timer(props: { timeLeft: number }) {
       }
     }, 1000);
     const now = Date.now();
-    if (expiry < finishTime) {
+    if (timeRemaining <= 0) {
       router.push('/lose');
     }
+    console.table({'Time remaining: ': timeRemaining, 'Expiry': expiry, 'Finish time: ': finishTime})
     return () => clearTimeout(timer);
   });
 

@@ -10,10 +10,10 @@ describe('Navigation', () => {
   });
 
   it('should navigate to the play page, load games, and start a game while being signed-out', () => {
-    // Find a link with an href attribute containing "about" and click it
+    // Find a link with an href attribute containing "play" and click it
     cy.getByData('play').click();
 
-    // The new url should include "/about"
+    // The new url should include "/play"
     cy.url().should('include', '/play');
 
     // The new page should contain an h1 with "About"
@@ -22,9 +22,9 @@ describe('Navigation', () => {
     // Get the first game card
     cy.getByData('game-card-0').click();
 
-    // Shows a log-in
     cy.getByData('start-game').click();
 
+    // Should be on a challenge page (have a submit button)
     cy.get('button').should('contain.text', 'Submit');
   });
 });
@@ -136,6 +136,7 @@ describe('Game Creation and Editing while logged out', () => {
 
     cy.getByData('home-link').click();
     cy.getByData('play').click();
+    cy.getByData('your-rooms').click();
     cy.get('h3').contains('Test Game - edited');
   });
 });

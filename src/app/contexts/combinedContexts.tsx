@@ -13,17 +13,15 @@ const CompositeContextProvider: React.FC<CompositeContextProviderProps> = ({
   children,
 }) => {
   return (
-    <SavedGamesContextProvider>
-      <LoadedGamesContextProvider>
-        <SingleGameContextProvider>
-          <UserContextProvider>
-            <TimerContextProvider>
-              {children}
-            </TimerContextProvider>
-          </UserContextProvider>
-        </SingleGameContextProvider>
-      </LoadedGamesContextProvider>
-    </SavedGamesContextProvider>
+    <UserContextProvider>
+      <SavedGamesContextProvider>
+        <LoadedGamesContextProvider>
+          <SingleGameContextProvider>
+            <TimerContextProvider>{children}</TimerContextProvider>
+          </SingleGameContextProvider>
+        </LoadedGamesContextProvider>
+      </SavedGamesContextProvider>
+    </UserContextProvider>
   );
 };
 

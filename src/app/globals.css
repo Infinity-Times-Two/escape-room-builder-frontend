@@ -35,6 +35,15 @@ body {
   color: #fff;
 }
 
+.tabs-boxed .tab-active {
+  color: #fff !important;
+}
+
+.block-question {
+  display: inline-block;
+  padding: 8px;
+}
+
 @keyframes skeleton {
   from {
     background-position: -10000px 0;

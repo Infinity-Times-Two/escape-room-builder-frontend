@@ -33,6 +33,7 @@ export default function Header() {
           savedGames: data.savedGames,
           createdGames: data.createdGames,
           isAdmin: data.isAdmin,
+          recentGameTimestamps: data.recentGameTimestamps,
         });
         if (typeof data.firstName === 'undefined') {
           const firstName = await updateUser(id);
@@ -53,6 +54,7 @@ export default function Header() {
             savedGames: data.savedGames,
             createdGames: data.createdGames,
             isAdmin: data.isAdmin,
+            recentGameTimestamps: data.recentGameTimestamps,
           });
           return data;
         }
@@ -65,6 +67,7 @@ export default function Header() {
           savedGames: [],
           createdGames: [],
           isAdmin: false,
+          recentGameTimestamps: [],
         });
       }
     };

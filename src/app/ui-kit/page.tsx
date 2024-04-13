@@ -2,7 +2,6 @@ import GameCard from '../components/ui/GameCard';
 import Card from '../components/ui/Card';
 import Input from '../components/ui/Input';
 import TextArea from '../components/ui/TextArea';
-import Timer from '../components/ui/Timer';
 
 const room = {
   name: 'Game Card',
@@ -21,10 +20,10 @@ let formattedTime: { minutes: string; seconds: string } = {
   seconds: '37',
 };
 
-export default function About() {
+export default function UIKit() {
   return (
     <div className='flex flex-col items-center justify-start sm:mx-16 lg:mx-0 min-h-screen gap-16 border-x border-t pt-8 border-black'>
-      <h1>Style Guide</h1>
+      <h1>UI Kit</h1>
       <p className='text-xl px-4'>
         The UI is built with DaisyUI components customized with Tailwind CSS.
       </p>

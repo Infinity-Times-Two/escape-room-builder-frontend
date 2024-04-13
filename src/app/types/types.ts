@@ -8,6 +8,7 @@ export interface Game {
   authorId: string;
   titleBg: string;
   bodyBg: string;
+  private: boolean;
   challenges: Challenge[];
 }
 
@@ -26,4 +27,5 @@ export interface DBuser {
   savedGames: string[];
   createdGames: string[];
   isAdmin: boolean;
+  recentGameTimestamps: number[];
 }

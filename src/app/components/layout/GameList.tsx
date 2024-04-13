@@ -22,7 +22,6 @@ export default function GameList() {
     }
   }, [loadedGames, setLoadedGames]);
 
-  console.log(loadedGames);
   return (
     <div className='flex flex-col justify-center row-wrap max-w-7xl self-start gap-8'>
       <div className='overflow-x-auto'>
