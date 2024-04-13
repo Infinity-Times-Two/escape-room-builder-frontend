@@ -9,6 +9,7 @@ export async function GET(req: Request) {
       accessKeyId: process.env.DYNAMODB_ACCESS_KEY as string,
       secretAccessKey: process.env.DYNAMODB_SECRET_KEY as string,
     },
+    region: process.env.AWS_REGION
   });
 
   const docClient = DynamoDBDocumentClient.from(dbClient);
