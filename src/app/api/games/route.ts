@@ -1,4 +1,3 @@
-// Get public games with optional ?limit
 export const dynamic = 'force-dynamic'
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, ScanCommand } from '@aws-sdk/lib-dynamodb';
