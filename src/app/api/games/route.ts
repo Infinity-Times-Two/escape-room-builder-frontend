@@ -1,3 +1,4 @@
+'use server';
 // Get public games with optional ?limit
 
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
