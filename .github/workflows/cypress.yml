@@ -34,3 +34,4 @@ jobs:
           NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
           DEV_API: ${{ secrets.DEV_API }}
           PROD_API: ${{ secrets.PROD_API }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
