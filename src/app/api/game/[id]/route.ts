@@ -55,7 +55,7 @@ export async function PUT(
   try {
     const env = process.env.NODE_ENV === 'development' ? 'dev' : 'main';
     const response = await fetch(
-      `https://api-erb.cloudzack.com/dev/games/${gameId}`,
+      `https://api-erb.cloudzack.com/${env}/games/${gameId}`,
       {
         method: 'PUT',
         headers: {
@@ -94,7 +94,7 @@ export async function DELETE(
   try {
     const env = process.env.NODE_ENV === 'development' ? 'dev' : 'main';
     const response = await fetch(
-      `https://api-erb.cloudzack.com/dev/games/${gameId}`,
+      `https://api-erb.cloudzack.com/${env}/games/${gameId}`,
       {
         method: 'DELETE',
         headers: {
