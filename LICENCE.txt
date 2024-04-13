@@ -1,3 +1,7 @@
+Here's the ELI5: You can use this code and make it better, 
+but you have to share it if you do and include this licence 
+so that other people can do the same.
+
 GNU AFFERO GENERAL PUBLIC LICENSE
                        Version 3, 19 November 2007
 

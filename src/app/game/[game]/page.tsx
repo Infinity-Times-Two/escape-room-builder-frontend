@@ -14,7 +14,7 @@ import { colorVariants } from '@/app/components/ui/colorVariants';
 export default function PlayGame({ params }: { params: { game: string } }) {
   const { singleGame, setSingleGame } = useContext(SingleGameContext);
   const { savedGames, setSavedGames } = useContext(SavedGamesContext);
-  const { loadedGames } = useContext(LoadedGamesContext);
+  const { loadedGames, setLoadedGames } = useContext(LoadedGamesContext);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
@@ -132,6 +132,11 @@ export default function PlayGame({ params }: { params: { game: string } }) {
         localStorage.setItem('savedGames', JSON.stringify(newGames));
         return newGames;
       });
+      setLoadedGames((prevGames: Game[]) => {
+        const newGames = prevGames.filter((game) => game.id !== params.game);
+        localStorage.setItem('loadedGames', JSON.stringify(newGames))
+        return newGames;
+      })
     } catch (error) {
       return error;
     } finally {
