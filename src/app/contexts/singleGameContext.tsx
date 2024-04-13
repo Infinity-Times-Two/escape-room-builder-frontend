@@ -24,6 +24,7 @@ const defaultContextValue: SingleGameContextType = {
     authorId: '',
     bodyBg: '',
     titleBg: '',
+    private: false,
     challenges: [
       {
         id: 'challenge-1',
@@ -64,6 +65,7 @@ const SingleGameContextProvider = (props: PropsWithChildren<{}>) => {
     authorId: '',
     bodyBg: '',
     titleBg: '',
+    private: false,
     challenges: [
       {
         id: 'challenge-1',
