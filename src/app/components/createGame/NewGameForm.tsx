@@ -41,6 +41,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     authorId: authorId,
     bodyBg: '',
     titleBg: '',
+    private: false,
     challenges: [
       {
         id: 'challenge-0',
@@ -623,6 +624,13 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
               </div>
             </div>
           </>
+
+          <div className='form-control w-24'>
+            <label className='cursor-pointer label'>
+              <span>Private</span>
+              <input type='checkbox' className='checkbox checkbox-secondary' checked={newGame.private} onClick={() => setNewGame((prevGame: Game) => ({ ...prevGame, private: !prevGame.private }))} />
+            </label>
+          </div>
 
           {/* Show by default on edit page */}
           {editGame === newGame.id && (

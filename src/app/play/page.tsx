@@ -54,7 +54,7 @@ export default function Play() {
                     } sm:flex-row w-full justify-between border-b-2 -translate-x-1 -translate-y-1 hover:-translate-y-2 hover:-translate-x-2 transition-all`}
                   >
                     <div className='flex flex-col items-start'>
-                      <h3 className='text-xl'>{game.gameTitle}</h3>
+                      <h3 className='text-xl text-left'>{game.gameTitle}</h3>
                       <p className='text-xs text-neutral-500'>{game.author}</p>
                       {game.gameDescription && <p>{game.gameDescription}</p>}
                     </div>

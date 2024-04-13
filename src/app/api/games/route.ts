@@ -18,9 +18,17 @@ export async function GET(req: Request) {
   const fetchAllGames = async () => {
     const command = new ScanCommand({
       TableName: gamesTable,
+      FilterExpression: '#private = :privateValue OR attribute_not_exists(#private)',
+      ExpressionAttributeNames: {
+        '#private': 'private', 
+      },
+      ExpressionAttributeValues: {
+        ':privateValue': false, 
+      },
     });
     try {
       const response = await docClient.send(command);
+      console.log(response)
       return response;
     } catch (error) {
       console.log('There was an error: ', error);

@@ -8,6 +8,7 @@ export interface Game {
   authorId: string;
   titleBg: string;
   bodyBg: string;
+  private: boolean;
   challenges: Challenge[];
 }
 
