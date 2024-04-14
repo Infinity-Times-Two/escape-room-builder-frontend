@@ -9,17 +9,24 @@ const config: Config = {
   theme: {
     extend: {
       boxShadow: {
-        'DEFAULT': '2px 2px #000',
-        'xl': '4px 4px #000',
-      }
+        DEFAULT: '2px 2px #000',
+        xl: '4px 4px #000',
+      },
     },
   },
-  plugins: [require('daisyui')],
+  plugins: [require('daisyui'), require('@tailwindcss/container-queries')],
   daisyui: {
-    themes: ["light"],
+    themes: false,
+    logs: false,
   },
   safelist: [
-    'bg-yellow-50', 'bg-blue-50', 'bg-green-50', 'bg-red-50', 'bg-purple-50', 'bg-pink-50', 'bg-orange-50',
+    'bg-yellow-50',
+    'bg-blue-50',
+    'bg-green-50',
+    'bg-red-50',
+    'bg-purple-50',
+    'bg-pink-50',
+    'bg-orange-50',
   ],
 };
 export default config;

@@ -1,4 +1,5 @@
-import { useState, createContext, useMemo, PropsWithChildren, Dispatch, SetStateAction } from 'react';
+'use client';
+import { useState, createContext, useMemo, PropsWithChildren } from 'react';
 
 type TimerContextType = {
   expiry: number;
@@ -8,7 +9,7 @@ type TimerContextType = {
 };
 
 const TimerContext = createContext<TimerContextType>({
-  expiry: 0, // provide a default value
+  expiry: 0, 
   setExpiry: () => {},
   finishTime: 0,
   setFinishTime: () => {},

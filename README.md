@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h1 align="center">Escape Room Builder</h1>
 
-## Getting Started
+<h2 align="center">Create and Share Escape Rooms</h2>
 
-First, run the development server:
+<p align="center"><a href="https://cloud.cypress.io/projects/f968uc/runs"><img src="https://img.shields.io/endpoint?url=https://cloud.cypress.io/badge/detailed/f968uc&style=flat&logo=cypress" /></a><a href="https://codecov.io/gh/Infinity-Times-Two/escape-room-builder-frontend" > 
+ <img src="https://codecov.io/gh/Infinity-Times-Two/escape-room-builder-frontend/graph/badge.svg?token=USH6GNBN4U"/> 
+ </a></p>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Escape Room Builder is a full-stack web app that allows users to create and play escape rooms. Logged-out users may browse public escape rooms by other users, and create and play their own - the data is saved to local storage on their device. Users may optionally log in to save their escape rooms so they can be shared publically and across devices.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Front-End (this repo)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Author: [James Keezer](https://github.com/Jamesllllllllll)
 
-## Learn More
+- [NextJS](https://nextjs.org) - Framework
+- [Typescript](https://www.typescriptlang.org/) - Lanugage
+- [Cypress](https://www.cypress.io/) - Testing
+- [GitHub Actions](https://docs.github.com/en/actions) - CI
+- [Clerk](https://clerk.com) - Authentication
+- [DaisyUI](https://daisyui.com/) - UI Components
+- [Tailwind](https://tailwindcss.com) - CSS
+- [Vercel](https://vercel.com) - Hosting
 
-To learn more about Next.js, take a look at the following resources:
+### Back-End
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Author: [Zackry Langford](https://github.com/zackrylangford)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- [API Gateway](https://aws.amazon.com/api-gateway/) - REST API
+- [DynamoDB](https://aws.amazon.com/dynamodb/) - Database
+- [Lambda](https://aws.amazon.com/lambda/) - Serverless Compute
+- [Python 3.10](https://www.python.org/) - Language

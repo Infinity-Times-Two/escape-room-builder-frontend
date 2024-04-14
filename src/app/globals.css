@@ -10,6 +10,7 @@
   --btn-red-bg: hsl(0, 100%, 96%);
   --light-red: hsl(0, 100%, 96%);
   --dark-red: hsl(0, 58%, 27%);
+  --tooltip-color: #c22525;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -22,32 +23,47 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: #fff8f0;
+  @apply bg-indigo-50;
   font-family: var(--font-cabin);
 }
 
-header {
-  background-color: hsl(32, 100%, 94%);
+.card:has(div.bg-red-100) {
+  background-color: rgb(254, 226, 226);
 }
 
-/* Patterned background experiment:
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background-color: #fff8f0;
-background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff2e3' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+.tooltip-primary::before {
+  color: #fff;
 }
 
-header {
-  background-color: #fff2e3;
-background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff8f0' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+.tabs-boxed .tab-active {
+  color: #fff !important;
 }
 
-*/
+.block-question {
+  display: inline-block;
+  padding: 8px;
+}
+
+@keyframes skeleton {
+  from {
+    background-position: -10000px 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
+.skel {
+  border-radius: 10px;
+  background-color: #dfdbe5;
+  background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.25'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  will-change: background-position;
+  animation: skeleton 180s linear infinite;
+}
 
 p {
-  font-weight: 600;
-  @apply tracking-wide
+  font-weight: 500;
+  @apply tracking-wide;
 }
 
 a:hover {
@@ -56,15 +72,22 @@ a:hover {
   text-underline-offset: 3px;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   @apply font-semibold tracking-wider;
   font-family: var(--font-work-sans);
   text-transform: uppercase;
   font-weight: bold;
+  text-align: center;
 }
 
 h1 {
   font-size: 48px;
+  margin-inline: 12px;
 }
 
 h2 {
@@ -75,13 +98,71 @@ h3 {
   font-size: 32px;
 }
 
+.header {
+  background: linear-gradient(233deg, #e56420, #c22525, #3d9c31, #37bbde);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-animation: hue-rotate 20s linear infinite;
+          animation: hue-rotate 20s linear infinite;
+  display: inline-block;
+}
+
+.cl-avatarBox {
+  width: 48px;
+  height: 48px;
+}
+
+@-webkit-keyframes hue-rotate {
+  from {
+    -webkit-filter: hue-rotate(0);
+    -moz-filter: hue-rotate(0);
+    -ms-filter: hue-rotate(0);
+    filter: hue-rotate(0);
+  }
+  to {
+    -webkit-filter: hue-rotate(360deg);
+    -moz-filter: hue-rotate(360deg);
+    -ms-filter: hue-rotate(360deg);
+    filter: hue-rotate(360deg);
+  }
+}
+
+@keyframes hue-rotate {
+  from {
+    -webkit-filter: hue-rotate(0);
+    -moz-filter: hue-rotate(0);
+    -ms-filter: hue-rotate(0);
+    filter: hue-rotate(0);
+  }
+  to {
+    -webkit-filter: hue-rotate(360deg);
+    -moz-filter: hue-rotate(360deg);
+    -ms-filter: hue-rotate(360deg);
+    filter: hue-rotate(360deg);
+  }
+}
+
 button {
-  @apply rounded-md bg-black font-semibold m-2;
+  @apply rounded-md bg-black font-semibold m-2 self-center;
   font-family: var(--font-work-sans);
+}
+
+button:disabled {
+  @apply bg-gray-500;
+}
+
+button:disabled > span {
+  @apply bg-gray-300 text-gray-500 border-gray-500 hover:-translate-y-0.5 hover:-translate-x-0.5;
 }
 
 button > span {
   @apply block -translate-x-0.5 -translate-y-0.5 rounded-md border-2 border-black bg-white py-3 px-7 text-lg uppercase tracking-wider hover:-translate-y-1 hover:-translate-x-1 transition-all;
+}
+
+button > span:active {
+  @apply translate-x-0 translate-y-0;
 }
 
 button.xl > span {
@@ -105,12 +186,12 @@ button.red > span {
 }
 
 div.badge {
-  @apply block h-8 rounded-full bg-black font-semibold m-2 p-0 border-0 w-max;
+  @apply block h-8 rounded-full bg-black font-semibold m-2 p-0 border-0 w-max text-center;
   font-family: var(--font-work-sans);
 }
 
 div.badge > span {
-  @apply block -translate-x-1 -translate-y-1 rounded-full bg-white text-black border-2 border-black py-1 px-8 uppercase tracking-wider cursor-pointer;
+  @apply min-h-8 min-w-24 block -translate-x-1 -translate-y-1 rounded-full bg-white text-black border-2 border-black py-1 px-8 uppercase tracking-wider cursor-pointer;
 }
 
 div.badge.red {
@@ -124,7 +205,7 @@ div.badge.red > span {
 }
 
 div.badge.red > span:hover {
-  background-color:hsl(0, 100%, 94%)
+  background-color: hsl(0, 100%, 94%);
 }
 
 div.badge.blue {
@@ -138,7 +219,7 @@ div.badge.blue > span {
 }
 
 div.badge.blue > span:hover {
-  background-color:hsl(227, 100%, 88%)
+  background-color: hsl(227, 100%, 88%);
 }
 
 div.badge.orange {
@@ -152,11 +233,21 @@ div.badge.orange > span {
 }
 
 div.badge.orange > span:hover {
-  background-color:hsl(32, 100%, 88%)
+  background-color: hsl(32, 100%, 88%);
 }
 
 div.chip {
   @apply block rounded-full bg-white w-max text-black text-2xl font-semibold border-2 border-black py-1.5 px-9 tracking-wider;
+  font-family: var(--font-work-sans);
+}
+
+div.chip {
+  @apply block rounded-full bg-white w-max text-black text-2xl font-semibold border-2 border-black py-1.5 px-9 tracking-wider;
+  font-family: var(--font-work-sans);
+}
+
+.skel.chip {
+  @apply block rounded-full bg-white w-max text-black text-2xl font-semibold border-2 border-gray-200 py-1.5 px-9 tracking-wider;
   font-family: var(--font-work-sans);
 }
 
