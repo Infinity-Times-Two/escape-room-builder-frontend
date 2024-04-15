@@ -235,30 +235,6 @@ export default function FillInTheBlankChallenge({
   return (
     <div className='flex flex-col gap-2 items-center max-w-full'>
       <Card>
-        <div className='flex flex-row gap-2 flex-wrap justify-center'>
-          {removedWords.map((word: Word) => (
-            <div
-              key={word.index}
-              className={`badge orange ${word.hidden ? `invisible` : ''}`}
-              onClick={() => handleClueClick(word)}
-            >
-              <span>{word.word}</span>
-            </div>
-          ))}
-          {loading && (
-            // <div className='flex flex-row flex-wrap gap-y-4 gap-x-8 justify-center'>
-            <>
-              <div className='skel h-8 w-32 m-2'></div>
-              <div className='skel h-8 w-32 m-2'></div>
-              <div className='skel h-8 w-32 m-2'></div>
-              <div className='skel h-8 w-32 m-2'></div>
-              <div className='skel h-8 w-32 m-2``'></div>
-            </>
-            // </div>
-          )}
-        </div>
-      </Card>
-      <Card>
         <div className='flex flex-row flex-wrap justify-center items-center'>
           {!loading &&
             answer.map((word: Word) =>
@@ -268,7 +244,12 @@ export default function FillInTheBlankChallenge({
                     <span>{' ' /* one of the "blanks" to be filled */}</span>
                   </div>
                 ) : (
-                  <span className={`text-xl ${word.word.match(punctuationRegex) ? `mr-1` : `mx-1`} font-bold`} key={word.index}>
+                  <span
+                    className={`text-xl ${
+                      word.word.match(punctuationRegex) ? `mr-1` : `mx-1`
+                    } font-bold`}
+                    key={word.index}
+                  >
                     {word.word /* a regular word in the answer */}
                   </span>
                 )
@@ -295,6 +276,31 @@ export default function FillInTheBlankChallenge({
               <div className='skel h-8 w-20'></div>
               <div className='skel h-8 w-28'></div>
             </div>
+          )}
+        </div>
+      </Card>
+      <Card>
+        <p className='text-sm mb-2'>Choose the correct word(s):</p>
+        <div className='flex flex-row gap-2 flex-wrap justify-center'>
+          {removedWords.map((word: Word) => (
+            <div
+              key={word.index}
+              className={`badge orange ${word.hidden ? `invisible` : ''}`}
+              onClick={() => handleClueClick(word)}
+            >
+              <span>{word.word}</span>
+            </div>
+          ))}
+          {loading && (
+            // <div className='flex flex-row flex-wrap gap-y-4 gap-x-8 justify-center'>
+            <>
+              <div className='skel h-8 w-32 m-2'></div>
+              <div className='skel h-8 w-32 m-2'></div>
+              <div className='skel h-8 w-32 m-2'></div>
+              <div className='skel h-8 w-32 m-2'></div>
+              <div className='skel h-8 w-32 m-2``'></div>
+            </>
+            // </div>
           )}
         </div>
       </Card>

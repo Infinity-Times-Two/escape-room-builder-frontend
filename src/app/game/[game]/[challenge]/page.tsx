@@ -3,7 +3,7 @@ import { useContext, useEffect } from 'react';
 import { SingleGameContext } from '@/app/contexts/singleGameContext';
 import TriviaChallenge from '@/app/components/challenges/Trivia';
 import WordScrambleChallenge from '@/app/components/challenges/WordScramble';
-import CaesarCypherChallenge from '@/app/components/challenges/CaesarCypher';
+import CaesarCipherChallenge from '@/app/components/challenges/CaesarCipher';
 import FillInTheBlankChallenge from '@/app/components/challenges/FillInTheBlank';
 import { Challenge, Game } from '@/app/types/types';
 
@@ -18,17 +18,15 @@ const SingleChallenge: React.FC<SingleChallengeProps> = ({
   nextChallenge,
   singleGame,
 }) => {
-  const challengeType = currentChallenge.type.toLowerCase().replace(" ", "-");
+  const challengeType = currentChallenge.type.toLowerCase().replace(' ', '-');
   switch (challengeType) {
     case 'trivia': {
       return (
-        <>
-          <TriviaChallenge
-            currentChallenge={currentChallenge}
-            nextChallenge={nextChallenge}
-            currentGame={singleGame}
-          />
-        </>
+        <TriviaChallenge
+          currentChallenge={currentChallenge}
+          nextChallenge={nextChallenge}
+          currentGame={singleGame}
+        />
       );
     }
     case 'word-scramble': {
@@ -40,9 +38,9 @@ const SingleChallenge: React.FC<SingleChallengeProps> = ({
         />
       );
     }
-    case 'caesar-cypher': {
+    case 'caesar-cipher': {
       return (
-        <CaesarCypherChallenge
+        <CaesarCipherChallenge
           currentChallenge={currentChallenge}
           nextChallenge={nextChallenge}
           currentGame={singleGame}
@@ -99,9 +97,8 @@ export default function ChallengePage({
 
   return (
     <div className='pt-16 sm:pt-0'>
-      <h2 className='mb-8'>
-        {currentChallenge?.type.replace("-", " ")}: {currentChallenge?.description}
-      </h2>
+      <h2 className='mb-8 leading-10'>{currentChallenge?.type.replace('-', ' ')}: </h2>
+      <p className='mb-4 text-center'> {currentChallenge?.description}</p>
       <SingleChallenge
         currentChallenge={currentChallenge}
         nextChallenge={nextChallenge}

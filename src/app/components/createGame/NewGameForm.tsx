@@ -18,18 +18,6 @@ import NewChallenge from './NewChallenge';
 
 export default function NewGameForm({ editGame }: { editGame?: string }) {
   const { user } = useContext(UserContext);
-  let author: string;
-  if (user.firstName === '') {
-    author = 'Anonymous';
-  } else {
-    author = user.firstName;
-  }
-  let authorId: string;
-  if (user.id === '') {
-    authorId = '';
-  } else {
-    authorId = user.id;
-  }
 
   const defaultGameData = {
     id: '',
@@ -37,8 +25,8 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     gameDescription: '',
     timeLimit: 900,
     theme: '',
-    author: author,
-    authorId: authorId,
+    author: user.firstName,
+    authorId: user.id,
     bodyBg: '',
     titleBg: '',
     private: false,
@@ -52,7 +40,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
       },
       {
         id: 'challenge-1',
-        type: 'caesar-cypher',
+        type: 'caesar-cipher',
         description: '',
         clue: '',
         answer: '',
@@ -77,20 +65,57 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
   const { setSavedGames } = useContext(SavedGamesContext);
   const { singleGame, setSingleGame } = useContext(SingleGameContext);
 
-  const [newGame, setNewGame] = useState<Game>(() => {
-    let localStorageData: string | null = '';
-    if (typeof localStorage !== 'undefined') {
-      localStorageData = localStorage.getItem('newGameForm');
+  const [newGame, setNewGame] = useState<Game>(defaultGameData);
+
+  useEffect(() => {
+    if (newGame.id === '') {
+      let localStorageData: string | null = '';
+
+      if (typeof window !== 'undefined') {
+        localStorageData = localStorage.getItem('newGameForm');
+      }
+      let gameData: Game = defaultGameData;
+
+      if (localStorageData) {
+        gameData = JSON.parse(localStorageData);
+        setNewGame(gameData);
+      } else if (editGame === singleGame.id) {
+        gameData = singleGame;
+        setNewGame(gameData);
+        saveForm(gameData);
+      } else {
+        if (user.firstName === '') {
+          gameData.author = 'Anonymous';
+        } else {
+          gameData.author = user.firstName;
+        }
+        if (user.id === '') {
+          gameData.authorId = 'noAuthorId';
+        } else {
+          gameData.authorId = user.id;
+        }
+        if (newGame.id === '') {
+          gameData.id = uuidv4();
+        }
+        if (newGame.bodyBg === '') {
+          const colours = [
+            'red',
+            'blue',
+            'yellow',
+            'green',
+            'orange',
+            'purple',
+          ];
+          const bodybgIndex = Math.floor(Math.random() * 6);
+          const titlebgIndex = Math.floor(Math.random() * 6);
+          gameData.bodyBg = colours[bodybgIndex];
+          gameData.titleBg = colours[titlebgIndex];
+        }
+        setNewGame(gameData);
+        saveForm(gameData);
+      }
     }
-    let gameData = defaultGameData;
-    if (localStorageData) {
-      gameData = JSON.parse(localStorageData);
-    }
-    if (editGame === singleGame.id) {
-      return singleGame;
-    }
-    return localStorageData ? gameData : defaultGameData;
-  });
+  }, [user.id, newGame.id]);
 
   // Reusable function to save form to localStorage
   const saveForm = (updatedGame: Game) => {
@@ -99,35 +124,6 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
 
   // Set game ID and colours when loading a new form
   useEffect(() => {
-    if (!editGame) {
-      setSingleGame((prevGame: Game) => {
-        const newGame = { ...prevGame, id: '' };
-        return newGame;
-      });
-    }
-    if (newGame.id === '') {
-      const newId = uuidv4();
-      setNewGame((prevGame: Game) => {
-        const newGame = { ...prevGame, id: newId };
-        return newGame;
-      });
-    }
-
-    if (newGame.bodyBg === '') {
-      const colours = ['red', 'blue', 'yellow', 'green', 'orange', 'purple'];
-      const bodybgIndex = Math.floor(Math.random() * 6);
-      const titlebgIndex = Math.floor(Math.random() * 6);
-      setNewGame((prevGame: Game) => {
-        const newGame = {
-          ...prevGame,
-          bodyBg: colours[bodybgIndex],
-          titleBg: colours[titlebgIndex],
-        };
-        return newGame;
-      });
-    }
-    saveForm(newGame);
-
     const now = Date.now();
     if (user.recentGameTimestamps && !user.isAdmin) {
       if (
@@ -182,7 +178,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     let clue: string | string[];
     // Array clues come from the actual value passed to onClueChange, not the event target
     if (
-      type === 'caesar-cypher' ||
+      type === 'caesar-cipher' ||
       type === 'word-scramble' ||
       type === 'fill-in-the-blank'
     ) {
@@ -357,15 +353,12 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     if (user.id !== '') {
       if (editGame) {
         setEditError(false);
-        console.log('Editing game in DB...');
         const response = await fetch(`/api/game/${editGame}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newGame),
         });
         const data = await response.json();
-        console.log('Response from saving edited game to DB:');
-        console.log(data);
         if (data.message === 'Game updated successfully') {
           setEditMessage('Your game was updated successfully!');
         } else {
@@ -380,8 +373,6 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
           body: JSON.stringify(newGame),
         });
         const data = await response.json();
-        console.log('Response from saving to DB:');
-        console.log(data);
       }
     }
 
@@ -393,16 +384,16 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
         body: JSON.stringify({ savedGame: newGame.id }),
       });
       const data = await response.json();
-      console.log("Response from adding game to user's saved games in DB:");
-      console.log(data);
     }
   };
 
   // Reset the current game form
   const handleReset = (e: any) => {
     e.preventDefault();
+    localStorage.removeItem('newGameForm');
     setSubmitError(false);
     setSubmitErrorMessage([]);
+    saveForm(defaultGameData)
     setNewGame(defaultGameData);
   };
 
@@ -567,15 +558,15 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
                     />
                   </div>
                   <div className='flex flex-row-reverse justify-end gap-2'>
-                    <label htmlFor='caesarCypher'>Caesar Cypher</label>
+                    <label htmlFor='caesarcipher'>Caesar Cipher</label>
                     <input
                       type='radio'
                       name='challengeType'
-                      id='caesarCypher'
-                      value='caesar-cypher'
+                      id='caesarcipher'
+                      value='caesar-cipher'
                       className='radio radio-primary'
                       onChange={handleNextChallenge}
-                      checked={nextChallenge === 'caesar-cypher'}
+                      checked={nextChallenge === 'caesar-cipher'}
                     />
                   </div>
                   <div className='flex flex-row-reverse justify-end gap-2'>
@@ -625,7 +616,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
                 type='checkbox'
                 className='checkbox checkbox-secondary'
                 checked={newGame.private}
-                onClick={() =>
+                onChange={() =>
                   setNewGame((prevGame: Game) => ({
                     ...prevGame,
                     private: !prevGame.private,
@@ -698,7 +689,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
           )}
 
           {/* Show after creating game or after editing game*/}
-          {singleGame?.id === newGame.id && (
+          {(singleGame?.id === newGame.id) && (newGame.id !== '') && (
             <Link
               key={newGame.id}
               href={`/game/${newGame.id}`}

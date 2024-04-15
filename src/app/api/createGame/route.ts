@@ -8,8 +8,8 @@ import {
 import { Game } from '../../types/types'
 
 export async function POST(req: Request) {
-  const newGame = await req.json();
-
+  const newGame: Game = await req.json();
+  console.log('newGame: ', newGame)
   const dbClient = new DynamoDBClient({
     credentials: {
       accessKeyId: process.env.DYNAMODB_ACCESS_KEY as string,
@@ -22,16 +22,18 @@ export async function POST(req: Request) {
   const gamesTable = process.env.AWS_GAMES_TABLE_NAME + env;
 
   const createNewGame = async (game: Game) => {
+    console.log('Item: ', game)
     const command = new PutCommand({
       TableName: gamesTable,
       Item: game,
     });
     try {
       const response = await docClient.send(command);
+      console.log('response: ', response)
       return response;
     } catch (error) {
-      console.log('There was an error: ', error);
-      throw error;
+      console.log('There was an error in createNewGame(): ', error);
+      return Response.json(`There was error in createNewGame(): ${error}`);
     }
   };
 
@@ -41,7 +43,7 @@ export async function POST(req: Request) {
   // Front-end will not allow a user to create more than 3 games in a 24 hour period
   // The first timestamp in the array is the oldest
   const updateUser = async (userId: string) => {
-    console.log('Adding timestamp to recentGameTimestamps');
+    console.log('Adding timestamp to recentGameTimestamps for userId: ', userId);
 
     try {
       // Fetch the item from DynamoDB containing the list
@@ -51,11 +53,12 @@ export async function POST(req: Request) {
           Key: { userId: userId },
         })
       );
+
       if (!user.Item) {
         return 'User not found';
       }
 
-      // Extract the savedGames list from the fetched item
+      // Get the savedGames list from the fetched item
       const recentGameTimestamps: number[] =
         user.Item.recentGameTimestamps || [];
 
@@ -77,9 +80,10 @@ export async function POST(req: Request) {
       });
 
       const response = await docClient.send(command);
+      console.log('response from adding timestamp: ', response)
       return response;
     } catch (error) {
-      return Response.json(`There was error: ${error}`);
+      return Response.json(`There was error updating timestamps: ${error}`);
     }
   };
   const updateTimestampsResponse = await updateUser(newGame.authorId);

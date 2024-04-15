@@ -23,7 +23,7 @@ export const encrypt = (answer: string | undefined, seed: number) => {
   return encryptedWord.toString().toLowerCase().replaceAll(',', '');
 };
 
-export default function CaesarCypherChallenge({
+export default function CaesarCipherChallenge({
   index,
   clue,
   description,
@@ -176,21 +176,21 @@ export default function CaesarCypherChallenge({
           </div>
         )}
       </div>
-      <label htmlFor={`challenge-caesar-cypher-clue-${index}`}>
+      <label htmlFor={`challenge-caesar-cipher-clue-${index}`}>
         Encrypted clue:
       </label>
       <Input
-        fieldType={`challenge-caesar-cypher-clue-${index}`}
+        fieldType={`challenge-caesar-cipher-clue-${index}`}
         value={encryptedClue.toString().replaceAll(',', '')}
         onChange={onClueChange}
         placeholder=''
         onKeyDown={handleKeyDown}
-        key={`challenge-caesar-cypher-clue-${index}`}
+        key={`challenge-caesar-cipher-clue-${index}`}
         aria-disabled
         dataTest={`${dataTest}-clue`}
         submitError={submitError}
       />
-      <RemoveButton onRemove={onRemove} testId={`remove-caesar-cypher-${index}`}/>
+      <RemoveButton onRemove={onRemove} testId={`remove-caesar-cipher-${index}`}/>
     </div>
   );
 }

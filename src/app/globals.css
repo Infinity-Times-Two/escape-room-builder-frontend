@@ -25,6 +25,7 @@ body {
   color: rgb(var(--foreground-rgb));
   @apply bg-indigo-50;
   font-family: var(--font-cabin);
+  font-size: 18px;
 }
 
 .card:has(div.bg-red-100) {
@@ -237,12 +238,7 @@ div.badge.orange > span:hover {
 }
 
 div.chip {
-  @apply block rounded-full bg-white w-max text-black text-2xl font-semibold border-2 border-black py-1.5 px-9 tracking-wider;
-  font-family: var(--font-work-sans);
-}
-
-div.chip {
-  @apply block rounded-full bg-white w-max text-black text-2xl font-semibold border-2 border-black py-1.5 px-9 tracking-wider;
+  @apply block rounded-full bg-white w-max text-black font-semibold border-2 border-black py-1.5 px-9 tracking-wider;
   font-family: var(--font-work-sans);
 }
 
