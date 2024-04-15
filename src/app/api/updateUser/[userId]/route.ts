@@ -42,7 +42,7 @@ export async function GET(
   };
 
   const response = await updateUser(params.userId);
-  return Response.json(response);
+  return Response.json(firstName);
 }
 
 // Updates a user's saved games

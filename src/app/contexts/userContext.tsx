@@ -12,7 +12,6 @@ const defaultContextValue: DBuserContextType = {
   user: {
     id: '',
     firstName: '',
-    nickName: '',
     savedGames: [],
     createdGames: [],
     isAdmin: false,
@@ -27,7 +26,6 @@ const UserContextProvider = (props: PropsWithChildren<{}>) => {
   const [user, setUser] = useState<DBuser>({
     id: '',
     firstName: '',
-    nickName: '',
     savedGames: [],
     createdGames: [],
     isAdmin: false,
