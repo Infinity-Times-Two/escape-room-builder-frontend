@@ -132,7 +132,7 @@ describe('Game Creation and Editing while logged out', () => {
     cy.get('h2').contains('edited');
 
     cy.getByData('start-game').click();
-    cy.get('h2').contains('Trivia question #1');
+    cy.get('p').contains('Trivia question #1');
 
     cy.getByData('home-link').click();
     cy.getByData('play').click();
