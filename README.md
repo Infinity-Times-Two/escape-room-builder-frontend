@@ -16,7 +16,7 @@ Author: [James Keezer](https://github.com/Jamesllllllllll)
 
 - [NextJS](https://nextjs.org) - Framework
 - [Typescript](https://www.typescriptlang.org/) - Lanugage
-- [Cypress](https://www.cypress.io/) - Testing
+- [Cypress](https://www.cypress.io/) & [Jest](https://jestjs.io/) - Testing
 - [GitHub Actions](https://docs.github.com/en/actions) - CI
 - [Clerk](https://clerk.com) - Authentication
 - [DaisyUI](https://daisyui.com/) - UI Components
