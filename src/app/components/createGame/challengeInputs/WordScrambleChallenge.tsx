@@ -83,7 +83,7 @@ export default function WordScrambleChallenge({
       setWords(clue);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [clue]);
 
   useEffect(() => {
     setError(false);

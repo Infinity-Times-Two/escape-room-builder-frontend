@@ -1,11 +1,11 @@
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import { render } from '@testing-library/react';
-import { encrypt } from '../components/createGame/challengeInputs/CaesarCypherChallenge';
+import { encrypt } from '../components/createGame/challengeInputs/CaesarCipherChallenge';
 import { shuffleWords } from '../components/createGame/challengeInputs/WordScrambleChallenge';
 import WordScrambleChallenge from '../components/createGame/challengeInputs/WordScrambleChallenge';
 
-describe('Caesar Cypher encryptor', () => {
+describe('Caesar Cipher encryptor', () => {
   it('encrypts a string', () => {
     const clue = 'apple banana';
     const seed = 4;

@@ -16,7 +16,7 @@ describe('Navigation', () => {
     // The new url should include "/play"
     cy.url().should('include', '/play');
 
-    // The new page should contain an h1 with "About"
+    // The new page should contain an h1 with "Play"
     cy.get('h1').contains('Play');
 
     // Get the first game card
@@ -71,10 +71,10 @@ describe('Game Creation and Editing while logged out', () => {
       'Trivia answer #1'
     );
 
-    // Test Caesar Cypher input
-    cy.getByData('challenge-1-caesar-cypher-answer').type('Encrypt this clue');
+    // Test Caesar cipher input
+    cy.getByData('challenge-1-caesar-cipher-answer').type('Encrypt this clue');
     cy.getByData('1-encrypt-button').click();
-    cy.getByData('challenge-1-caesar-cypher-clue').should('not.have.value', '');
+    cy.getByData('challenge-1-caesar-cipher-clue').should('not.have.value', '');
 
     // Test Word Scramble input
     cy.getByData('challenge-2-word-scramble-answer').type(
@@ -132,7 +132,7 @@ describe('Game Creation and Editing while logged out', () => {
     cy.get('h2').contains('edited');
 
     cy.getByData('start-game').click();
-    cy.get('h2').contains('Trivia question #1');
+    cy.get('p').contains('Trivia question #1');
 
     cy.getByData('home-link').click();
     cy.getByData('play').click();

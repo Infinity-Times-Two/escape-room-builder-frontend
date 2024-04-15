@@ -201,7 +201,7 @@ export default function PlayGame({ params }: { params: { game: string } }) {
             <>
               <h2>{singleGame.gameTitle}</h2>
               <p>{singleGame.gameDescription}</p>
-              <div className='flex flex-row justify-center gap-8'>
+              <div className='flex flex-row flex-wrap justify-center gap-8'>
                 {showEdit && (
                   <Link href={`/edit/${singleGame.id}`} data-test='edit-game'>
                     <button className='xl'>
@@ -223,7 +223,7 @@ export default function PlayGame({ params }: { params: { game: string } }) {
                   </button>
                 </Link>
               </div>
-              <div className='flex flex-row gap-8'>
+              <div className='flex flex-row flex-wrap justify-center gap-x-8'>
                 <div className='badge'>
                   <span className='text-nowrap'>
                     {singleGame.challenges.length}{' '}

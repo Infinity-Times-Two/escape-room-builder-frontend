@@ -50,6 +50,7 @@ export default function WordScrambleChallenge({
   return (
     <div className='flex flex-col gap-2 items-center max-w-full'>
       <Card>
+        <p className='text-sm mb-2'>Clues:</p>
         <div className='flex flex-row gap-2 flex-wrap justify-center'>
           {Array.isArray(currentChallenge.clue) &&
             clues.map(
@@ -77,6 +78,7 @@ export default function WordScrambleChallenge({
         </div>
       </Card>
       <Card>
+        <p className='text-sm mb-2'>Your answer:</p>
         <div className='flex flex-row gap-2 flex-wrap justify-center'>
           {answer &&
             answer.map((word: string, answerIndex: number) => (

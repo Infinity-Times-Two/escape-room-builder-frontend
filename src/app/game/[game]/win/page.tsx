@@ -22,7 +22,7 @@ export default function Win() {
       <h1>You win!</h1>
       <h2>Game Stats:</h2>
       <div className='chip'>
-        <span>
+        <span className='text-lg'>
           Time remaining: {formattedTime.minutes + 'm ' + formattedTime.seconds + 's'}
         </span>
       </div>

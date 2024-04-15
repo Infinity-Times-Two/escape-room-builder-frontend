@@ -45,7 +45,7 @@ const SavedGamesContextProvider = (props: PropsWithChildren<{}>) => {
     } else {
       setLoadingSavedGames(false);
     }
-  }, [user.id]);
+  }, [user]);
 
   const value = useMemo(
     () => ({
