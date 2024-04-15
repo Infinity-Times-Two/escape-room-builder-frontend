@@ -373,6 +373,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
           body: JSON.stringify(newGame),
         });
         const data = await response.json();
+        console.log('response from createGame: ', data)
       }
     }
 
@@ -384,6 +385,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
         body: JSON.stringify({ savedGame: newGame.id }),
       });
       const data = await response.json();
+      console.log('response from adding game to saved games array: ', data)
     }
   };
 
