@@ -30,7 +30,7 @@ const SavedGamesContextProvider = (props: PropsWithChildren<{}>) => {
   const { user } = useContext(UserContext);
 
   useEffect(() => {
-    console.log('user: ', user);
+    // console.log('user: ', user);
     const fetchData = async () => {
       setLoadingSavedGames(true);
       const response = await fetch(`/api/games/${user.id}`);

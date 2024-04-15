@@ -15,11 +15,11 @@ export default function Header() {
       const data = await response.json();
       return data;
     };
-
+       
     const updateUser = async (userId: string | undefined) => {
       const response = await fetch(`/api/updateUser/${userId}`);
       const data = await response.json();
-      return data;
+      return data.Attributes.firstName;
     };
 
     const fetchUser = async (id: string | undefined | null) => {
@@ -29,7 +29,6 @@ export default function Header() {
         setUser({
           id: data.userId,
           firstName: data.firstName,
-          nickName: data.nickName,
           savedGames: data.savedGames,
           createdGames: data.createdGames,
           isAdmin: data.isAdmin,
@@ -50,7 +49,6 @@ export default function Header() {
           setUser({
             id: data.userId,
             firstName: data.firstName,
-            nickName: data.nickName,
             savedGames: data.savedGames,
             createdGames: data.createdGames,
             isAdmin: data.isAdmin,
@@ -63,7 +61,6 @@ export default function Header() {
         setUser({
           id: '',
           firstName: '',
-          nickName: '',
           savedGames: [],
           createdGames: [],
           isAdmin: false,

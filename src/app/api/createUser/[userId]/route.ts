@@ -3,7 +3,7 @@ import {
   DynamoDBDocumentClient,
   PutCommand,
 } from '@aws-sdk/lib-dynamodb';
-
+import { DBuser } from '@/app/types/types';
 export async function GET(
   req: Request,
   { params }: { params: { userId: string } }
@@ -22,6 +22,7 @@ export async function GET(
       TableName: process.env.AWS_TABLE_NAME,
       Item: {
         userId: userId,
+        firstName: '',
         savedGames: [],
         createdGames: [],
         isAdmin: false,

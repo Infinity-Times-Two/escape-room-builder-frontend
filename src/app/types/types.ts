@@ -23,7 +23,6 @@ export interface Challenge {
 export interface DBuser {
   id: string;
   firstName: string;
-  nickName: string;
   savedGames: string[];
   createdGames: string[];
   isAdmin: boolean;
