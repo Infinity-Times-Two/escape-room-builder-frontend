@@ -9,7 +9,7 @@ export default function Card({
 }) {
 
   return (
-    <div className='w-full sm:mx-8'>
+    <div className='w-full'>
       <div className='rounded-md bg-black font-semibold m-2 self-start'>
         <div
           className={`card ${

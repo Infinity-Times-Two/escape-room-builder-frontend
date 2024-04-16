@@ -183,8 +183,9 @@ export default function FillInTheBlankChallenge({
           required
         />
       </div>
-      <div className='flex flex-row'>
-        {error && (
+
+      {error && (
+        <div className='flex flex-row'>
           <div role='alert' className='alert alert-warning mx-4 self-center'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -201,8 +202,8 @@ export default function FillInTheBlankChallenge({
             </svg>
             <span>{errorMessage}</span>
           </div>
-        )}
-      </div>
+        </div>
+      )}
       <Card>
         <div
           className={`flex flex-col gap-2 flex-wrap justify-center min-h-[100px] w-full ${
