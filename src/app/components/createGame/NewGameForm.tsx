@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from 'react';
 import { Game, Challenge } from '../../types/types';
 import { UserContext } from '@/app/contexts/userContext';
 import { SavedGamesContext } from '@/app/contexts/savedGamesContext';
+import { LoadedGamesContext } from '@/app/contexts/loadedGamesContext';
 import { SingleGameContext } from '@/app/contexts/singleGameContext';
 import Input from '../ui/Input';
 import TextArea from '../ui/TextArea';
@@ -63,6 +64,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
   const [tooManyGames, setTooManyGames] = useState(false);
 
   const { setSavedGames } = useContext(SavedGamesContext);
+  const { setLoadedGames } = useContext(LoadedGamesContext);
   const { singleGame, setSingleGame } = useContext(SingleGameContext);
 
   const [newGame, setNewGame] = useState<Game>(defaultGameData);
@@ -348,6 +350,23 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
       return newGames;
     });
 
+    setLoadedGames((prevGames: Game[]) => {
+      let newGames: Game[];
+      if (editGame) {
+        newGames = prevGames.map((game) => {
+          if (game.id === editGame) {
+            return newGame;
+          } else {
+            return game;
+          }
+        });
+      } else {
+        newGames = [...prevGames, newGame];
+      }
+      localStorage.setItem('loadedGames', JSON.stringify(newGames));
+      return newGames;
+    });
+
     // Add to main games table in DB
     // TO DO: Allow user to mark a game as public or private
     if (user.id !== '') {
@@ -393,7 +412,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     localStorage.removeItem('newGameForm');
     setSubmitError(false);
     setSubmitErrorMessage([]);
-    saveForm(defaultGameData)
+    saveForm(defaultGameData);
     setNewGame(defaultGameData);
   };
 
@@ -689,7 +708,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
           )}
 
           {/* Show after creating game or after editing game*/}
-          {(singleGame?.id === newGame.id) && (newGame.id !== '') && (
+          {singleGame?.id === newGame.id && newGame.id !== '' && (
             <Link
               key={newGame.id}
               href={`/game/${newGame.id}`}

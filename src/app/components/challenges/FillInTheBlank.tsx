@@ -83,6 +83,8 @@ export default function FillInTheBlankChallenge({
   const [loading, setLoading] = useState<boolean>(true);
 
   const router = useRouter();
+  const punctuationRegex = /^[,.!?]$/;
+  const endPunctuationRegex = /[,.!?]+$/;
 
   // Filter correct and incorrect answer words from answer array
   const filterWords = () => {
@@ -123,7 +125,10 @@ export default function FillInTheBlankChallenge({
 
     // Get the last word of the answer
     const answerArray = currentChallenge.answer.split(' ');
-    const lastWord = answerArray[answerArray.length - 1];
+    const lastWord = answerArray[answerArray.length - 1].replace(
+      endPunctuationRegex,
+      ''
+    );
 
     // find last index of the element containing lastWord
     const findLastIndexWithMatch = (array: string[], searchWord: any) => {
@@ -205,8 +210,6 @@ export default function FillInTheBlankChallenge({
     setAnswer(newAnswer);
   };
 
-  const punctuationRegex = /^[,.!?]$/;
-
   useEffect(() => {
     filterWords();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -220,8 +223,12 @@ export default function FillInTheBlankChallenge({
       .trim()
       .toLowerCase()
       .replace(/ (\,|\!|\?|\.)/g, '$1'); // removes single space before , . ! ?
-
-    if (checkAnswer === currentChallenge.answer.toLowerCase()) {
+    console.log(`checkAnswer: ${checkAnswer}`);
+    if (
+      checkAnswer ===
+      currentChallenge.answer.toLowerCase().replace(endPunctuationRegex, '')
+    ) {
+      // removes trailing punctuation that is not included in answer
       if (nextChallenge === currentGame.challenges.length) {
         router.push(`../${currentGame.id}/win`);
       } else {
