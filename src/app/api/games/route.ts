@@ -28,7 +28,6 @@ export async function GET(req: Request) {
     });
     try {
       const response = await docClient.send(command);
-      console.log(response)
       return response;
     } catch (error) {
       console.log('There was an error: ', error);
