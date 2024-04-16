@@ -2,6 +2,7 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import {
   DynamoDBDocumentClient,
   PutCommand,
+  GetCommand,
 } from '@aws-sdk/lib-dynamodb';
 import { DBuser } from '@/app/types/types';
 export async function GET(
@@ -18,7 +19,7 @@ export async function GET(
   const docClient = DynamoDBDocumentClient.from(dbClient);
 
   const createNewUser = async (userId: string | null) => {
-    const command = new PutCommand({
+    const putCommand = new PutCommand({
       TableName: process.env.AWS_TABLE_NAME,
       Item: {
         userId: userId,
@@ -30,13 +31,19 @@ export async function GET(
       },
     });
     try {
-      const response = await docClient.send(command);
-      return response;
+      await docClient.send(putCommand);
+      const getCommand = new GetCommand({
+        TableName: process.env.AWS_TABLE_NAME,
+        Key: { userId }
+      });
+      const response = await docClient.send(getCommand);
+      return response.Item;
     } catch (error) {
       throw error;
     }
   };
 
   const response = await createNewUser(params.userId);
+  console.log('response in /createUser/{userId}: ', response)
   return Response.json(response);
 }
