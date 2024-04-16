@@ -78,14 +78,14 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
       }
       let gameData: Game = defaultGameData;
 
-      if (localStorageData) {
-        gameData = JSON.parse(localStorageData);
-        setNewGame(gameData);
-      } else if (editGame === singleGame.id) {
+      if (editGame === singleGame.id) {
         gameData = singleGame;
         setNewGame(gameData);
         saveForm(gameData);
-      } else {
+      } else if (localStorageData) {
+        gameData = JSON.parse(localStorageData);
+        setNewGame(gameData);
+      } else  {
         if (user.firstName === '') {
           gameData.author = 'Anonymous';
         } else {
