@@ -89,8 +89,11 @@ export default function Header() {
       </p>
       <div className='flex flex-row items-center justify-self-center sm:justify-self-end space-x-4 sm:space-x-8'>
         <SignedIn>
-          <div className='bg-white p-1 rounded-full hover:bg-emerald-100 transition-all'>
-            <UserButton />
+          <div className='indicator'>
+            {user.isAdmin && <span className='indicator-item badge badge-primary text-white text-xs'>admin</span>}
+            <div className='bg-white p-1 rounded-full hover:bg-emerald-100 transition-all'>
+              <UserButton />
+            </div>
           </div>
         </SignedIn>
 
