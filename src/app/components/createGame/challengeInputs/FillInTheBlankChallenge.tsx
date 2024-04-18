@@ -39,7 +39,7 @@ export default function FillInTheBlankChallenge({
     setError(false);
     if (typeof answer !== 'undefined' && answer !== '') {
       // Regular expression to match quoted phrases or words/punctuation
-      const regex = /"[^"]+"|[\w']+|[.,!?;]/g;
+      const regex = /"[^"]+"|[\w']+(?:-\w+)*|[.,!?;]/g;
       let matches = answer.match(regex);
       let newWords = matches
         ? matches.map((match) => {
