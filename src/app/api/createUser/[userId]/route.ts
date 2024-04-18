@@ -5,6 +5,7 @@ import {
   GetCommand,
 } from '@aws-sdk/lib-dynamodb';
 import { DBuser } from '@/app/types/types';
+
 export async function GET(
   req: Request,
   { params }: { params: { userId: string } }
