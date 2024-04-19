@@ -74,6 +74,7 @@ export default function FillInTheBlankChallenge({
         })
       : []
   );
+  console.log(`currentChallenge.clue: ${currentChallenge.clue}`);
 
   const [removedWords, setRemovedWords] = useState<Word[]>([]);
 
@@ -85,7 +86,10 @@ export default function FillInTheBlankChallenge({
   const router = useRouter();
   const punctuationRegex = /^[,.!?]$/;
   const endPunctuationRegex = /[,.!?]+$/;
-
+  useEffect(() => {
+    console.log(JSON.stringify(answer));
+    console.log(`loading: ${loading}`);
+  }, [answer, loading]);
   // Filter correct and incorrect answer words from answer array
   const filterWords = () => {
     let newRemovedWords: Word[] = [];
@@ -119,7 +123,6 @@ export default function FillInTheBlankChallenge({
         })
       : [];
     newRemovedWords = shuffle(newRemovedWords);
-
     setRemovedWords(newRemovedWords);
     // Remove extra words from the end of the answer
 
@@ -132,8 +135,14 @@ export default function FillInTheBlankChallenge({
 
     // find last index of the element containing lastWord
     const findLastIndexWithMatch = (array: string[], searchWord: string) => {
+      console.log('looking for >>>', searchWord, '<<<');
       for (let i = array.length - 1; i >= 0; i--) {
-        if (array[i] === searchWord) {
+        let queriedWord = array[i];
+        console.log(`queriedWord: ${queriedWord}`)
+        if (queriedWord[0] === '~') {
+          queriedWord = queriedWord.slice(1);
+        }
+        if (queriedWord === searchWord) {
           return i;
         }
       }
@@ -141,8 +150,10 @@ export default function FillInTheBlankChallenge({
     };
 
     let lastIndex: number = 0;
+    console.log(`lastIndex: ${lastIndex}`);
     if (Array.isArray(currentChallenge.clue)) {
       lastIndex = findLastIndexWithMatch(currentChallenge.clue, lastWord);
+      console.log(`lastIndex: ${lastIndex}`);
     }
 
     // Remove words after the last word so they don't display as blanks
@@ -244,86 +255,90 @@ export default function FillInTheBlankChallenge({
   };
 
   return (
-    <div className='flex flex-col gap-2 items-center max-w-full'>
-      <Card>
-        <div className='flex flex-row flex-wrap justify-center items-center'>
-          {!loading &&
-            answer.map((word: Word) =>
-              !word.hidden && !word.remove ? (
-                removedWordIndexes.some((index) => word.index === index) ? (
-                  <div key={word.index} className={`badge mr-0 orange`}>
-                    <span>{' ' /* one of the "blanks" to be filled */}</span>
-                  </div>
+    <>
+      <div className='flex flex-col gap-2 items-center max-w-full'>
+        <Card>
+          <div className='flex flex-row flex-wrap justify-center items-center'>
+            {!loading &&
+              answer.map((word: Word) =>
+                !word.hidden && !word.remove ? (
+                  removedWordIndexes.some((index) => word.index === index) ? (
+                    <div key={word.index} className={`badge mr-0 orange`}>
+                      <span>{' ' /* one of the "blanks" to be filled */}</span>
+                    </div>
+                  ) : (
+                    <span
+                      className={`text-xl ${
+                        word.word.match(punctuationRegex) ? `mr-1` : `mx-1`
+                      } font-bold`}
+                      key={word.index}
+                    >
+                      {word.word /* a regular word in the answer */}
+                    </span>
+                  )
                 ) : (
-                  <span
-                    className={`text-xl ${
-                      word.word.match(punctuationRegex) ? `mr-1` : `mx-1`
-                    } font-bold`}
+                  <div
                     key={word.index}
+                    className={`badge orange w-32 block`}
+                    onClick={() => handleAnswerClick(word)}
                   >
-                    {word.word /* a regular word in the answer */}
-                  </span>
+                    <span>
+                      {word.word /* a word added to a "blank space" */}
+                    </span>
+                  </div>
                 )
-              ) : (
-                <div
-                  key={word.index}
-                  className={`badge orange`}
-                  onClick={() => handleAnswerClick(word)}
-                >
-                  <span>{word.word /* a word added to a "blank space" */}</span>
-                </div>
-              )
+              )}
+            {loading && (
+              <div className='flex flex-row flex-wrap gap-y-6 gap-x-4 m-2 justify-center'>
+                <div className='skel h-8 w-20'></div>
+                <div className='skel h-8 w-14'></div>
+                <div className='skel h-8 w-32'></div>
+                <div className='skel h-8 w-20'></div>
+                <div className='skel h-8 w-28'></div>
+                <div className='skel h-8 w-32'></div>
+                <div className='skel h-8 w-20'></div>
+                <div className='skel h-8 w-14'></div>
+                <div className='skel h-8 w-20'></div>
+                <div className='skel h-8 w-28'></div>
+              </div>
             )}
-          {loading && (
-            <div className='flex flex-row flex-wrap gap-y-6 gap-x-4 m-2 justify-center'>
-              <div className='skel h-8 w-20'></div>
-              <div className='skel h-8 w-14'></div>
-              <div className='skel h-8 w-32'></div>
-              <div className='skel h-8 w-20'></div>
-              <div className='skel h-8 w-28'></div>
-              <div className='skel h-8 w-32'></div>
-              <div className='skel h-8 w-20'></div>
-              <div className='skel h-8 w-14'></div>
-              <div className='skel h-8 w-20'></div>
-              <div className='skel h-8 w-28'></div>
-            </div>
-          )}
-        </div>
-      </Card>
-      <Card>
-        <p className='text-sm mb-2'>Choose the correct word(s):</p>
-        <div className='flex flex-row gap-2 flex-wrap justify-center'>
-          {removedWords.map((word: Word) => (
-            <div
-              key={word.index}
-              className={`badge orange ${word.hidden ? `invisible` : ''}`}
-              onClick={() => handleClueClick(word)}
-            >
-              <span>{word.word}</span>
-            </div>
-          ))}
-          {loading && (
-            // <div className='flex flex-row flex-wrap gap-y-4 gap-x-8 justify-center'>
-            <>
-              <div className='skel h-8 w-32 m-2'></div>
-              <div className='skel h-8 w-32 m-2'></div>
-              <div className='skel h-8 w-32 m-2'></div>
-              <div className='skel h-8 w-32 m-2'></div>
-              <div className='skel h-8 w-32 m-2``'></div>
-            </>
-            // </div>
-          )}
-        </div>
-      </Card>
-      <button
-        className='large'
-        onClick={handleSubmit}
-        data-type='challenge-submit'
-      >
-        <span>Submit</span>
-      </button>
+          </div>
+        </Card>
+        <Card>
+          <p className='text-sm mb-2'>Choose the correct word(s):</p>
+          <div className='flex flex-row gap-2 flex-wrap justify-center'>
+            {removedWords.map((word: Word) => (
+              <div
+                key={word.index}
+                className={`badge orange ${word.hidden ? `invisible` : ''}`}
+                onClick={() => handleClueClick(word)}
+              >
+                <span>{word.word}</span>
+              </div>
+            ))}
+            {loading && (
+              // <div className='flex flex-row flex-wrap gap-y-4 gap-x-8 justify-center'>
+              <>
+                <div className='skel h-8 w-32 m-2'></div>
+                <div className='skel h-8 w-32 m-2'></div>
+                <div className='skel h-8 w-32 m-2'></div>
+                <div className='skel h-8 w-32 m-2'></div>
+                <div className='skel h-8 w-32 m-2``'></div>
+              </>
+              // </div>
+            )}
+          </div>
+        </Card>
+        <button
+          className='large'
+          onClick={handleSubmit}
+          data-type='challenge-submit'
+        >
+          <span>Submit</span>
+        </button>
+      </div>
       {incorrect && <Modal setIncorrect={setIncorrect}>Incorrect!</Modal>}
-    </div>
+    </>
   );
 }
 
