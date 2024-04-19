@@ -43,12 +43,12 @@ export default function PlayGame({ params }: { params: { game: string } }) {
         const response = await fetch(`/api/game/${params.game}`);
         const data = await response.json();
         console.log('Fetched game data from the DB.');
-        console.log(data);
-        localStorage.setItem('singleGame', JSON.stringify(data));
+        console.log(data.Item);
+        localStorage.setItem('singleGame', JSON.stringify(data.Item));
         if (data.length === undefined) {
           setError(true);
         } else {
-          saveSingleGame(data);
+          saveSingleGame(data.Item);
         }
         setLoading(false);
       } catch (error) {
