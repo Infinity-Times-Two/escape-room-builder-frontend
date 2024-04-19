@@ -14,14 +14,12 @@ export default function Header() {
     const createUser = async (userId: string | undefined) => {
       const response = await fetch(`/api/createUser/${userId}`);
       const data = await response.json();
-      console.log('data from /api/createUser/{userId}: ', data);
       return data;
     };
 
     const updateUser = async (userId: string | undefined) => {
       const response = await fetch(`/api/updateUser/${userId}`);
       const data = await response.json();
-      console.log('data from /api/updateUser/{userId}: ', data);
       return data;
     };
 
@@ -29,13 +27,10 @@ export default function Header() {
       if (id !== null && id !== undefined) {
         const response = await fetch(`/api/user/${id}`);
         const data = await response.json();
-        console.log('data from /api/user/{id}: ', data);
         if (data?.message === 'User not found') {
-          console.log('creating user...');
           const createdUser = await createUser(id);
           // const response = await fetch(`/api/user/${id}`);
           // const data = await response.json();
-          console.log('response from creating user: ', createdUser);
           setUser({
             id: createdUser.userId,
             firstName: createdUser.firstName,
@@ -53,16 +48,11 @@ export default function Header() {
             isAdmin: data.isAdmin,
             recentGameTimestamps: data.recentGameTimestamps,
           });
-
-          console.log(
-            `setUser: \n id: ${data.userId},\n firstName: ${data.firstName},\n savedGames: ${data.savedGames},\n createdGames: ${data.createdgames},\n isAdmin: ${data.isAdmin},\n recentgameTimeStamps: ${data.recentGameTimestamps}`
-          );
         }
         if (typeof data.firstName === 'undefined') {
           const firstName = await updateUser(id);
           setUser((prevUser: DBuser) => {
             const updatedUser = { ...prevUser, firstName: firstName };
-            console.log('updatedUser: ', updatedUser);
             return updatedUser;
           });
         }

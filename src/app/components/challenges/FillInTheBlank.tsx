@@ -74,7 +74,6 @@ export default function FillInTheBlankChallenge({
         })
       : []
   );
-  console.log(`currentChallenge.clue: ${currentChallenge.clue}`);
 
   const [removedWords, setRemovedWords] = useState<Word[]>([]);
 
@@ -86,10 +85,7 @@ export default function FillInTheBlankChallenge({
   const router = useRouter();
   const punctuationRegex = /^[,.!?]$/;
   const endPunctuationRegex = /[,.!?]+$/;
-  useEffect(() => {
-    console.log(JSON.stringify(answer));
-    console.log(`loading: ${loading}`);
-  }, [answer, loading]);
+
   // Filter correct and incorrect answer words from answer array
   const filterWords = () => {
     let newRemovedWords: Word[] = [];
@@ -135,10 +131,8 @@ export default function FillInTheBlankChallenge({
 
     // find last index of the element containing lastWord
     const findLastIndexWithMatch = (array: string[], searchWord: string) => {
-      console.log('looking for >>>', searchWord, '<<<');
       for (let i = array.length - 1; i >= 0; i--) {
         let queriedWord = array[i];
-        console.log(`queriedWord: ${queriedWord}`)
         if (queriedWord[0] === '~') {
           queriedWord = queriedWord.slice(1);
         }
@@ -150,10 +144,8 @@ export default function FillInTheBlankChallenge({
     };
 
     let lastIndex: number = 0;
-    console.log(`lastIndex: ${lastIndex}`);
     if (Array.isArray(currentChallenge.clue)) {
       lastIndex = findLastIndexWithMatch(currentChallenge.clue, lastWord);
-      console.log(`lastIndex: ${lastIndex}`);
     }
 
     // Remove words after the last word so they don't display as blanks
@@ -235,10 +227,6 @@ export default function FillInTheBlankChallenge({
     const challengeAnswer = currentChallenge.answer
       .toLowerCase()
       .replace(endPunctuationRegex, '');
-    console.table({
-      checkAnswer: checkAnswer,
-      'currentChallenge.answer': challengeAnswer,
-    });
     if (
       checkAnswer ===
       currentChallenge.answer.toLowerCase().replace(endPunctuationRegex, '')

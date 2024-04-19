@@ -42,7 +42,7 @@ export default function PlayGame({ params }: { params: { game: string } }) {
         console.log('Fetching game data from the DB...');
         const response = await fetch(`/api/game/${params.game}`);
         const data = await response.json();
-        console.log('Fetched game data from the DB.');
+        console.log('Fetched game data from the DB:');
         console.log(data.Item);
         localStorage.setItem('singleGame', JSON.stringify(data.Item));
         if (data.length === undefined) {
@@ -106,7 +106,6 @@ export default function PlayGame({ params }: { params: { game: string } }) {
           headers: { 'Content-Type': 'application/json' },
         });
         const data = await response.json();
-        console.log('Response from deleting game from DB:');
         console.log(data);
       } catch (error) {
         console.log(error);
