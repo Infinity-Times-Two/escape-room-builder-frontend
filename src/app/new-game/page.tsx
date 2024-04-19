@@ -4,7 +4,7 @@ import { SignedOut } from '@clerk/nextjs';
 
 export default function NewGame() {
   return (
-    <div className='flex flex-col items-center justify-start min-h-screen gap-8'>
+    <div className='flex flex-col items-center justify-start min-h-screen gap-8 w-full'>
       <SignedOut>
         <p className='text-center'>
           You can create and save a game on your device without logging in.
