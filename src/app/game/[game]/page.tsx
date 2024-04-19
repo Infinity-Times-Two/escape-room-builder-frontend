@@ -148,15 +148,15 @@ export default function PlayGame({ params }: { params: { game: string } }) {
 
   const DeleteModal = () => {
     return (
-      <dialog id='my_modal_1' className='modal' open>
-        <div className='modal-box bg-white'>
+      <dialog id='my_modal_1' className='modal bg-slate-500/50' open>
+        <div className='modal-box bg-white shadow-none border-2 border-black'>
           <h3 className='font-bold text-lg'>Hold up!</h3>
-          <p className='py-4'>
+          <p className='py-4 text-center'>
             {!deleting
-              ? 'Are you sure you want to delete this game? This cannot be reversed!'
+              ? <>Are you sure you want to delete this game?<br />This cannot be reversed!</>
               : 'Deleting room...'}
           </p>
-          <div className='modal-action'>
+          <div className='modal-action justify-center'>
             <form method='dialog'>
               {!deleting && (
                 <>
@@ -244,11 +244,11 @@ export default function PlayGame({ params }: { params: { game: string } }) {
                   <span>Delete Game</span>
                 </button>
               )}
-              {deleteModal && <DeleteModal />}
             </>
           )}
         </div>
       </Card>
+      {deleteModal && <DeleteModal />}
     </div>
   );
 }

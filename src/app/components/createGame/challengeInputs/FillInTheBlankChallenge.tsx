@@ -52,7 +52,7 @@ export default function FillInTheBlankChallenge({
         : [];
       setWords(newWords);
       // If words have been selected to be removed, this will "reset" them
-      // TODO: Figure out how to allow the user to continue typing wihout losing "removed" words
+      // TODO: Figure out how to allow the user to continue typing without losing "removed" words
     }
   }, [answer]);
 
@@ -146,25 +146,25 @@ export default function FillInTheBlankChallenge({
       </div>
       <div>
         <div className='flex flex-row w-full justify-between'>
-          <label
-            htmlFor={`challenge-answer-${index}`}
-            className='tooltip tooltip-open tooltip-right tooltip-primary grow-1 whitespace-nowrap pr-2'
-            data-tip='Tip: Wrap multiple word clues with quotes!'
-          >
-            Answer (required)
+          <label htmlFor={`challenge-answer-${index}`}>
+            Type the answer, then click or tap the words below to make them
+            &quot;blanks&quot;:
           </label>
-          <div className='w-full'></div>
         </div>
         <Input
           fieldType={`challenge-answer-${index}`}
           value={answer}
-          placeholder='Answer*'
+          placeholder='&quot;Bart Simpson&quot; lives in Springfield'
           onChange={onAnswerChange}
           key={`challenge-answer-${index}`}
           dataTest={`${dataTest}-answer`}
           submitError={submitError}
           required
         />
+        <div
+          className='absolute w-3/4 sm:w-3/5 tooltip tooltip-open tooltip-bottom tooltip-primary grow-1 whitespace-nowrap pr-2'
+          data-tip='Tip: Wrap multiple word clues with quotes!'
+        ></div>
       </div>
       <div>
         <label htmlFor={`challenge-answer-${index}`}>
@@ -175,7 +175,7 @@ export default function FillInTheBlankChallenge({
           // value={incorrectWords}
           // Uncontrolled form input because the value becomes a stringified array
           // TO DO: Figure out how to make it controlled so words can be removed on click.
-          placeholder='Add some incorrect words*'
+          placeholder='Oscar the Grouch, Ariel, Buddy the Elf'
           onChange={handleIncorrectWords}
           key={`challenge-incorrect-words-${index}`}
           dataTest={`${dataTest}-incorrect-words`}
@@ -212,6 +212,7 @@ export default function FillInTheBlankChallenge({
           data-test={`${dataTest}-clue`}
         >
           <div className='flex flex-col gap-8'>
+            <span className='absolute top-[5px] text-sm italic'>Click words to make them &quot;Blanks&quot;</span>
             <div className='flex flex-row flex-wrap justify-center items-center list-none'>
               {words.map((word: string, index: number) =>
                 word.startsWith('~') ? (

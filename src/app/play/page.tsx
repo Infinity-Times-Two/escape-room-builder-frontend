@@ -43,9 +43,9 @@ export default function Play() {
               >
                 <div className='rounded-xl bg-black self-start'>
                   <div
-                    className={`flex flex-col border-2 rounded-xl p-8 border-black ${
+                    className={`flex flex-col gap-4 border-2 rounded-xl p-8 border-black ${
                       colorVariants[game.titleBg]
-                    } sm:flex-row w-full justify-between border-b-2 -translate-x-1 -translate-y-1 hover:-translate-y-2 hover:-translate-x-2 transition-all`}
+                    } md:flex-row w-full justify-between border-b-2 -translate-x-1 -translate-y-1 hover:-translate-y-2 hover:-translate-x-2 transition-all`}
                   >
                     <div className='flex flex-col items-start'>
                       <h3 className='text-xl text-left'>{game.gameTitle}</h3>
@@ -53,8 +53,8 @@ export default function Play() {
                       {game.gameDescription && <p>{game.gameDescription}</p>}
                     </div>
                     <div className='flex flex-row justify-center gap-4'>
-                      <div className='flex flex-col items-center'>
-                        <span className='text-4xl text-neutral-800'>
+                      <div className='flex flex-col items-center gap-2 text-indigo-950'>
+                        <span className='text-4xl'>
                           <FontAwesomeIcon icon={faCircleQuestion} />
                         </span>
                         <p className='text-nowrap'>
@@ -65,8 +65,8 @@ export default function Play() {
                               : 'challenge')}
                         </p>
                       </div>
-                      <div className='flex flex-col items-center'>
-                        <span className='text-4xl text-neutral-800'>
+                      <div className='flex flex-col items-center gap-2 text-indigo-950'>
+                        <span className='text-4xl'>
                           <FontAwesomeIcon icon={faStopwatch} />
                         </span>
                         <p className='text-nowrap'>
