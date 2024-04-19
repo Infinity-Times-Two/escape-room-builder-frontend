@@ -131,9 +131,9 @@ export default function FillInTheBlankChallenge({
     );
 
     // find last index of the element containing lastWord
-    const findLastIndexWithMatch = (array: string[], searchWord: any) => {
+    const findLastIndexWithMatch = (array: string[], searchWord: string) => {
       for (let i = array.length - 1; i >= 0; i--) {
-        if (searchWord(array[i])) {
+        if (array[i] === searchWord) {
           return i;
         }
       }
@@ -142,9 +142,7 @@ export default function FillInTheBlankChallenge({
 
     let lastIndex: number = 0;
     if (Array.isArray(currentChallenge.clue)) {
-      lastIndex = findLastIndexWithMatch(currentChallenge.clue, (item: any) =>
-        item.includes(lastWord)
-      );
+      lastIndex = findLastIndexWithMatch(currentChallenge.clue, lastWord);
     }
 
     // Remove words after the last word so they don't display as blanks
@@ -223,7 +221,13 @@ export default function FillInTheBlankChallenge({
       .trim()
       .toLowerCase()
       .replace(/ (\,|\!|\?|\.)/g, '$1'); // removes single space before , . ! ?
-    console.log(`checkAnswer: ${checkAnswer}`);
+    const challengeAnswer = currentChallenge.answer
+      .toLowerCase()
+      .replace(endPunctuationRegex, '');
+    console.table({
+      checkAnswer: checkAnswer,
+      'currentChallenge.answer': challengeAnswer,
+    });
     if (
       checkAnswer ===
       currentChallenge.answer.toLowerCase().replace(endPunctuationRegex, '')

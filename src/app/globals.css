@@ -13,6 +13,10 @@
   --tooltip-color: #c22525;
 }
 
+dialog {
+  @apply shadow-none border border-black border-2;
+}
+
 /* @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
@@ -175,7 +179,7 @@ button.large > span {
 }
 
 button.small > span {
-  @apply py-2 px-4 text-lg;
+  @apply py-2 px-4 text-sm;
 }
 
 button.green > span {

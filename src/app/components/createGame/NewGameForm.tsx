@@ -651,7 +651,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
         </>
         <div className='flex flex-col sm:flex-row sm:flex-nowrap w-full justify-between'>
           <div className='form-control w-24'>
-            <label className='cursor-pointer label'>
+            <label className='cursor-pointer label flex flex-row gap-4'>
               <span>Private</span>
               <input
                 type='checkbox'
@@ -819,7 +819,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
         )}
       </form>
       {!editGame && (
-        <button className='red self-end' onClick={handleReset} role='reset'>
+        <button className='red self-end small' onClick={handleReset} role='reset'>
           <span>Reset</span>
         </button>
       )}

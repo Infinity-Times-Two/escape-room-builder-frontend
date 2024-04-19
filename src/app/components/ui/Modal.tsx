@@ -8,7 +8,7 @@ export default function Modal({
   children: React.ReactNode;
 }) {
   return (
-    <dialog id='my_modal_1' className='modal bg-slate-700/50' open>
+    <dialog id='my_modal_1' className='bg-slate-700/50' open>
       <div className='w-[500px] pr-8'>
         <Card>
           <h3 className='font-bold text-lg'>{children}</h3>
