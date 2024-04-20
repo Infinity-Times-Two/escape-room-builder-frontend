@@ -1,4 +1,4 @@
-<h1 align="center">Quiz Buddy</h1>
+<h1 align="center">Quiz Buddies</h1>
 
 <h2 align="center">Create and Share Quizzes</h2>
 

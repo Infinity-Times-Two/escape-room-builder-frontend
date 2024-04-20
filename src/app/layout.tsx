@@ -15,7 +15,7 @@ const workSans = Work_Sans({
 const cabin = Cabin({ subsets: ['latin'], variable: '--font-cabin' });
 
 export const metadata: Metadata = {
-  title: 'Quiz Buddy',
+  title: 'Quiz Buddies',
   description: 'Create and play quizzes with your friends',
 };
 
