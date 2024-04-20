@@ -3,7 +3,7 @@ export default function About() {
     <>
       <h1 className='text-4xl font-bold'>About</h1>
       <p className='text-xl'>
-        Escape Room Builder is a tool to help you build and play escape rooms
+        Quiz Buddy is a tool to help you create quizzes to share
         with your friends.
       </p>
     </>

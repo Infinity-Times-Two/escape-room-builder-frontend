@@ -74,7 +74,7 @@ export default function Header() {
     <header className='flex flex-col sm:flex-row items-center gap-4 bg-blue-400/25 border-b border-black py-4 sm:py-6 sm:px-16'>
       <p className='header text-4xl font-black text-center sm:text-left uppercase flex-grow'>
         <Link href='/' data-test='home-link'>
-          Escape Room Builder
+          Quiz Buddies
         </Link>
       </p>
       <div className='flex flex-row items-center justify-self-center sm:justify-self-end space-x-4 sm:space-x-8'>

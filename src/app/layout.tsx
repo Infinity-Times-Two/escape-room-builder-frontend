@@ -15,8 +15,8 @@ const workSans = Work_Sans({
 const cabin = Cabin({ subsets: ['latin'], variable: '--font-cabin' });
 
 export const metadata: Metadata = {
-  title: 'Escape Room Builder',
-  description: 'Build and play escape rooms with your friends',
+  title: 'Quiz Buddy',
+  description: 'Create and play quizzes with your friends',
 };
 
 export default async function RootLayout({

@@ -10,7 +10,7 @@ const room = {
   challenges: 5,
   timeLimit: 900,
   description:
-    'A brief description of the escape room that makes it sound extremely fun and you want to play it!',
+    'A brief description of the Quiz that makes it sound extremely fun and you want to play it!',
   titleBg: 'yellow',
   bodyBg: 'green',
 };
