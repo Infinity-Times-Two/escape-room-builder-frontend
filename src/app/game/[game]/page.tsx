@@ -42,19 +42,20 @@ export default function PlayGame({ params }: { params: { game: string } }) {
         console.log('Fetching game data from the DB...');
         const response = await fetch(`/api/game/${params.game}`);
         const data = await response.json();
-        console.log('Fetched game data from the DB.');
-        console.log(data);
-        localStorage.setItem('singleGame', JSON.stringify(data));
-        if (data.length === undefined) {
+        if (!data.Item) {
+          console.log('!data.Item');
           setError(true);
         } else {
-          saveSingleGame(data);
+          console.log('Fetched game data from the DB:');
+          console.log(data.Item);
+          localStorage.setItem('singleGame', JSON.stringify(data.Item));
+          saveSingleGame(data.Item);
         }
-        setLoading(false);
       } catch (error) {
         console.log(error);
         setError(true);
       }
+      setLoading(false);
     };
 
     // Grab everything from LS in case it's not in state (eg. brand new user arrives at this page from a shared link)
@@ -74,7 +75,8 @@ export default function PlayGame({ params }: { params: { game: string } }) {
 
     if (localStorageGame && localStorageGame.id === params.game) {
       console.log('Found game in local storage (singleGame)');
-      saveSingleGame(localStorageGame);
+      setSingleGame(localStorageGame);
+      setLoading(false);
       return; // Exit useEffect early if game is found in local storage
     }
 
@@ -88,11 +90,11 @@ export default function PlayGame({ params }: { params: { game: string } }) {
       if (gameFromState) {
         console.log('Found game in state');
         saveSingleGame(gameFromState);
+        setLoading(false);
         return; // Exit useEffect early if game is found in state
       }
 
       // If the game was not found in state or local storage, fetch it from DB
-      console.log('Fetching game data from DB');
       fetchSingleGame();
     }
   }, []);
@@ -106,7 +108,6 @@ export default function PlayGame({ params }: { params: { game: string } }) {
           headers: { 'Content-Type': 'application/json' },
         });
         const data = await response.json();
-        console.log('Response from deleting game from DB:');
         console.log(data);
       } catch (error) {
         console.log(error);
@@ -134,9 +135,9 @@ export default function PlayGame({ params }: { params: { game: string } }) {
       });
       setLoadedGames((prevGames: Game[]) => {
         const newGames = prevGames.filter((game) => game.id !== params.game);
-        localStorage.setItem('loadedGames', JSON.stringify(newGames))
+        localStorage.setItem('loadedGames', JSON.stringify(newGames));
         return newGames;
-      })
+      });
     } catch (error) {
       return error;
     } finally {
@@ -152,9 +153,15 @@ export default function PlayGame({ params }: { params: { game: string } }) {
         <div className='modal-box bg-white shadow-none border-2 border-black'>
           <h3 className='font-bold text-lg'>Hold up!</h3>
           <p className='py-4 text-center'>
-            {!deleting
-              ? <>Are you sure you want to delete this game?<br />This cannot be reversed!</>
-              : 'Deleting room...'}
+            {!deleting ? (
+              <>
+                Are you sure you want to delete this game?
+                <br />
+                This cannot be reversed!
+              </>
+            ) : (
+              'Deleting room...'
+            )}
           </p>
           <div className='modal-action justify-center'>
             <form method='dialog'>

@@ -96,7 +96,7 @@ export default function ChallengePage({
   }
 
   return (
-    <div className='pt-16 sm:pt-0 px-4'>
+    <div className='flex flex-col items-center justify-start min-h-screen gap-8 w-11/12 md:w-3/4 xl:w-1/2 pt-12 sm:pt-0'>
       <h2 className='mb-8 leading-10'>{currentChallenge?.type.replace('-', ' ')}: </h2>
       <p className='mb-4 text-center'> {currentChallenge?.description}</p>
       <SingleChallenge

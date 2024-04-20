@@ -55,9 +55,9 @@ describe('New Game Form', () => {
   it('renders all inputs', () => {
     const { getByLabelText } = render(<NewGameForm />);
 
-    const gameTitle = getByLabelText('Name your Escape room');
+    const gameTitle = getByLabelText('Name your Quiz');
     expect(gameTitle).toBeInTheDocument();
-    const gameDescription = getByLabelText('Describe your Escape room');
+    const gameDescription = getByLabelText('Describe your Quiz');
     expect(gameDescription).toBeInTheDocument();
   });
 });
@@ -68,13 +68,13 @@ describe('Handle form inputs and submission', () => {
     const { getByLabelText, getByTestId } = render(<NewGameForm />);
 
     // Change title
-    const gameTitle = getByLabelText('Name your Escape room');
+    const gameTitle = getByLabelText('Name your Quiz');
     await user.click(gameTitle);
     await user.keyboard('New game title');
     expect(gameTitle.value).toBe('New game title');
 
     // Change description
-    const gameDescription = getByLabelText('Describe your Escape room');
+    const gameDescription = getByLabelText('Describe your Quiz');
     await user.click(gameDescription);
     await user.keyboard('New game description');
     expect(gameDescription.value).toBe('New game description');
@@ -210,8 +210,8 @@ describe('Handle form inputs and submission', () => {
   it('resets the form when Reset button is clicked', async () => {
     const { getByLabelText, getByRole } = render(<NewGameForm />);
 
-    const gameTitle = getByLabelText('Name your Escape room');
-    const gameDescription = getByLabelText('Describe your Escape room');
+    const gameTitle = getByLabelText('Name your Quiz');
+    const gameDescription = getByLabelText('Describe your Quiz');
     expect(gameTitle.value).toBe('New game title');
     expect(gameDescription.value).toBe('New game description');
 

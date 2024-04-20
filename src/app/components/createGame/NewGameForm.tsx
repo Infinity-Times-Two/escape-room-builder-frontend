@@ -475,8 +475,8 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
       {/* Update to <form action={...}> when this has been refactored to a server action */}
       <form className='flex flex-col min-h-screen w-11/12 xs:w-4/5 md:w-3/4 gap-8'>
         <div className='flex flex-col gap-4'>
-          <h1>Create your escape room</h1>
-          <label htmlFor='gameTitle'>Name your Escape room</label>
+          <h1>Create your Quiz</h1>
+          <label htmlFor='gameTitle'>Name your Quiz</label>
           <Input
             fieldType='gameTitle'
             value={newGame.gameTitle}
@@ -487,7 +487,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
           />
         </div>
         <div className='flex flex-col gap-4 max-w-full'>
-          <label htmlFor='gameDescription'>Describe your Escape room</label>
+          <label htmlFor='gameDescription'>Describe your Quiz</label>
           <TextArea
             fieldType='gameDescription'
             value={newGame.gameDescription}
