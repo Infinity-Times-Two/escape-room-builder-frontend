@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className='footer footer-center p-10 bg-indigo-950 text-slate-200 rounded'>
+    <footer className='footer footer-center p-10 bg-indigo-950 text-slate-200'>
       <nav className='grid grid-flow-col gap-4'>
         <Link href='/about'>About us</Link>
         <Link href='/ui-kit'>UI Kit</Link>

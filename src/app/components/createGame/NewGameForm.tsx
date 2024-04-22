@@ -31,7 +31,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     bodyBg: '',
     titleBg: '',
     private: false,
-    challenges: [
+    challenges: [ // If the default challenges are changed, update challengeId's default state value below
       {
         id: 'challenge-0',
         type: 'trivia',
@@ -63,6 +63,9 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
   const [editError, setEditError] = useState<boolean>(false);
   const [editMessage, setEditMessage] = useState<string>('');
   const [tooManyGames, setTooManyGames] = useState(false);
+  const [challengeId, setChallengeId] = useState(3) 
+  // Instead of using a fancy way to get a unique ID for mapped challenges, we're just incrementing each time a challenge is added
+  // and not decrementing whenever a challenge is deleted. 
 
   const { setSavedGames } = useContext(SavedGamesContext);
   const { setLoadedGames } = useContext(LoadedGamesContext);
@@ -233,17 +236,17 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
   const handleAddChallenge = (e: any) => {
     e.preventDefault();
     setNewGame((prevGame: Game) => {
-      const numberOfChallenges: number = prevGame.challenges.length;
       const newChallenges = [
         ...prevGame.challenges,
         {
-          id: `challenge-${numberOfChallenges}`, // this number should be the current length of the challenge array (challenges are zero-indexed)
+          id: `challenge-${challengeId}`, // this number should be the current length of the challenge array (challenges are zero-indexed)
           type: nextChallenge,
           description: '',
           clue: '',
           answer: '',
         },
       ];
+      setChallengeId(challengeId + 1)
       const updatedGame = { ...prevGame, challenges: newChallenges };
       saveForm(updatedGame);
       return updatedGame;
@@ -558,9 +561,11 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
               handleRemoveChallenge(e, index);
             };
 
+            console.log(`challenge.id: ${challenge.id + '-' + challenge.type}`)
+
             return (
               <NewChallenge
-                key={challenge.id}
+                key={challenge.type + '-' + challenge.id}
                 challenge={challenge}
                 clue={newGame.challenges[index].clue}
                 description={newGame.challenges[index].description}
@@ -573,7 +578,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
                 dataTest={`${challenge.id}-${String(challenge.type).replace(
                   ' ',
                   '-'
-                )}`} // Mmm.. maybe refactor challenge type names?
+                )}`}
                 submitError={submitError}
               />
             );
