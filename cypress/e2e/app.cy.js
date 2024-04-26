@@ -95,14 +95,14 @@ describe('Game Creation and Editing while logged out', () => {
     // Test Fill In The Blank input
     cy.get('#fillInTheBlank').click()
     cy.getByData('add-challenge').click()
-    cy.getByData('challenge-3-fill-in-the-blank-answer').type(
+    cy.getByData('challenge-4-fill-in-the-blank-answer').type(
       'Fill in the blanks'
     );
-    cy.getByData('challenge-3-fill-in-the-blank-highlight-word-3').click();
-    cy.getByData('challenge-3-fill-in-the-blank-incorrect-words').type(
+    cy.getByData('challenge-4-fill-in-the-blank-highlight-word-3').click();
+    cy.getByData('challenge-4-fill-in-the-blank-incorrect-words').type(
       'incorrect, words'
     );
-    cy.getByData('challenge-3-fill-in-the-blank-FITB-clue-words')
+    cy.getByData('challenge-4-fill-in-the-blank-FITB-clue-words')
       .children()
       .should('have.length', 3);
 
