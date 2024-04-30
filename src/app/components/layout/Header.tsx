@@ -81,7 +81,7 @@ export default function Header() {
         <SignedIn>
           <div className='indicator'>
             {user.isAdmin && <span className='indicator-item badge badge-primary text-white text-xs'>admin</span>}
-            <div className='bg-white p-1 rounded-full hover:bg-emerald-100 transition-all'>
+            <div className='border border-white border-4 bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full hover:bg-emerald-100 transition-all min-h-[56px] min-w-[56px]'>
               <UserButton />
             </div>
           </div>

@@ -86,7 +86,7 @@ export default function Play() {
 
   return (
     <div className='flex flex-col items-center justify-start min-h-screen gap-8 w-11/12 md:w-3/4 xl:w-1/2'>
-      <h1 className='text-8xl'>Play</h1>
+      <h1 className='text-8xl'>Choose A Quiz</h1>
       <div
         role='tablist'
         className='tabs tabs-boxed justify-center p-2 bg-indigo-800/75'

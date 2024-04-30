@@ -3,7 +3,7 @@ import { useContext, useEffect } from 'react';
 import { SingleGameContext } from '@/app/contexts/singleGameContext';
 import TriviaChallenge from '@/app/components/challenges/Trivia';
 import WordScrambleChallenge from '@/app/components/challenges/WordScramble';
-import CaesarCipherChallenge from '@/app/components/challenges/CaesarCipher';
+import CryptogramChallenge from '@/app/components/challenges/Cryptogram';
 import FillInTheBlankChallenge from '@/app/components/challenges/FillInTheBlank';
 import { Challenge, Game } from '@/app/types/types';
 
@@ -38,9 +38,9 @@ const SingleChallenge: React.FC<SingleChallengeProps> = ({
         />
       );
     }
-    case 'caesar-cipher': {
+    case 'cryptogram': {
       return (
-        <CaesarCipherChallenge
+        <CryptogramChallenge
           currentChallenge={currentChallenge}
           nextChallenge={nextChallenge}
           currentGame={singleGame}

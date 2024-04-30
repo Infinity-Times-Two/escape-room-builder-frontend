@@ -3,8 +3,8 @@ import CreateButton from './components/ui/CreateButton';
 
 export default function Home() {
   return (
-    <div className='flex flex-col w-full justify-center'>
-      <div className='flex flex-wrap justify-center gap-8'>
+    <div className='flex flex-col w-full h-full items-center justify-center self-stretch'>
+      <div className='flex flex-wrap justify-center gap-8 mb-8'>
         <Link href='/play'>
           <button data-test='play' className='xl'>
             <span>Play</span>

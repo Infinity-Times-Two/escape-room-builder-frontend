@@ -71,10 +71,10 @@ describe('Game Creation and Editing while logged out', () => {
       'Trivia answer #1'
     );
 
-    // Test Caesar cipher input
-    cy.getByData('challenge-1-caesar-cipher-answer').type('Encrypt this clue');
+    // Test Cryptogram input
+    cy.getByData('challenge-1-cryptogram-answer').type('Encrypt this clue');
     cy.getByData('1-encrypt-button').click();
-    cy.getByData('challenge-1-caesar-cipher-clue').should('not.have.value', '');
+    cy.getByData('challenge-1-cryptogram-clue').should('not.have.value', '');
 
     // Test Word Scramble input
     cy.getByData('challenge-2-word-scramble-answer').type(

@@ -104,14 +104,14 @@ describe('Handle form inputs and submission', () => {
     await user.click(triviaAnswer);
     await user.keyboard('Trivia answer #1');
 
-    // Add Caesar cipher description
-    const cipherDesc = getByTestId('challenge-1-caesar-cipher-answer');
+    // Add Cryptogram description
+    const cipherDesc = getByTestId('challenge-1-cryptogram-answer');
     await user.click(cipherDesc);
     await user.keyboard('Decrypt this phrase');
     expect(cipherDesc.value).toBe('Decrypt this phrase');
     const encryptButton = getByTestId('1-encrypt-button');
     await user.click(encryptButton);
-    const cipherClue = getByTestId('challenge-1-caesar-cipher-clue');
+    const cipherClue = getByTestId('challenge-1-cryptogram-clue');
     expect(cipherClue.value).not.toBeNull();
 
     // Add Word Scramble description & answer
@@ -147,8 +147,8 @@ describe('Handle form inputs and submission', () => {
     expect(warning2).not.toBeInTheDocument();
 
     // Remove a challenge
-    const removeCaesarcipher = getByTestId('remove-caesar-cipher-1');
-    user.click(removeCaesarcipher);
+    const removeCryptogram = getByTestId('remove-cryptogram-1');
+    user.click(removeCryptogram);
     const removeTrivia = getByTestId('remove-trivia-0');
     user.click(removeTrivia);
   });
@@ -177,17 +177,17 @@ describe('Handle form inputs and submission', () => {
 
     const user = userEvent.setup();
     // Verify that initially there are 3 challenges
-    expect(queryByTestId('caesar-cipher-3')).toBeNull();
+    expect(queryByTestId('cryptogram-3')).toBeNull();
 
     // Add a new challenge
-    const caesarcipherRadioButton = getByLabelText('Caesar Cipher');
-    await user.click(caesarcipherRadioButton);
+    const cryptogramRadioButton = getByLabelText('Cryptogram');
+    await user.click(cryptogramRadioButton);
 
-    const addChallengeButton = getByTestId('add-caesar-cipher-challenge');
+    const addChallengeButton = getByTestId('add-cryptogram-challenge');
     await user.click(addChallengeButton);
 
     // Verify the new challenge was added
-    const newChallenge = getByTestId('caesar-cipher-3');
+    const newChallenge = getByTestId('cryptogram-3');
     expect(newChallenge).toBeInTheDocument();
   });
 

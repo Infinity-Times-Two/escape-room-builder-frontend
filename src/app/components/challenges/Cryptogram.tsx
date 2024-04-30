@@ -4,7 +4,7 @@ import Input from '../ui/Input';
 import Modal from '../ui/Modal';
 import { Game } from '@/app/types/types';
 
-interface CaesarCipherChallengeProps {
+interface CryptogramChallengeProps {
   currentChallenge: {
     id: string;
     type: string;
@@ -16,11 +16,11 @@ interface CaesarCipherChallengeProps {
   currentGame: Game;
 }
 
-export default function CaesarCipherChallenge({
+export default function CryptogramChallenge({
   currentChallenge,
   nextChallenge,
   currentGame,
-}: CaesarCipherChallengeProps) {
+}: CryptogramChallengeProps) {
   const [answer, setAnswer] = useState('');
   const [incorrect, setIncorrect] = useState<boolean>(false);
   const router = useRouter();

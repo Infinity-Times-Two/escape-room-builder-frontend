@@ -22,7 +22,7 @@ let formattedTime: { minutes: string; seconds: string } = {
 
 export default function UIKit() {
   return (
-    <div className='flex flex-col items-center justify-start sm:mx-16 lg:mx-0 min-h-screen gap-16 border-x border-t pt-8 border-black'>
+    <div className='flex flex-col items-center justify-start sm:mx-16 lg:mx-0 min-h-screen gap-16 border-x border-t pt-8 border-black bg-indigo-50'>
       <h1>UI Kit</h1>
       <p className='text-xl px-4'>
         The UI is built with DaisyUI components customized with Tailwind CSS.
@@ -83,10 +83,10 @@ export default function UIKit() {
       <div className='flex flex-col gap-4 w-full items-center pb-8 px-4'>
         <h2>Inputs</h2>
         <div>
-          <Input fieldType='text' placeholder='Type here' />
+          <Input fieldType='text' placeholder='Input' />
         </div>
         <div>
-          <TextArea fieldType='sampleTextarea' placeholder='bio' />
+          <TextArea fieldType='sampleTextarea' placeholder='TextArea' />
         </div>
       </div>
       <div className='flex flex-col gap-4 w-full items-center justify-center border-b border-black pb-8'>

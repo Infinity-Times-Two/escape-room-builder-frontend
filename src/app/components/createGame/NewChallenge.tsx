@@ -1,5 +1,5 @@
 import TriviaChallenge from './challengeInputs/TriviaChallenge';
-import CaesarCipherChallenge from './challengeInputs/CaesarCipherChallenge';
+import CryptogramChallenge from './challengeInputs/CryptogramChallenge';
 import WordScrambleChallenge from './challengeInputs/WordScrambleChallenge';
 import FillInTheBlankChallenge from './challengeInputs/FillInTheBlankChallenge';
 import { Challenge } from '@/app/types/types';
@@ -48,9 +48,9 @@ export default function NewChallenge({
         />
       );
     }
-    case 'caesar-cipher': {
+    case 'cryptogram': {
       return (
-        <CaesarCipherChallenge
+        <CryptogramChallenge
           key={challenge.id}
           challengeType={challenge.type}
           clue={clue}

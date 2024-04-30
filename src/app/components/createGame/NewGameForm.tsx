@@ -10,6 +10,12 @@ import TextArea from '../ui/TextArea';
 import { v4 as uuidv4 } from 'uuid';
 import Link from 'next/link';
 import NewChallenge from './NewChallenge';
+import {
+  QuestionMarkCircleIcon,
+  KeyIcon,
+  ArrowPathIcon,
+  PuzzlePieceIcon,
+} from '@heroicons/react/24/outline';
 
 /***
  * TO DO: Refactor this form to use a server action for submission
@@ -31,29 +37,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     bodyBg: '',
     titleBg: '',
     private: false,
-    challenges: [ // If the default challenges are changed, update challengeId's default state value below
-      {
-        id: 'challenge-0',
-        type: 'trivia',
-        description: '',
-        clue: '',
-        answer: '',
-      },
-      {
-        id: 'challenge-1',
-        type: 'caesar-cipher',
-        description: '',
-        clue: '',
-        answer: '',
-      },
-      {
-        id: 'challenge-2',
-        type: 'word-scramble',
-        description: '',
-        clue: [''],
-        answer: '',
-      },
-    ],
+    challenges: [],
   };
 
   const [nextChallenge, setNextChallenge] = useState<string>('trivia');
@@ -63,9 +47,9 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
   const [editError, setEditError] = useState<boolean>(false);
   const [editMessage, setEditMessage] = useState<string>('');
   const [tooManyGames, setTooManyGames] = useState(false);
-  const [challengeId, setChallengeId] = useState(3) 
+  const [challengeId, setChallengeId] = useState(0);
   // Instead of using a fancy way to get a unique ID for mapped challenges, we're just incrementing each time a challenge is added
-  // and not decrementing whenever a challenge is deleted. 
+  // and not decrementing whenever a challenge is deleted.
 
   const { setSavedGames } = useContext(SavedGamesContext);
   const { setLoadedGames } = useContext(LoadedGamesContext);
@@ -144,7 +128,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
 
   useEffect(() => {
     // adding newGame.challenges scrolls to the newest challenge whenever any challenge value changes
-    if (newGame.challenges.length > 4) {
+    if (newGame.challenges.length > 0) {
       const index = newGame.challenges.length - 1;
       const challengeType = newGame.challenges[index].type;
       const challengeId = document.getElementById(`${challengeType}-${index}`);
@@ -184,7 +168,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     let clue: string | string[];
     // Array clues come from the actual value passed to onClueChange, not the event target
     if (
-      type === 'caesar-cipher' ||
+      type === 'cryptogram' ||
       type === 'word-scramble' ||
       type === 'fill-in-the-blank'
     ) {
@@ -246,7 +230,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
           answer: '',
         },
       ];
-      setChallengeId(challengeId + 1)
+      setChallengeId(challengeId + 1);
       const updatedGame = { ...prevGame, challenges: newChallenges };
       saveForm(updatedGame);
       return updatedGame;
@@ -275,6 +259,8 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     setSubmitError(false);
     setSubmitMessage([]);
 
+    const hasNoClues = newGame.challenges.length === 0;
+
     const hasEmptyClue = newGame.challenges.some(
       (challenge) =>
         challenge.clue === '' ||
@@ -302,6 +288,13 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
           ...prev,
           'Please add a short description for your game.',
         ]);
+      case hasNoClues:
+        setSubmitError(true);
+        setSubmitMessage((prev) => [
+          ...prev,
+          'Please add at least one challenge',
+        ]);
+        break;
       case hasEmptyClue:
         setSubmitError(true);
         setSubmitMessage((prev) => [
@@ -316,51 +309,39 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
         ]);
     }
 
-    if (submitError) {
+    if (
+      newGame.gameTitle === '' ||
+      newGame.gameDescription === '' ||
+      hasNoClues ||
+      hasEmptyClue ||
+      hasEmptyAnswer
+    ) {
+      console.log('Not saving game');
       setSavingToDB(false);
       return;
-    }
-
-    // Format clues for DB
-    newGame.challenges.map((challenge) => {
-      if (typeof challenge.clue === 'string') {
-        challenge.clue = challenge.clue.trim();
-        if (challenge.type === 'word-scramble') {
-          let sentenceArray: string[] = [];
-          sentenceArray = challenge.clue.split(' ');
-          challenge.clue = sentenceArray;
-        }
-      }
-      if (challenge.type === 'fill-in-the-blank') {
-        challenge.answer = challenge.answer.replaceAll('"', '');
-      }
-    });
-
-    // Set this game to be the current game in state (if the player chooses to play the game)
-    setSingleGame(newGame);
-    localStorage.setItem('singleGame', JSON.stringify(newGame));
-
-    // Add this game to saved games in state & local storage
-    setSavedGames((prevGames: Game[]) => {
-      let newGames: Game[];
-      if (editGame) {
-        newGames = prevGames.map((game) => {
-          if (game.id === editGame) {
-            return newGame;
-          } else {
-            return game;
+    } else {
+      console.log('Saving game...');
+      // Format clues for DB
+      newGame.challenges.map((challenge) => {
+        if (typeof challenge.clue === 'string') {
+          challenge.clue = challenge.clue.trim();
+          if (challenge.type === 'word-scramble') {
+            let sentenceArray: string[] = [];
+            sentenceArray = challenge.clue.split(' ');
+            challenge.clue = sentenceArray;
           }
-        });
-      } else {
-        newGames = [...prevGames, newGame];
-      }
-      localStorage.setItem('savedGames', JSON.stringify(newGames));
-      return newGames;
-    });
+        }
+        if (challenge.type === 'fill-in-the-blank') {
+          challenge.answer = challenge.answer.replaceAll('"', '');
+        }
+      });
 
-    if (!newGame.private) {
-      // Add to public games in front-end (no need for refetching)
-      setLoadedGames((prevGames: Game[]) => {
+      // Set this game to be the current game in state (if the player chooses to play the game)
+      setSingleGame(newGame);
+      localStorage.setItem('singleGame', JSON.stringify(newGame));
+
+      // Add this game to saved games in state & local storage
+      setSavedGames((prevGames: Game[]) => {
         let newGames: Game[];
         if (editGame) {
           newGames = prevGames.map((game) => {
@@ -373,63 +354,83 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
         } else {
           newGames = [...prevGames, newGame];
         }
-        localStorage.setItem('loadedGames', JSON.stringify(newGames));
+        localStorage.setItem('savedGames', JSON.stringify(newGames));
         return newGames;
       });
-    } else {
-      // remove from public games in FE
-      if (editGame) {
+
+      if (!newGame.private) {
+        // Add to public games in front-end (no need for refetching)
         setLoadedGames((prevGames: Game[]) => {
           let newGames: Game[];
-
-          newGames = prevGames.filter((game) => game.id !== editGame);
+          if (editGame) {
+            newGames = prevGames.map((game) => {
+              if (game.id === editGame) {
+                return newGame;
+              } else {
+                return game;
+              }
+            });
+          } else {
+            newGames = [...prevGames, newGame];
+          }
+          localStorage.setItem('loadedGames', JSON.stringify(newGames));
           return newGames;
         });
-      }
-    }
-
-    // Add to main games table in DB
-    if (user.id !== '') {
-      if (editGame) {
-        setEditError(false);
-        setEditMessage('');
-        const response = await fetch(`/api/game/${editGame}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newGame),
-        });
-        const data = await response.json();
-        if (data.updateGameResponse.$metadata.httpStatusCode === 200) {
-          setEditMessage('Your game was updated successfully!');
-        } else {
-          setEditError(true);
-          setEditMessage(data.message);
-        }
       } else {
-        // /api/createGame directly adds to DB with DynamoDB SDK
-        const response = await fetch('/api/createGame', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newGame),
-        });
-        const data = await response.json();
-        console.log(`data from creating game: ${JSON.stringify(data)}`);
-        if (data.createGameResponse.$metadata.httpStatusCode === 200) {
-          setSubmitMessage(['Game saved!']);
+        // remove from public games in FE
+        if (editGame) {
+          setLoadedGames((prevGames: Game[]) => {
+            let newGames: Game[];
+
+            newGames = prevGames.filter((game) => game.id !== editGame);
+            return newGames;
+          });
         }
       }
-    }
 
-    // Add game ID to the user's saved games array in escape-room-users table in DB
-    if (user.id !== '' && !editGame) {
-      const response = await fetch(`/api/updateUser/${user.id}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ savedGame: newGame.id }),
-      });
-      const data = await response.json();
+      // Add to main games table in DB
+      if (user.id !== '') {
+        if (editGame) {
+          setEditError(false);
+          setEditMessage('');
+          const response = await fetch(`/api/game/${editGame}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newGame),
+          });
+          const data = await response.json();
+          if (data.updateGameResponse.$metadata.httpStatusCode === 200) {
+            setEditMessage('Your game was updated successfully!');
+          } else {
+            setEditError(true);
+            setEditMessage(data.message);
+          }
+        } else {
+          // /api/createGame directly adds to DB with DynamoDB SDK
+          const response = await fetch('/api/createGame', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newGame),
+          });
+          const data = await response.json();
+          console.log(`data from creating game: ${JSON.stringify(data)}`);
+          if (data.createGameResponse.$metadata.httpStatusCode === 200) {
+            setSubmitMessage(['Game saved!']);
+          }
+        }
+      }
+
+      // Add game ID to the user's saved games array in escape-room-users table in DB
+      if (user.id !== '' && !editGame) {
+        const response = await fetch(`/api/updateUser/${user.id}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ savedGame: newGame.id }),
+        });
+        const data = await response.json();
+      }
+      setSavingToDB(false);
     }
-    setSavingToDB(false);
   };
 
   // Reset the current game form
@@ -561,7 +562,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
               handleRemoveChallenge(e, index);
             };
 
-            console.log(`challenge.id: ${challenge.id + '-' + challenge.type}`)
+            console.log(`challenge.id: ${challenge.id + '-' + challenge.type}`);
 
             return (
               <NewChallenge
@@ -588,56 +589,100 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
         <>
           <div className='flex flex-row flex-wrap gap-8 w-full'>
             <div className='flex flex-row flex-wrap gap-8 border-2 border-black p-8 rounded-xl bg-white/50 w-full'>
-              <fieldset className='flex flex-col flex-shrink gap-4'>
-                <legend className='mb-4'>Choose a challenge type:</legend>
-                <div className='flex flex-row-reverse justify-end gap-2'>
-                  <label htmlFor='trivia'>Trivia</label>
-                  <input
-                    type='radio'
-                    name='challengeType'
-                    id='trivia'
-                    value='trivia'
-                    className='radio radio-primary'
-                    onChange={handleNextChallenge}
-                    checked={nextChallenge === 'trivia'}
-                    required
-                  />
-                </div>
-                <div className='flex flex-row-reverse justify-end gap-2'>
-                  <label htmlFor='caesarcipher'>Caesar Cipher</label>
-                  <input
-                    type='radio'
-                    name='challengeType'
-                    id='caesarcipher'
-                    value='caesar-cipher'
-                    className='radio radio-primary'
-                    onChange={handleNextChallenge}
-                    checked={nextChallenge === 'caesar-cipher'}
-                  />
-                </div>
-                <div className='flex flex-row-reverse justify-end gap-2'>
-                  <label htmlFor='wordScramble'>Word Scramble</label>
-                  <input
-                    type='radio'
-                    name='challengeType'
-                    id='wordScramble'
-                    value='word-scramble'
-                    className='radio radio-primary'
-                    onChange={handleNextChallenge}
-                    checked={nextChallenge === 'word-scramble'}
-                  />
-                </div>
-                <div className='flex flex-row-reverse justify-end gap-2'>
-                  <label htmlFor='fillInTheBlank'>Fill in the Blank</label>
-                  <input
-                    type='radio'
-                    name='challengeType'
-                    id='fillInTheBlank'
-                    value='fill-in-the-blank'
-                    className='radio radio-primary'
-                    onChange={handleNextChallenge}
-                    checked={nextChallenge === 'fill-in-the-blank'}
-                  />
+              <fieldset className='flex flex-col w-full gap-4'>
+                <legend className='mb-4 w-full text-center'>
+                  Add a challenge:
+                </legend>
+                <div className='flex w-full justify-around'>
+                  <div className='flex gap-2'>
+                    <label
+                      htmlFor='trivia'
+                      className={`p-2 flex flex-col items-center text-center text-2xl gap-2 ${
+                        nextChallenge === 'trivia'
+                          ? 'border border-black rounded bg-slate-200'
+                          : null
+                      }`}
+                    >
+                      <QuestionMarkCircleIcon className='size-24' />
+                      Trivia
+                    </label>
+                    <input
+                      type='radio'
+                      name='challengeType'
+                      id='trivia'
+                      value='trivia'
+                      className='hidden'
+                      onChange={handleNextChallenge}
+                      checked={nextChallenge === 'trivia'}
+                      required
+                    />
+                  </div>
+                  <div className='flex gap-2'>
+                    <label
+                      htmlFor='cryptogram'
+                      className={`p-2 flex flex-col items-center text-center text-2xl gap-2 ${
+                        nextChallenge === 'cryptogram'
+                          ? 'border border-black rounded bg-slate-200'
+                          : null
+                      }`}
+                    >
+                      <KeyIcon className='size-24' />
+                      Cryptogram
+                    </label>
+                    <input
+                      type='radio'
+                      name='challengeType'
+                      id='cryptogram'
+                      value='cryptogram'
+                      className='hidden'
+                      onChange={handleNextChallenge}
+                      checked={nextChallenge === 'cryptogram'}
+                    />
+                  </div>
+                  <div className='flex flex-row-reverse justify-end gap-2'>
+                    <label
+                      htmlFor='wordScramble'
+                      className={`p-2 flex flex-col items-center text-center text-2xl gap-2 ${
+                        nextChallenge === 'word-scramble'
+                          ? 'border border-black rounded bg-slate-200'
+                          : null
+                      }`}
+                    >
+                      <ArrowPathIcon className='size-24' />
+                      Word Scramble
+                    </label>
+                    <input
+                      type='radio'
+                      name='challengeType'
+                      id='wordScramble'
+                      value='word-scramble'
+                      className='hidden'
+                      onChange={handleNextChallenge}
+                      checked={nextChallenge === 'word-scramble'}
+                    />
+                  </div>
+                  <div className='flex flex-row-reverse justify-end gap-2'>
+                    <label
+                      htmlFor='fillInTheBlank'
+                      className={`p-2 flex flex-col items-center text-center text-2xl gap-2 ${
+                        nextChallenge === 'fill-in-the-blank'
+                          ? 'border border-black rounded bg-slate-200'
+                          : null
+                      }`}
+                    >
+                      <PuzzlePieceIcon className='size-24' />
+                      Fill in the Blank
+                    </label>
+                    <input
+                      type='radio'
+                      name='challengeType'
+                      id='fillInTheBlank'
+                      value='fill-in-the-blank'
+                      className='hidden'
+                      onChange={handleNextChallenge}
+                      checked={nextChallenge === 'fill-in-the-blank'}
+                    />
+                  </div>
                 </div>
               </fieldset>
               <div className='grid place-items-center flex-grow'>
@@ -655,22 +700,6 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
           </div>
         </>
         <div className='flex flex-col sm:flex-row sm:flex-nowrap w-full justify-between'>
-          <div className='form-control w-24'>
-            <label className='cursor-pointer label flex flex-row gap-4'>
-              <span>Private</span>
-              <input
-                type='checkbox'
-                className='checkbox checkbox-secondary'
-                checked={newGame.private}
-                onChange={() =>
-                  setNewGame((prevGame: Game) => ({
-                    ...prevGame,
-                    private: !prevGame.private,
-                  }))
-                }
-              />
-            </label>
-          </div>
           <div className='w-full text-center p-4'>
             {savingToDB && (
               <>
@@ -704,7 +733,22 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
             <span>Create Game</span>
           </button>
         )}
-
+        <div className='flex justify-center w-full form-control w-24'>
+          <label className='cursor-pointer label flex flex-row justify-center gap-4'>
+            <span>Make Private</span>
+            <input
+              type='checkbox'
+              className='checkbox checkbox-secondary'
+              checked={newGame.private}
+              onChange={() =>
+                setNewGame((prevGame: Game) => ({
+                  ...prevGame,
+                  private: !prevGame.private,
+                }))
+              }
+            />
+          </label>
+        </div>
         {editMessage && (
           <div role='alert' className='alert alert-info'>
             <svg
@@ -824,8 +868,27 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
         )}
       </form>
       {!editGame && (
-        <button className='red self-end small' onClick={handleReset} role='reset'>
-          <span>Reset</span>
+        <button
+          className='red self-end small'
+          onClick={handleReset}
+          role='reset'
+        >
+          <span className='group flex gap-1 items-center'>
+            Reset
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              className='stroke-current group-hover:stroke-red-500 shrink-0 h-6 w-6'
+              fill='none'
+              viewBox='0 0 24 24'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth='2'
+                d='M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'
+              />
+            </svg>
+          </span>
         </button>
       )}
     </>
