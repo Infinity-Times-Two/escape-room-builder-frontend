@@ -602,6 +602,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
                           ? 'border border-black rounded bg-slate-200'
                           : null
                       }`}
+                      data-test="add-trivia"
                     >
                       <QuestionMarkCircleIcon className='size-24' />
                       Trivia
@@ -625,6 +626,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
                           ? 'border border-black rounded bg-slate-200'
                           : null
                       }`}
+                      data-test="add-cryptogram"
                     >
                       <KeyIcon className='size-24' />
                       Cryptogram
@@ -647,6 +649,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
                           ? 'border border-black rounded bg-slate-200'
                           : null
                       }`}
+                      data-test="add-word-scramble"
                     >
                       <ArrowPathIcon className='size-24' />
                       Word Scramble
@@ -669,6 +672,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
                           ? 'border border-black rounded bg-slate-200'
                           : null
                       }`}
+                      data-test="add-fill-in-the-blank"
                     >
                       <PuzzlePieceIcon className='size-24' />
                       Fill in the Blank

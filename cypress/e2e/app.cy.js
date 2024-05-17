@@ -17,7 +17,7 @@ describe('Navigation', () => {
     cy.url().should('include', '/play');
 
     // The new page should contain an h1 with "Play"
-    cy.get('h1').contains('Play');
+    cy.get('h1').contains('Choose A Quiz');
 
     // Get the first game card
     cy.getByData('game-card-0').click();
@@ -58,7 +58,7 @@ describe('Game Creation and Editing while logged out', () => {
     cy.getByData('minute-marker-30').should('have.class', 'font-bold');
 
     // Enter data into challenges
-
+    cy.getByData('add-challenge').click();
     // Test Trivia input
     cy.getByData('challenge-0-trivia-clue').type('Trivia question #1');
     cy.getByData('challenge-0-trivia-clue').should(
@@ -72,11 +72,16 @@ describe('Game Creation and Editing while logged out', () => {
     );
 
     // Test Cryptogram input
+    cy.getByData('add-cryptogram').click();
+    cy.getByData('add-challenge').click();
+
     cy.getByData('challenge-1-cryptogram-answer').type('Encrypt this clue');
     cy.getByData('1-encrypt-button').click();
     cy.getByData('challenge-1-cryptogram-clue').should('not.have.value', '');
 
     // Test Word Scramble input
+    cy.getByData('add-word-scramble').click();
+    cy.getByData('add-challenge').click();
     cy.getByData('challenge-2-word-scramble-answer').type(
       'scramble these words'
     );
@@ -87,13 +92,14 @@ describe('Game Creation and Editing while logged out', () => {
     );
 
     // Add a new challenge
+    cy.getByData('add-trivia').click()
     cy.getByData('add-challenge').click();
     cy.getByData('challenge-3-trivia-clue').should('exist');
     cy.getByData('remove-trivia-3').click();
     // This is flaky - later on it may not create a trivia challenge by default
 
     // Test Fill In The Blank input
-    cy.get('#fillInTheBlank').click()
+    cy.getByData('add-fill-in-the-blank').click();
     cy.getByData('add-challenge').click()
     cy.getByData('challenge-4-fill-in-the-blank-answer').type(
       'Fill in the blanks'
