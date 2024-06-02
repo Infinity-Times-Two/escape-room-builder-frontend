@@ -22,9 +22,9 @@ let formattedTime: { minutes: string; seconds: string } = {
 
 export default function UIKit() {
   return (
-    <div className='flex flex-col items-center justify-start sm:mx-16 lg:mx-0 min-h-screen gap-16 border-x border-t pt-8 border-black bg-indigo-50'>
+    <div className='flex flex-col items-center justify-start sm:mx-16 lg:mx-0 min-h-screen gap-16 border-x border-t pt-8 sm:border-black sm:bg-indigo-50'>
       <h1>UI Kit</h1>
-      <p className='text-xl px-4'>
+      <p className='text-xl px-4 text-center'>
         The UI is built with DaisyUI components customized with Tailwind CSS.
       </p>
       <div className='flex flex-col gap-4 w-full items-center justify-center border-b border-black pb-8 px-4'>
@@ -64,7 +64,7 @@ export default function UIKit() {
       </div>
       <div className='flex flex-col gap-4 w-full items-center justify-center border-b border-black pb-8'>
         <h2>Cards</h2>
-        <div className='flex flex-wrap items-start gap-8 w-full justify-center pb-8'>
+        <div className='flex flex-wrap items-start gap-8 w-full justify-center pb-8 px-4 sm:px-20'>
           <GameCard
             roomName={room.name}
             author={room.author}

@@ -33,7 +33,6 @@ const SavedGamesContextProvider = (props: PropsWithChildren<{}>) => {
     if (savedGames.length === 0) {
       const localStorageSavedGames: any = localStorage.getItem('savedGames');
       if (localStorageSavedGames) {
-        console.log('local storage saved games: ', localStorageSavedGames);
         setSavedGames(JSON.parse(localStorageSavedGames));
       }
     }
