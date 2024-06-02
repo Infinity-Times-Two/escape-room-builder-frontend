@@ -42,7 +42,7 @@ export default function TriviaChallenge({
       <p className='text-center font-bold text-xl' data-type='challenge-submit'>{currentChallenge.clue}</p>
       <form
         onSubmit={handleSubmit}
-        className='flex flex-col gap-2 items-center gap-8'
+        className='flex flex-col items-center gap-8'
       >
         <Input
           fieldType='text'

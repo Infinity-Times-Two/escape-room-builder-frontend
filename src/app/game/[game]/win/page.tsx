@@ -2,11 +2,13 @@
 import Link from 'next/link';
 import { useContext } from 'react';
 import { TimerContext } from '@/app/contexts/timerContext';
+import { SingleGameContext } from '@/app/contexts/singleGameContext';
 export default function Win() {
   const { expiry, finishTime } = useContext(TimerContext);
+  const { singleGame } = useContext(SingleGameContext);
 
-  localStorage.removeItem('singleGame')
-  
+  localStorage.removeItem('singleGame');
+
   let formattedTime: { minutes: string; seconds: string } = {
     minutes: '15',
     seconds: '0',
@@ -21,11 +23,14 @@ export default function Win() {
     <div className='flex flex-col items-center justify-start py-16 min-h-screen gap-8'>
       <h1>You win!</h1>
       <h2>Game Stats:</h2>
-      <div className='chip'>
-        <span className='text-lg'>
-          Time remaining: {formattedTime.minutes + 'm ' + formattedTime.seconds + 's'}
-        </span>
-      </div>
+      {singleGame.timeLimit > 0 && (
+        <div className='chip'>
+          <span className='text-lg'>
+            Time remaining:{' '}
+            {formattedTime.minutes + 'm ' + formattedTime.seconds + 's'}
+          </span>
+        </div>
+      )}
       <div className='flex flex-row'>
         <div className='badge orange'>
           <span>Speedy</span>

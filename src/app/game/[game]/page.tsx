@@ -97,6 +97,7 @@ export default function PlayGame({ params }: { params: { game: string } }) {
       // If the game was not found in state or local storage, fetch it from DB
       fetchSingleGame();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDelete = async () => {
@@ -196,6 +197,7 @@ export default function PlayGame({ params }: { params: { game: string } }) {
   }
 
   const timeInMinutes = (singleGame.timeLimit / 60).toFixed(2);
+  console.log('TIME IN MINUTES:', Number(timeInMinutes));
   const formattedTime = parseFloat(timeInMinutes);
 
   return (
@@ -223,6 +225,7 @@ export default function PlayGame({ params }: { params: { game: string } }) {
                   <button
                     className='xl green'
                     onClick={() =>
+                      timeInMinutes !== '0' &&
                       setExpiry(Date.now() + singleGame.timeLimit * 1000)
                     }
                   >
@@ -240,7 +243,7 @@ export default function PlayGame({ params }: { params: { game: string } }) {
                   </span>
                 </div>
                 <div className='badge'>
-                  <span className='text-nowrap'>{formattedTime} minutes</span>
+                  <span className='text-nowrap'>{timeInMinutes !== '0' ? 'No time limit' : `${formattedTime} minutes`}</span>
                 </div>
               </div>
               {showEdit && (

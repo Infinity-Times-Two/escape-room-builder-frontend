@@ -6,7 +6,7 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 255, 255, 255;
   --background-end-rgb: 255, 255, 255;
-  --btn-green-bg: hsl(126, 45%, 96%);
+  --btn-green-bg: hsl(127, 43%, 96%);
   --btn-red-bg: hsl(0, 100%, 96%);
   --light-red: hsl(0, 100%, 96%);
   --dark-red: hsl(0, 58%, 27%);
@@ -14,7 +14,7 @@
 }
 
 dialog {
-  @apply shadow-none border border-black border-2;
+  @apply shadow-none border-black border-2;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -166,7 +166,7 @@ h3 {
   }
 }
 
-button {
+button, button[type='button'] {
   @apply rounded-md bg-black font-semibold m-2 self-center;
   font-family: var(--font-work-sans);
 }

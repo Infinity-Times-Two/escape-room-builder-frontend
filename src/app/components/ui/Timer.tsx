@@ -45,7 +45,7 @@ export default function Timer(props: { timeLeft: number }) {
   // Note - this will be positioned relative to <main>, the nearest relatively positioned element
   return (
     <div className='flex justify-center m-6 absolute right-0 top-0 min-w-[300px]'>
-      <div className='flex flex-row nowrap justify-between items-center gap-2 block rounded-full bg-white min-w-[250px] text-black text-xl font-semibold border-2 border-black py-1.5 px-8 tracking-wider'>
+      <div className='flex flex-row nowrap justify-between items-center gap-2 rounded-full bg-white min-w-[250px] text-black text-xl font-semibold border-2 border-black py-1.5 px-8 tracking-wider'>
         <span>
           {/* Only render time left after first calculation */}
           Time left:

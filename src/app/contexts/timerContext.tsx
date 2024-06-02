@@ -9,14 +9,13 @@ type TimerContextType = {
 };
 
 const TimerContext = createContext<TimerContextType>({
-  expiry: 0, 
+  expiry: 0,
   setExpiry: () => {},
   finishTime: 0,
   setFinishTime: () => {},
 });
 
 const TimerContextProvider = (props: PropsWithChildren<{}>) => {
-
   const [expiry, setExpiry] = useState<number>(0);
   const [finishTime, setFinishTime] = useState<number>(0);
 
@@ -35,7 +34,6 @@ const TimerContextProvider = (props: PropsWithChildren<{}>) => {
       {props.children}
     </TimerContext.Provider>
   );
-
 };
 
 export { TimerContext, TimerContextProvider };

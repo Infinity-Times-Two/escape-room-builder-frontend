@@ -10,6 +10,8 @@ import TextArea from '../ui/TextArea';
 import { v4 as uuidv4 } from 'uuid';
 import Link from 'next/link';
 import NewChallenge from './NewChallenge';
+import { useHotkeys } from 'react-hotkeys-hook';
+import toast, { Toaster } from 'react-hot-toast';
 import {
   QuestionMarkCircleIcon,
   KeyIcon,
@@ -30,7 +32,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     id: '',
     gameTitle: '',
     gameDescription: '',
-    timeLimit: 900,
+    timeLimit: 0,
     theme: '',
     author: user.firstName,
     authorId: user.id,
@@ -40,14 +42,14 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     challenges: [],
   };
 
-  const [nextChallenge, setNextChallenge] = useState<string>('trivia');
   const [savingToDB, setSavingToDB] = useState<boolean>(false);
   const [submitError, setSubmitError] = useState<boolean>(false);
   const [submitMessage, setSubmitMessage] = useState<string[]>([]);
   const [editError, setEditError] = useState<boolean>(false);
   const [editMessage, setEditMessage] = useState<string>('');
-  const [tooManyGames, setTooManyGames] = useState(false);
-  const [challengeId, setChallengeId] = useState(0);
+  const [tooManyGames, setTooManyGames] = useState<boolean>(false);
+  const [challengeId, setChallengeId] = useState<number>(0);
+  const [editingDetails, setEditingDetails] = useState<boolean>(true);
   // Instead of using a fancy way to get a unique ID for mapped challenges, we're just incrementing each time a challenge is added
   // and not decrementing whenever a challenge is deleted.
 
@@ -105,6 +107,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
         saveForm(gameData);
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.id, newGame.id]);
 
   // Reusable function to save form to localStorage
@@ -141,6 +144,8 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
   }, [newGame.challenges.length]);
 
   const handleInputChange = (e: any) => {
+    setSubmitError(false);
+    setSubmitMessage([]);
     setNewGame((prevGame: Game) => {
       let saveGame: Game = prevGame;
       switch (e.target.dataset.type) {
@@ -157,6 +162,8 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
   };
 
   const handleTimeLimitChange = (e: any) => {
+    setSubmitError(false);
+    setSubmitMessage([]);
     setNewGame((prevGame: Game) => {
       const newGame = { ...prevGame, timeLimit: e.target.value };
       saveForm(newGame);
@@ -164,7 +171,36 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     });
   };
 
+  const handleGoToChallenges = () => {
+    let hasError = false;
+    setSubmitMessage([]);
+
+    if (newGame.gameTitle === '') {
+      hasError = true;
+      setSubmitMessage((prev) => [
+        ...prev,
+        'Please add a title for your game.',
+      ]);
+    }
+
+    if (newGame.gameDescription === '') {
+      hasError = true;
+      setSubmitMessage((prev) => [
+        ...prev,
+        'Please add a short description for your game.',
+      ]);
+    }
+
+    setSubmitError(hasError);
+
+    if (!hasError) {
+      setEditingDetails(!editingDetails);
+    }
+  };
+
   const handleClueChange = (e: any, type: string, index: number) => {
+    setSubmitError(false);
+    setSubmitMessage([]);
     let clue: string | string[];
     // Array clues come from the actual value passed to onClueChange, not the event target
     if (
@@ -190,6 +226,8 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
   };
 
   const handleDescriptionChange = (e: any, index: number) => {
+    setSubmitError(false);
+    setSubmitMessage([]);
     setNewGame((prevGame: Game) => {
       const newChallenges = prevGame.challenges.map((item, itemIndex) => {
         if (itemIndex === index) {
@@ -204,6 +242,8 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
   };
 
   const handleAnswerChange = (e: any, index: number) => {
+    setSubmitError(false);
+    setSubmitMessage([]);
     setNewGame((prevGame: Game) => {
       const newChallenges = prevGame.challenges.map((item, itemIndex) => {
         if (itemIndex === index) {
@@ -217,14 +257,13 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     });
   };
 
-  const handleAddChallenge = (e: any) => {
-    e.preventDefault();
+  const handleAddChallenge = (challengeType: string) => {
     setNewGame((prevGame: Game) => {
       const newChallenges = [
         ...prevGame.challenges,
         {
           id: `challenge-${challengeId}`, // this number should be the current length of the challenge array (challenges are zero-indexed)
-          type: nextChallenge,
+          type: challengeType,
           description: '',
           clue: '',
           answer: '',
@@ -247,10 +286,6 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
       saveForm(updatedGame);
       return updatedGame;
     });
-  };
-
-  const handleNextChallenge = (e: any) => {
-    setNextChallenge(e.target.value);
   };
 
   const handleSubmit = async (e: any) => {
@@ -360,6 +395,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
 
       if (!newGame.private) {
         // Add to public games in front-end (no need for refetching)
+        console.log('Saving private game...')
         setLoadedGames((prevGames: Game[]) => {
           let newGames: Game[];
           if (editGame) {
@@ -378,6 +414,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
         });
       } else {
         // remove from public games in FE
+        console.log('saving public game...')
         if (editGame) {
           setLoadedGames((prevGames: Game[]) => {
             let newGames: Game[];
@@ -390,6 +427,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
 
       // Add to main games table in DB
       if (user.id !== '') {
+        console.log('saving to DB...')
         if (editGame) {
           setEditError(false);
           setEditMessage('');
@@ -418,6 +456,36 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
             setSubmitMessage(['Game saved!']);
           }
         }
+      } else {
+        console.log('not saving to DB')
+        toast.custom(
+          (t) => (
+            <div role='alert' className='alert alert-info'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+                className='stroke-current shrink-0 w-6 h-6'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
+                ></path>
+              </svg>
+              <span data-test='logged-out-message'>
+                Your game is saved to your device. If you would like to share or
+                save across devices, please <Link href='/sign-in'>sign in</Link>{' '}
+                or <Link href='/sign-up'>sign up</Link>.
+              </span>
+              <button onClick={() => toast.dismiss(t.id)}>
+                <span>Dismiss</span>
+              </button>
+            </div>
+          ),
+          { position: 'bottom-center' }
+        );
       }
 
       // Add game ID to the user's saved games array in escape-room-users table in DB
@@ -443,266 +511,218 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
     setNewGame(defaultGameData);
   };
 
-  const minutes = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
+  const maxTimeLimit = Array.from(Array(16).keys());
+
   return (
     <>
-      {tooManyGames && (
-        <div
-          role='alert'
-          className='alert alert-error lg:max-w-2xl text-white bg-rose-900'
-        >
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            className='stroke-current shrink-0 h-6 w-6'
-            fill='none'
-            viewBox='0 0 24 24'
-          >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth='2'
-              d='M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'
-            />
-          </svg>
-          <span data-test='tooManyGames-error'>
-            Only 3 games may be created per day. You can create another game in{' '}
-            {Number(
-              (86400000 - (Date.now() - user.recentGameTimestamps[0])) /
-                1000 /
-                60 /
-                60
-            ).toFixed(1)}{' '}
-            hours.
-          </span>
-        </div>
-      )}
+      {tooManyGames &&
+        toast.custom(
+          (t) => (
+            <div
+              role='alert'
+              className='alert alert-error lg:max-w-2xl text-white bg-rose-900'
+            >
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                className='stroke-current shrink-0 h-6 w-6'
+                fill='none'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'
+                />
+              </svg>
+              <span data-test='tooManyGames-error'>
+                Only 3 games may be created per day. You can create another game
+                in{' '}
+                {Number(
+                  (86400000 - (Date.now() - user.recentGameTimestamps[0])) /
+                    1000 /
+                    60 /
+                    60
+                ).toFixed(1)}{' '}
+                hours.
+              </span>
+              <button onClick={() => toast.dismiss(t.id)}>
+                <span>Dismiss</span>
+              </button>
+            </div>
+          ),
+          { position: 'bottom-center' }
+        )}
       {/* Update to <form action={...}> when this has been refactored to a server action */}
-      <form className='flex flex-col min-h-screen w-11/12 xs:w-4/5 md:w-3/4 gap-8'>
-        <div className='flex flex-col gap-4'>
-          <h1>Create your Quiz</h1>
-          <label htmlFor='gameTitle'>Name your Quiz</label>
-          <Input
-            fieldType='gameTitle'
-            value={newGame.gameTitle}
-            placeholder='Room name'
-            onChange={handleInputChange}
-            required
-            dataTest='game-title'
-          />
-        </div>
-        <div className='flex flex-col gap-4 max-w-full'>
-          <label htmlFor='gameDescription'>Describe your Quiz</label>
-          <TextArea
-            fieldType='gameDescription'
-            value={newGame.gameDescription}
-            placeholder='Describe this room'
-            onChange={handleInputChange}
-            dataTest='game-description'
-          />
-        </div>
-        <div className='flex flex-col gap-4'>
-          <label htmlFor='timeLimit'>
-            Time limit:{' '}
-            <span className='countdown'>
-              <span
-                style={
-                  { '--value': newGame.timeLimit / 60 } as React.CSSProperties
-                }
-                className='text-right mr-1'
-              ></span>
-            </span>
-            minutes
-          </label>
-          <input
-            type='range'
-            min={300}
-            max={3600}
-            value={newGame.timeLimit}
-            className='range range-lg [--range-shdw:violet]'
-            step={300}
-            onChange={handleTimeLimitChange}
-            id='timeLimit'
-            data-test='time-limit'
-            data-testid='time-limit'
-          />
-          <div className='w-full flex justify-between text-xs sm:text-base pl-px'>
-            {minutes.map((item: number) => {
-              return (
-                <span
-                  data-test={`minute-marker-${item}`}
-                  key={`minute-${item}`}
-                  className={
-                    Number(newGame.timeLimit) === item * 60
-                      ? 'flex items-center justify-center p-0 sm:p-2 font-bold sm:border sm:border-black rounded-full w-[1rem] min-h-[1rem] sm:w-[2.5rem] sm:min-h-[2.5rem] bg-teal-100'
-                      : 'flex items-center justify-center p-0 sm:p-2 w-[1rem] min-h-[1rem] sm:w-[2.5rem] sm:min-h-[2.5rem]'
-                  }
-                >
-                  {String(item).padStart(2, '0')}
-                </span>
-              );
-            })}
-          </div>
-        </div>
-        <h2>Challenges</h2>
-
-        {newGame.challenges.length === 0 ? (
-          <p>Add a challenge!</p>
-        ) : (
-          newGame.challenges.map((challenge: Challenge, index) => {
-            const onClueChange = (e: any) => {
-              handleClueChange(e, challenge.type, index);
-            };
-            const onDescriptionChange = (e: any) => {
-              handleDescriptionChange(e, index);
-            };
-            const onAnswerChange = (e: any) => {
-              handleAnswerChange(e, index);
-            };
-            const onRemove = (e: any) => {
-              handleRemoveChallenge(e, index);
-            };
-
-            console.log(`challenge.id: ${challenge.id + '-' + challenge.type}`);
-
-            return (
-              <NewChallenge
-                key={challenge.type + '-' + challenge.id}
-                challenge={challenge}
-                clue={newGame.challenges[index].clue}
-                description={newGame.challenges[index].description}
-                answer={newGame.challenges[index].answer}
-                onClueChange={onClueChange}
-                onDescriptionChange={onDescriptionChange}
-                onAnswerChange={onAnswerChange}
-                onRemove={onRemove}
-                index={index}
-                dataTest={`${challenge.id}-${String(challenge.type).replace(
-                  ' ',
-                  '-'
-                )}`}
+      <form className='flex flex-col items-center min-h-screen w-11/12 sm:w-4/5 md:w-3/4 gap-8'>
+        {editingDetails ? (
+          <>
+            <div className='flex flex-col gap-4 w-full'>
+              <h1>Create your Quiz</h1>
+              <label htmlFor='gameTitle'>Name your Quiz</label>
+              <Input
+                fieldType='gameTitle'
+                value={newGame.gameTitle}
+                placeholder='Room name'
+                onChange={handleInputChange}
+                required
+                dataTest='game-title'
                 submitError={submitError}
               />
-            );
-          })
-        )}
-
-        <>
-          <div className='flex flex-row flex-wrap gap-8 w-full'>
-            <div className='flex flex-row flex-wrap gap-8 border-2 border-black p-8 rounded-xl bg-white/50 w-full'>
-              <fieldset className='flex flex-col w-full gap-4'>
-                <legend className='mb-4 w-full text-center'>
-                  Add a challenge:
-                </legend>
-                <div className='flex w-full justify-around'>
-                  <div className='flex gap-2'>
-                    <label
-                      htmlFor='trivia'
-                      className={`p-2 flex flex-col items-center text-center text-2xl gap-2 ${
-                        nextChallenge === 'trivia'
-                          ? 'border border-black rounded bg-slate-200'
-                          : null
-                      }`}
-                      data-test="add-trivia"
+            </div>
+            <div className='flex flex-col gap-4 w-full'>
+              <label htmlFor='gameDescription'>Describe your Quiz</label>
+              <TextArea
+                fieldType='gameDescription'
+                value={newGame.gameDescription}
+                placeholder='Describe this room'
+                onChange={handleInputChange}
+                dataTest='game-description'
+                submitError={submitError}
+              />
+            </div>
+            <div className='flex flex-col gap-4 w-full'>
+              <label htmlFor='timeLimit'>
+                Time limit:{' '}
+                {newGame.timeLimit == 0 ? (
+                  <span className='ml-2'>None</span>
+                ) : (
+                  <>
+                    <span className='countdown'>
+                      <span
+                        style={
+                          {
+                            '--value': newGame.timeLimit / 60,
+                          } as React.CSSProperties
+                        }
+                        className='text-right mr-1'
+                      ></span>
+                    </span>
+                    minutes
+                  </>
+                )}
+              </label>
+              <input
+                type='range'
+                min={0}
+                max={900}
+                value={newGame.timeLimit}
+                className='range range-lg [--range-shdw:violet] text-white'
+                step={60}
+                onChange={handleTimeLimitChange}
+                id='timeLimit'
+                data-test='time-limit'
+                data-testid='time-limit'
+              />
+              <div className='w-full flex justify-between text-xs sm:text-base pl-px'>
+                {maxTimeLimit.map((item: number) => {
+                  return (
+                    <span
+                      data-test={`minute-marker-${item}`}
+                      key={`minute-${item}`}
+                      className={
+                        Number(newGame.timeLimit) === item * 60
+                          ? 'flex items-center justify-center p-0 sm:p-2 font-bold sm:border sm:border-black rounded-full w-[1rem] min-h-[1rem] sm:w-[2.5rem] sm:min-h-[2.5rem] bg-teal-100'
+                          : 'flex items-center justify-center p-0 sm:p-2 w-[1rem] min-h-[1rem] sm:w-[2.5rem] sm:min-h-[2.5rem]'
+                      }
                     >
-                      <QuestionMarkCircleIcon className='size-24' />
-                      Trivia
-                    </label>
-                    <input
-                      type='radio'
-                      name='challengeType'
-                      id='trivia'
-                      value='trivia'
-                      className='hidden'
-                      onChange={handleNextChallenge}
-                      checked={nextChallenge === 'trivia'}
-                      required
-                    />
-                  </div>
-                  <div className='flex gap-2'>
-                    <label
-                      htmlFor='cryptogram'
-                      className={`p-2 flex flex-col items-center text-center text-2xl gap-2 ${
-                        nextChallenge === 'cryptogram'
-                          ? 'border border-black rounded bg-slate-200'
-                          : null
-                      }`}
-                      data-test="add-cryptogram"
-                    >
-                      <KeyIcon className='size-24' />
-                      Cryptogram
-                    </label>
-                    <input
-                      type='radio'
-                      name='challengeType'
-                      id='cryptogram'
-                      value='cryptogram'
-                      className='hidden'
-                      onChange={handleNextChallenge}
-                      checked={nextChallenge === 'cryptogram'}
-                    />
-                  </div>
-                  <div className='flex flex-row-reverse justify-end gap-2'>
-                    <label
-                      htmlFor='wordScramble'
-                      className={`p-2 flex flex-col items-center text-center text-2xl gap-2 ${
-                        nextChallenge === 'word-scramble'
-                          ? 'border border-black rounded bg-slate-200'
-                          : null
-                      }`}
-                      data-test="add-word-scramble"
-                    >
-                      <ArrowPathIcon className='size-24' />
-                      Word Scramble
-                    </label>
-                    <input
-                      type='radio'
-                      name='challengeType'
-                      id='wordScramble'
-                      value='word-scramble'
-                      className='hidden'
-                      onChange={handleNextChallenge}
-                      checked={nextChallenge === 'word-scramble'}
-                    />
-                  </div>
-                  <div className='flex flex-row-reverse justify-end gap-2'>
-                    <label
-                      htmlFor='fillInTheBlank'
-                      className={`p-2 flex flex-col items-center text-center text-2xl gap-2 ${
-                        nextChallenge === 'fill-in-the-blank'
-                          ? 'border border-black rounded bg-slate-200'
-                          : null
-                      }`}
-                      data-test="add-fill-in-the-blank"
-                    >
-                      <PuzzlePieceIcon className='size-24' />
-                      Fill in the Blank
-                    </label>
-                    <input
-                      type='radio'
-                      name='challengeType'
-                      id='fillInTheBlank'
-                      value='fill-in-the-blank'
-                      className='hidden'
-                      onChange={handleNextChallenge}
-                      checked={nextChallenge === 'fill-in-the-blank'}
-                    />
-                  </div>
-                </div>
-              </fieldset>
-              <div className='grid place-items-center flex-grow'>
-                <button
-                  onClick={handleAddChallenge}
-                  data-test='add-challenge'
-                  data-testid={`add-${nextChallenge}-challenge`}
-                >
-                  <span>
-                    Add {nextChallenge.replaceAll('-', ' ')} Challenge
-                  </span>
-                </button>
+                      {String(item).padStart(2, '0')}
+                    </span>
+                  );
+                })}
               </div>
             </div>
-          </div>
-        </>
+          </>
+        ) : (
+          <>
+            <h2>Challenges</h2>
+
+            {newGame.challenges.length === 0 ? (
+              <p>Add your first challenge!</p>
+            ) : (
+              newGame.challenges.map((challenge: Challenge, index) => {
+                const onClueChange = (e: any) => {
+                  handleClueChange(e, challenge.type, index);
+                };
+                const onDescriptionChange = (e: any) => {
+                  handleDescriptionChange(e, index);
+                };
+                const onAnswerChange = (e: any) => {
+                  handleAnswerChange(e, index);
+                };
+                const onRemove = (e: any) => {
+                  handleRemoveChallenge(e, index);
+                };
+
+                return (
+                  <NewChallenge
+                    key={challenge.type + '-' + challenge.id}
+                    challenge={challenge}
+                    clue={newGame.challenges[index].clue}
+                    description={newGame.challenges[index].description}
+                    answer={newGame.challenges[index].answer}
+                    onClueChange={onClueChange}
+                    onDescriptionChange={onDescriptionChange}
+                    onAnswerChange={onAnswerChange}
+                    onRemove={onRemove}
+                    index={index}
+                    dataTest={`${challenge.id}-${String(challenge.type).replace(
+                      ' ',
+                      '-'
+                    )}`}
+                    submitError={submitError}
+                  />
+                );
+              })
+            )}
+
+            <div className='flex w-full justify-around flex-wrap'>
+              <button
+                data-test='add-trivia'
+                type='button'
+                onClick={() => handleAddChallenge('trivia')}
+              >
+                <span className='flex flex-col items-center'>
+                  <QuestionMarkCircleIcon className='size-24' />
+                  Trivia
+                </span>
+              </button>
+
+              <button
+                data-test='add-cryptogram'
+                data-testid='add-cryptogram'
+                type='button'
+                onClick={() => handleAddChallenge('cryptogram')}
+              >
+                <span className='flex flex-col items-center'>
+                  <KeyIcon className='size-24' />
+                  Cryptogram
+                </span>
+              </button>
+              <button
+                data-test='add-word-scramble'
+                type='button'
+                onClick={() => handleAddChallenge('word-scramble')}
+              >
+                <span className='flex flex-col items-center'>
+                  <ArrowPathIcon className='size-24' />
+                  Word Scramble
+                </span>
+              </button>
+
+              <button
+                data-test='add-fill-in-the-blank'
+                type='button'
+                onClick={() => handleAddChallenge('fill-in-the-blank')}
+              >
+                <span className='flex flex-col items-center'>
+                  <PuzzlePieceIcon className='size-24' />
+                  Fill in the Blank
+                </span>
+              </button>
+            </div>
+          </>
+        )}
         <div className='flex flex-col sm:flex-row sm:flex-nowrap w-full justify-between'>
           <div className='w-full text-center p-4'>
             {savingToDB && (
@@ -725,90 +745,150 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
           </button>
         )}
 
+        <button type='button' onClick={handleGoToChallenges}>
+          <span className='flex items-center gap-2'>
+            {editingDetails ? (
+              <>
+                Next
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={1.5}
+                  stroke='currentColor'
+                  className='size-6'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='m8.25 4.5 7.5 7.5-7.5 7.5'
+                  />
+                </svg>
+              </>
+            ) : (
+              <>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={1.5}
+                  stroke='currentColor'
+                  className='size-6'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M15.75 19.5 8.25 12l7.5-7.5'
+                  />
+                </svg>
+                Edit Details
+              </>
+            )}
+          </span>
+        </button>
+
         {/* Show by default on create page */}
-        {!editGame && singleGame?.id !== newGame.id && (
+        {!editGame && singleGame?.id !== newGame.id && !editingDetails && (
           <button
             // remove onClick when this is refactored to a server action
             onClick={handleSubmit}
             data-test='create-game'
             data-testid='create-game'
-            disabled={tooManyGames}
+            disabled={tooManyGames || newGame.challenges.length === 0}
           >
             <span>Create Game</span>
           </button>
         )}
-        <div className='flex justify-center w-full form-control w-24'>
-          <label className='cursor-pointer label flex flex-row justify-center gap-4'>
-            <span>Make Private</span>
-            <input
-              type='checkbox'
-              className='checkbox checkbox-secondary'
-              checked={newGame.private}
-              onChange={() =>
-                setNewGame((prevGame: Game) => ({
-                  ...prevGame,
-                  private: !prevGame.private,
-                }))
-              }
-            />
-          </label>
-        </div>
-        {editMessage && (
-          <div role='alert' className='alert alert-info'>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              className='stroke-current shrink-0 w-6 h-6'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth='2'
-                d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
-              ></path>
-            </svg>
-            <span data-test='edit-message'>{editMessage}</span>
-          </div>
-        )}
-
-        {editError && (
-          <div role='alert' className='alert alert-error'>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              className='stroke-current shrink-0 h-6 w-6'
-              fill='none'
-              viewBox='0 0 24 24'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth='2'
-                d='M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'
+        {!editingDetails && (
+          <div className='flex justify-center form-control w-24'>
+            <label className='cursor-pointer label flex flex-row justify-center gap-4'>
+              <span>Make Private</span>
+              <input
+                type='checkbox'
+                className='checkbox checkbox-secondary'
+                checked={newGame.private}
+                onChange={() =>
+                  setNewGame((prevGame: Game) => ({
+                    ...prevGame,
+                    private: !prevGame.private,
+                  }))
+                }
               />
-            </svg>
-            <span data-test='edit-error'>{editError}</span>
+            </label>
           </div>
         )}
+        {editError &&
+          toast.custom(
+            (t) => (
+              <div role='alert' className='alert alert-info'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  className='stroke-current shrink-0 w-6 h-6'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
+                  ></path>
+                </svg>
+                <span data-test='edit-message'>{editMessage}</span>
+                <button onClick={() => toast.dismiss(t.id)}>
+                  <span>Dismiss</span>
+                </button>
+              </div>
+            ),
+            { position: 'bottom-center' }
+          )}
 
-        {submitMessage[0] === `Game saved!` && (
-          <div role='alert' className='alert alert-info'>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              className='stroke-current shrink-0 w-6 h-6'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth='2'
-                d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
-              ></path>
-            </svg>
-            <span data-test='edit-message'>{submitMessage}</span>
-          </div>
-        )}
+        {editError &&
+          toast.custom(
+            <div role='alert' className='alert alert-error'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                className='stroke-current shrink-0 h-6 w-6'
+                fill='none'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'
+                />
+              </svg>
+              <span data-test='edit-error'>{editError}</span>
+            </div>,
+            { position: 'bottom-center' }
+          )}
+
+        {submitMessage[0] === `Game saved!` &&
+          toast.custom(
+            (t) => (
+              <div role='alert' className='alert alert-info'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  className='stroke-current shrink-0 w-6 h-6'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
+                  ></path>
+                </svg>
+                <span data-test='edit-message'>{submitMessage}</span>
+                <button onClick={() => toast.dismiss(t.id)}>
+                  <span>Dismiss</span>
+                </button>
+              </div>
+            ),
+            { position: 'bottom-center' }
+          )}
 
         {/* Show after creating game or after editing game*/}
         {singleGame?.id === newGame.id && newGame.id !== '' && (
@@ -826,50 +906,31 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
             </button>
           </Link>
         )}
-        {singleGame?.id === newGame.id && user.id === '' && (
-          <div role='alert' className='alert alert-info'>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              className='stroke-current shrink-0 w-6 h-6'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth='2'
-                d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
-              ></path>
-            </svg>
-            <span data-test='logged-out-message'>
-              Your game is saved to your device. If you would like to share or
-              save across devices, please <Link href='/sign-in'>sign in</Link>{' '}
-              or <Link href='/sign-up'>sign up</Link>.
-            </span>
-          </div>
-        )}
-        {submitError && (
-          <div role='alert' className='alert alert-warning mx-4 self-center'>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              className='stroke-current shrink-0 h-6 w-6'
-              fill='none'
-              viewBox='0 0 24 24'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth='2'
-                d='M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'
-              />
-            </svg>
-            <ul>
-              {submitMessage.map((message, index) => (
-                <li key={`${message}-${index}`}>{message}</li>
-              ))}
-            </ul>
-          </div>
-        )}
+
+        {submitError &&
+          toast.custom(
+            <div role='alert' className='alert alert-warning mx-4 self-center'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                className='stroke-current shrink-0 h-6 w-6'
+                fill='none'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'
+                />
+              </svg>
+              <ul>
+                {submitMessage.map((message, index) => (
+                  <li key={`${message}-${index}`}>{message}</li>
+                ))}
+              </ul>
+            </div>,
+            { position: 'bottom-center' }
+          )}
       </form>
       {!editGame && (
         <button
@@ -895,6 +956,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
           </span>
         </button>
       )}
+      <Toaster />
     </>
   );
 }

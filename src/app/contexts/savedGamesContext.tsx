@@ -30,6 +30,16 @@ const SavedGamesContextProvider = (props: PropsWithChildren<{}>) => {
   const { user } = useContext(UserContext);
 
   useEffect(() => {
+    if (savedGames.length === 0) {
+      const localStorageSavedGames: any = localStorage.getItem('savedGames');
+      if (localStorageSavedGames) {
+        console.log('local storage saved games: ', localStorageSavedGames);
+        setSavedGames(JSON.parse(localStorageSavedGames));
+      }
+    }
+  }, [savedGames.length]);
+
+  useEffect(() => {
     const fetchData = async () => {
       setLoadingSavedGames(true);
       const response = await fetch(`/api/games/${user.id}`);

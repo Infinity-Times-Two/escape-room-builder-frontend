@@ -1,10 +1,13 @@
+'use client';
 import NewGameForm from '../components/createGame/NewGameForm';
 import Link from 'next/link';
 import { SignedOut } from '@clerk/nextjs';
+import toast, { Toaster } from 'react-hot-toast';
+import { useEffect } from 'react';
 
 export default function NewGame() {
-  return (
-    <div className='flex flex-col items-center justify-start min-h-screen gap-8 w-full'>
+  useEffect(() => {
+    toast.custom(
       <SignedOut>
         <div role='alert' className='alert alert-info w-9/12 mx-20'>
           <svg
@@ -21,14 +24,21 @@ export default function NewGame() {
             ></path>
           </svg>
           <span>
-            You can create and save a game on your device without logging in. If
-            you want to share your game with others or across devices,
-            please <Link href='/sign-in'>Sign In</Link> or{' '}
-            <Link href='/sign-up'>Sign Up</Link>.
+            If you want to share your game with others or across devices, please{' '}
+            <Link href='/sign-in'>Sign In</Link>
           </span>
         </div>
-      </SignedOut>
+      </SignedOut>,
+      {
+        position: 'bottom-center',
+      }
+    );
+  }, []);
+
+  return (
+    <div className='flex flex-col items-center justify-start min-h-screen gap-8 w-full'>
       <NewGameForm />
+      <Toaster />
     </div>
   );
 }

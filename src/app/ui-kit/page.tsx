@@ -47,7 +47,7 @@ export default function UIKit() {
       <div className='flex flex-col gap-4 w-full items-center justify-center border-b border-black pb-8 px-4'>
         <h2>Badges</h2>
 
-        <div className='flex flex-wrap items-start w-full justify-center items-center pb-8 px-4'>
+        <div className='flex flex-wrap w-full justify-center items-center pb-8 px-4'>
           <div className='badge'>
             <span>Default Badge</span>
           </div>
@@ -93,7 +93,7 @@ export default function UIKit() {
         <h2>Timer</h2>
         <div className='flex flex-wrap items-start gap-8 w-full justify-center pb-8'>
           <div className='flex justify-center m-6 min-w-[200px]'>
-            <div className='flex flex-row nowrap justify-between gap-2 block rounded-full bg-white min-w-[250px] text-black text-xl font-semibold border-2 border-black py-1.5 px-8 tracking-wider'>
+            <div className='flex flex-row nowrap justify-between gap-2 rounded-full bg-white min-w-[250px] text-black text-xl font-semibold border-2 border-black py-1.5 px-8 tracking-wider'>
               <span>Time left:</span>{' '}
               <span>
                 {Number(formattedTime.minutes) < 300 &&

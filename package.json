@@ -30,6 +30,8 @@
     "react-dom": "^18",
     "react-flip-move": "^3.0.5",
     "react-flip-toolkit": "^7.1.0",
+    "react-hot-toast": "^2.4.1",
+    "react-hotkeys-hook": "^4.5.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

@@ -51,7 +51,7 @@ global.fetch = jest.fn(() =>
   })
 );
 
-describe('New Game Form', () => {
+describe.only('New Game Form', () => {
   it('renders all inputs', () => {
     const { getByLabelText } = render(<NewGameForm />);
 
@@ -85,7 +85,7 @@ describe('Handle form inputs and submission', () => {
     expect(timeLimit.value).toBe('1800');
   });
 
-  it('Adds inputs to challenges', async () => {
+  it.only('Adds inputs to challenges', async () => {
     const {
       getByLabelText,
       getAllByLabelText,
@@ -96,6 +96,8 @@ describe('Handle form inputs and submission', () => {
     const user = userEvent.setup();
 
     // Add Trivia clue
+    const addtriviaButton = getByTestId('add-trivia-challenge');
+    await user.click(addtriviaButton);
     const triviaClue = getByLabelText('Question (required)');
     await user.click(triviaClue);
     await user.keyboard('Trivia question #1');
@@ -105,6 +107,10 @@ describe('Handle form inputs and submission', () => {
     await user.keyboard('Trivia answer #1');
 
     // Add Cryptogram description
+    const cryptogramLabel = getByTestId('add-cryptogram');
+    await user.click(cryptogramLabel);
+    const addCryptogramButton = getByTestId('add-cryptogram-challenge');
+    await user.click(addCryptogramButton);
     const cipherDesc = getByTestId('challenge-1-cryptogram-answer');
     await user.click(cipherDesc);
     await user.keyboard('Decrypt this phrase');
@@ -115,6 +121,10 @@ describe('Handle form inputs and submission', () => {
     expect(cipherClue.value).not.toBeNull();
 
     // Add Word Scramble description & answer
+    const wordScrambleLabel = getByTestId('add-cryptogram');
+    await user.click(wordScrambleLabel);
+    const addWordScrambleButton = getByTestId('add-word-scramble-challenge');
+    await user.click(addWordScrambleButton);
     const scrambleDescription = getByPlaceholderText(
       'Describe the phrase to be solved'
     );
@@ -235,22 +245,30 @@ it('Adds a FITB challenge and renders the answer & clues', async () => {
   const addChallengeButton = getByTestId('add-fill-in-the-blank-challenge');
   await user.click(addChallengeButton);
 
-  const answer = getByTestId('challenge-3-fill-in-the-blank-answer')
-  await user.click(answer)
-  await user.keyboard('Challenge answer with blank spaces')
+  const answer = getByTestId('challenge-3-fill-in-the-blank-answer');
+  await user.click(answer);
+  await user.keyboard('Challenge answer with blank spaces');
 
   // Remove a word - expect a blank space and
-  const wordToRemove = getByTestId('challenge-3-fill-in-the-blank-highlight-word-3')
-  await user.click(wordToRemove)
-  const blank = getByText('________')
+  const wordToRemove = getByTestId(
+    'challenge-3-fill-in-the-blank-highlight-word-3'
+  );
+  await user.click(wordToRemove);
+  const blank = getByText('________');
   expect(blank).toBeInTheDocument();
-  const correctClueWord = getByTestId('challenge-3-fill-in-the-blank-correct-clue-word-3')
+  const correctClueWord = getByTestId(
+    'challenge-3-fill-in-the-blank-correct-clue-word-3'
+  );
   expect(correctClueWord).toBeInTheDocument();
 
-  const incorrectWordInput = getByTestId('challenge-3-fill-in-the-blank-incorrect-words')
-  await user.click(incorrectWordInput)
-  await user.keyboard('incorrect, words')
-  const incorrectClueWord = getByTestId('challenge-3-fill-in-the-blank-incorrect-clue-word-0')
+  const incorrectWordInput = getByTestId(
+    'challenge-3-fill-in-the-blank-incorrect-words'
+  );
+  await user.click(incorrectWordInput);
+  await user.keyboard('incorrect, words');
+  const incorrectClueWord = getByTestId(
+    'challenge-3-fill-in-the-blank-incorrect-clue-word-0'
+  );
   expect(incorrectClueWord).toBeInTheDocument();
 });
 

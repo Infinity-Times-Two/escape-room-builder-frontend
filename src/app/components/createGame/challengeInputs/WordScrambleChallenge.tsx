@@ -118,7 +118,7 @@ export default function WordScrambleChallenge({
       data-testid={`${challengeType}-${index}`}
     >
       <p className='absolute top-0 left-0 p-6 text-2xl'>{index + 1}</p>
-      <h3 className='mb-6'>New {challengeType.replaceAll("-", " ")} Challenge</h3>
+      <h3 className='mb-6 mx-4'>New {challengeType.replaceAll("-", " ")} Challenge</h3>
       <div>
         <label htmlFor={`challenge-description-${index}`}>
           Description (optional)

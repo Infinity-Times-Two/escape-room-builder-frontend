@@ -19,15 +19,18 @@ export default function Play() {
   const [showRooms, setShowRooms] = useState<string>('public');
   const active = `tab-active text-white [--tab-bg:indigo] [--tab-border-color:indigo]`;
   const { loadedGames, loading } = useContext(LoadedGamesContext);
-  const { savedGames, loadingSavedGames } = useContext(SavedGamesContext);
+  const { savedGames, loadingSavedGames } =
+    useContext(SavedGamesContext);
 
   const GameList = ({ games }: { games: Game[] }) => {
+    console.log(`displaying games: `);
+    console.log(typeof(games));
     return (
       <div
-        className={`flex flex-col border-2 rounded-xl bg-indigo-400 p-8 border-black bg-white w-full justify-between border-b-2`}
+        className={`flex flex-col border-2 rounded-xl p-8 border-black bg-white w-full justify-between border-b-2`}
       >
         <div className='flex flex-col gap-8 w-full'>
-          {loading || loadingSavedGames && <p>loading...</p>}
+          {loading || (loadingSavedGames && <p>loading...</p>)}
           {!loading && games?.length === 0 && (
             <p>
               No games... <Link href='/new-game'>Create one!</Link>
