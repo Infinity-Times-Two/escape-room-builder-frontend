@@ -63,10 +63,27 @@ describe('New Game Form', () => {
 });
 
 describe('Handle form inputs and submission', () => {
+  it('Displays error when game title is empty on submit', async () => {
+    const user = userEvent.setup();
+    const { getByTestId, getByText } = render(<NewGameForm />);
+  
+    // Clear the game title field
+    const gameTitle = getByTestId('game-title');
+    await user.clear(gameTitle);
+  
+    // Try to submit the form
+    const submitButton = getByTestId('create-game');
+    await user.click(submitButton);
+  
+    // Check if error message is displayed
+    const errorMessage = getByText('Please add a title for your game.');
+    expect(errorMessage).toBeInTheDocument();
+  });
+  
   it('Updates the title and description', async () => {
     const user = userEvent.setup();
     const { getByLabelText, getByTestId } = render(<NewGameForm />);
-
+    
     // Change title
     const gameTitle = getByLabelText('Name your Quiz');
     await user.click(gameTitle);
@@ -222,6 +239,25 @@ describe('Handle form inputs and submission', () => {
 
     expect(gameTitle.value).toBe('');
     expect(gameDescription.value).toBe('');
+  });
+
+  it('Toggles private game option', async () => {
+    const user = userEvent.setup();
+    const { getByLabelText } = render(<NewGameForm />);
+  
+    const privateCheckbox = getByLabelText('Private');
+  
+    // Toggle the checkbox
+    await user.click(privateCheckbox);
+  
+    // The checkbox should be checked
+    expect(privateCheckbox).toBeChecked();
+  
+    // Toggle it again
+    await user.click(privateCheckbox);
+  
+    // The checkbox should be unchecked
+    expect(privateCheckbox).not.toBeChecked();
   });
 });
 

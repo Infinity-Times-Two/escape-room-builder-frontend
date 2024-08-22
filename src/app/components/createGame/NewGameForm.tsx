@@ -562,8 +562,6 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
               handleRemoveChallenge(e, index);
             };
 
-            console.log(`challenge.id: ${challenge.id + '-' + challenge.type}`)
-
             return (
               <NewChallenge
                 key={challenge.type + '-' + challenge.id}
