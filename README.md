@@ -3,7 +3,7 @@
 <h2 align="center">Create and Share Quizzes</h2>
 
 <p align="center"><a href="https://cloud.cypress.io/projects/f968uc/runs"><img src="https://img.shields.io/endpoint?url=https://cloud.cypress.io/badge/detailed/f968uc&style=flat&logo=cypress" /></a><a href="https://codecov.io/gh/Infinity-Times-Two/escape-room-builder-frontend" > 
- <img src="https://codecov.io/gh/Infinity-Times-Two/escape-room-builder-frontend/graph/badge.svg?token=USH6GNBN4U"/> 
+ <img src="https://codecov.io/gh/Infinity-Times-Two/escape-room-builder-frontend/branch/master/graph/badge.svg?token=USH6GNBN4U"/> 
  </a></p>
 
 Quiz Buddies is a full-stack web app that allows users to create and quizzes to share with their friends, and take publically shared quizzes. Logged-out users may browse public quizzes by other users, and create and play their own - the data is saved to local storage on their device. Users may optionally log in to save their quizzes so they can be shared publically and across devices.
