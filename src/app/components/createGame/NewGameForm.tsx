@@ -121,6 +121,7 @@ export default function NewGameForm({ editGame }: { editGame?: string }) {
         saveForm(gameData);
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.id, newGame.id]);
 
   // Reusable function to save form to localStorage
